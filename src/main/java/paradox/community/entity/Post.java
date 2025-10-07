@@ -16,6 +16,7 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "posts")
 public class Post {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id; // 게시글 고유 식별자
@@ -39,7 +40,7 @@ public class Post {
     private PostStatus status; // 게시글 상태 (DRAFT, PUBLISHED)
 
     @Column(name = "likes_count", nullable = false, columnDefinition = "integer default 0")
-    private int likesCount = 0; // 게시글의 좋아요
+    private int likesCount = 0; // 게시글의 좋아요 수
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
