@@ -5,6 +5,7 @@ import lombok.*;
 import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import paradox.community.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 
@@ -33,11 +34,11 @@ public class PostComment {
     @Column(nullable = false)
     private String body; // 댓글의 내용
 
-    @Column(name = "like_count", nullable = false, columnDefinition = "integer default 0")
+    @Column(name = "like_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Integer likeCount = 0; // 게시글 댓글의 좋아요 수
 
     @CreationTimestamp
-    @Column(name = "created_at", nullable = false)
+    @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt; // 게시글 댓글의 작성 시간
 
     @UpdateTimestamp

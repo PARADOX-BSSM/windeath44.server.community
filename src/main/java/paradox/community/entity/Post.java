@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import paradox.community.constclass.ColumnDefaults;
 import paradox.community.enumclass.PostStatus;
 
 import java.time.LocalDateTime;
@@ -39,8 +40,8 @@ public class Post {
     @Column(nullable = false)
     private PostStatus status; // 게시글 상태 (DRAFT, PUBLISHED)
 
-    @Column(name = "likes_count", nullable = false, columnDefinition = "integer default 0")
-    private int likesCount = 0; // 게시글의 좋아요 수
+    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Integer likesCount = 0; // 게시글의 좋아요 수
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
