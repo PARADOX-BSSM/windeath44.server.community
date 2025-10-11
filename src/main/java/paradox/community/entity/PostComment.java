@@ -2,7 +2,6 @@ package paradox.community.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import paradox.community.constclass.ColumnDefaults;
