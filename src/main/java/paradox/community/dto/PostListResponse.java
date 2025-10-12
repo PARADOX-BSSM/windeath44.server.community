@@ -5,11 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentCreateRequest {
-    private String body;
-    private Long parentCommentId; // null이면 일반 댓글
+
+public class PostListResponse {
+    private List<PostResponse> posts;
 }
