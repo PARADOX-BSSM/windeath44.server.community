@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ApiResonse<T> {
-    private String message;
-    private T data;
+public class PostCommentUpdateRequest {
+    private String body;
 }
-// 공통 응답 형식
