@@ -1,15 +1,19 @@
-package paradox.community.dto;
+package paradox.community.dto.post;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import paradox.community.enumclass.PostStatus;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentCreateRequest {
+
+public class PostRequest {
+    private String title;
     private String body;
-    private Long parentCommentId; // null이면 일반 댓글
+    private PostStatus status;
+    private Boolean isBlind;
 }
