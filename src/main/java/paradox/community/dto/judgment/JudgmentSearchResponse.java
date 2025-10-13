@@ -5,12 +5,14 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentListResponse {
-    private List<JudgmentSearchResponse> judgments;
+public class JudgmentSearchResponse {
+    private Long judgmentId;
+    private String title;
+    private Long characterId;
+    private String createdAt;
+    private String updatedAt;
 }

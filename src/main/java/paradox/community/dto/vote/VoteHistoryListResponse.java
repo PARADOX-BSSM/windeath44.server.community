@@ -1,4 +1,4 @@
-package paradox.community.dto.judgment;
+package paradox.community.dto.vote;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,8 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentListResponse {
-    private List<JudgmentSearchResponse> judgments;
+public class VoteHistoryListResponse {
+    private String userId;
+    private Long totalCount;
+    private List<VoteHistoryResponse> votes;
 }

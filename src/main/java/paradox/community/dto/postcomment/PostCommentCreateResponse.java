@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentResponse2 {
+public class PostCommentCreateResponse {
     private Long commendId;
     private Long postId;
     private String userId;

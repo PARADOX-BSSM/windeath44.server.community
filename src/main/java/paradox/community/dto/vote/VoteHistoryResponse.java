@@ -1,4 +1,4 @@
-package paradox.community.dto.judgment;
+package paradox.community.dto.vote;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentResponse2 {
+public class VoteHistoryResponse {
+    private Long voteId;
     private Long judgmentId;
-    private String title;
-    private Long characterId;
-    private String createdAt;
-    private String updatedAt;
+    private Boolean isHeaven;
+    private String votedAt;
 }
