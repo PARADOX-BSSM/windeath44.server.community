@@ -1,4 +1,4 @@
-package paradox.community.dto.judgment;
+package paradox.community.dto.judgmentcomment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentListResponse {
-    private List<JudgmentResponse> judgments;
+public class JudgmentCommentListResponse {
+    private List<JudgmentCommentResponse> comments;
 }

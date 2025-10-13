@@ -1,4 +1,4 @@
-package paradox.community.dto.judgment;
+package paradox.community.dto.judgmentcomment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,10 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentSearchResponse {
+public class JudgmentCommentCreateResponse extends JudgmentCommentResponse {
     private Long judgmentId;
-    private String title;
-    private Long characterId;
-    private String createdAt;
-    private String updatedAt;
 }
