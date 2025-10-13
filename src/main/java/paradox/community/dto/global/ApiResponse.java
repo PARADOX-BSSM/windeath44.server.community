@@ -1,4 +1,4 @@
-package paradox.community.dto;
+package paradox.community.dto.global;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,16 +1,15 @@
-package paradox.community.dto;
+package paradox.community.dto.postcomment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentListResponse {
-    private List<PostCommentResponse> comments;
+public class PostCommentCreateRequest {
+    private String body;
+    private Long parentCommentId; // null이면 일반 댓글
 }
