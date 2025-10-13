@@ -1,0 +1,17 @@
+package paradox.community.dto.vote;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+@Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class VoteHistoryResponse {
+    private Long voteId;
+    private Long judgmentId;
+    private Boolean isHeaven;
+    private String votedAt;
+}
