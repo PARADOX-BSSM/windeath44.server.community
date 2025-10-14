@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class JudgmentCommentCreateResponse extends JudgmentCommentResponse {
+public class JudgmentLikeResponse {
+    private Long likeId;
     private Long judgmentId;
+    private String userId;
 }
