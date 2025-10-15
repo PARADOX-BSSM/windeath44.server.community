@@ -1,4 +1,4 @@
-package paradox.community.constclass;
+package paradox.community.global.constclass;
 
 public final class ColumnDefaults {
     private ColumnDefaults() {}

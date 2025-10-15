@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import paradox.community.domain.judgment.enumclass.JudgmentStatus;
+import paradox.community.domain.judgment.model.JudgmentStatus;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -14,6 +16,6 @@ public class JudgmentRequest {
     private Long characterId;
     private String title;
     private JudgmentStatus instance;
-    private String startAt;
-    private String endAt;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
 }

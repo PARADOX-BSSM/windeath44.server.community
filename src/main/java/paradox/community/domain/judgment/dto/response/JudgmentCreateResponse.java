@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import paradox.community.domain.judgment.enumclass.JudgmentStatus;
+import paradox.community.domain.judgment.model.JudgmentStatus;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -16,10 +18,10 @@ public class JudgmentCreateResponse {
     private String title;
     private JudgmentStatus instance;
     private Boolean isEnd;
-    private String startAt;
-    private String endAt;
+    private LocalDateTime startAt;
+    private LocalDateTime endAt;
     private Long heavenCount;
     private Long hellCount;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
 }

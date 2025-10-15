@@ -3,8 +3,7 @@ package paradox.community.domain.judgment.model;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
-import paradox.community.constclass.ColumnDefaults;
-import paradox.community.domain.judgment.enumclass.JudgmentStatus;
+import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 

@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.cglib.core.Local;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder
@@ -14,8 +17,8 @@ public class JudgmentCommentResponse {
     private String userId;
     private Long parentCommentId;
     private String body;
-    private String createdAt;
-    private String updatedAt;
+    private LocalDateTime createdAt;
+    private LocalDateTime updatedAt;
     private Long likeCount;
     private Boolean isLiked;
 }

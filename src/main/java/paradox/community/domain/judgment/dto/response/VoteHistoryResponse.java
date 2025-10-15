@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Builder
 @NoArgsConstructor
@@ -13,5 +15,5 @@ public class VoteHistoryResponse {
     private Long voteId;
     private Long judgmentId;
     private Boolean isHeaven;
-    private String votedAt;
+    private LocalDateTime votedAt;
 }

@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import paradox.community.domain.community.enumclass.PostStatus;
+import paradox.community.domain.community.model.PostStatus;
 
 @Getter
 @Builder
