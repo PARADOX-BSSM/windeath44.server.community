@@ -1,11 +1,11 @@
-package paradox.community.domain.community.dto.model;
+package paradox.community.domain.community.model;
 
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import paradox.community.constclass.ColumnDefaults;
-import paradox.community.enumclass.PostStatus;
+import paradox.community.domain.community.enumclass.PostStatus;
 
 import java.time.LocalDateTime;
 

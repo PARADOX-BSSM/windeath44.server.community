@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import paradox.community.constclass.ColumnDefaults;
-import paradox.community.enumclass.JudgmentStatus;
+import paradox.community.domain.judgment.enumclass.JudgmentStatus;
 
 import java.time.LocalDateTime;
 

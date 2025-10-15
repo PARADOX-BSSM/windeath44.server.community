@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import paradox.community.enumclass.JudgmentStatus;
+import paradox.community.domain.judgment.enumclass.JudgmentStatus;
 
 @Getter
 @Builder

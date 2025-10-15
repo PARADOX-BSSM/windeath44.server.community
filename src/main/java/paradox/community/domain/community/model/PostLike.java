@@ -1,4 +1,4 @@
-package paradox.community.domain.community.dto.model;
+package paradox.community.domain.community.model;
 
 import jakarta.persistence.*;
 import lombok.*;

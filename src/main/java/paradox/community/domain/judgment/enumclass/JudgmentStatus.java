@@ -1,4 +1,4 @@
-package paradox.community.enumclass;
+package paradox.community.domain.judgment.enumclass;
 
 public enum JudgmentStatus {
     FirstInstance,
