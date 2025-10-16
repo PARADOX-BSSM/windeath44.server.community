@@ -49,4 +49,7 @@ public class Post {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 수정 시간
+
+    @Column(name = "view_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
+    private Integer viewsCount = 0; // 조회수
 }

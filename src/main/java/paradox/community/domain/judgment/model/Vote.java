@@ -20,14 +20,14 @@ public class Vote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 투표 고유 식별자
+    private Long VoteId; // 투표 고유 식별자
 
     @Column(name = "user_id", nullable = false)
     private String userId; // 투표한 사용자
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "judgment_id", nullable = false)
-    private Judgment judgment; // 소속 재판
+    private Judgment judgmentId; // 소속 재판
 
     @Column(name = "is_heaven", nullable = false)
     private Boolean isHeaven; // 투표 방향 (HEAVEN or HELL)

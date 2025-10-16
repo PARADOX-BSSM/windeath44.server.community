@@ -27,7 +27,7 @@ public class JudgmentComment {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "judgment_id", nullable = false)
-    private Judgment judgment; // 소속 재판
+    private Judgment judgmentId; // 소속 재판
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_comment_id")
