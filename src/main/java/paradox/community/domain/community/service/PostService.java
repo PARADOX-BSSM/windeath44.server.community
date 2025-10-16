@@ -3,6 +3,7 @@ package paradox.community.domain.community.service;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import paradox.community.domain.community.dto.request.PostRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.repository.PostRepository;
@@ -18,11 +19,11 @@ public class PostService {
     public PostResponse createPost(String userId, PostRequest request) {
         Post post = Post.builder()
                 .userId(userId)
-                .characterId(request.getCharacterId())
-                .title(request.getTitle())
-                .body(request.getBody())
-                .isBlind(false)
-                .status(request.getStatus())
+                .characterId(request.characterId())
+                .title(request.title())
+                .body(request.body())
+                .isBlind(request.isBlind())
+                .status(request.status())
                 .likesCount(0)
                 .build();
 
