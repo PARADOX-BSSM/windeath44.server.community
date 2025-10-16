@@ -19,7 +19,8 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 게시글 고유 식별자
+    @Column(name = "post_id")
+    private Long postId; // 게시글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
     private String userId; // 게시글 작성자(users.id) 참조
@@ -33,7 +34,7 @@ public class Post {
     private String body; // 게시글의 내용 (이미지 URL 등 포함)
 
     @Column(name = "is_blind", nullable = false)
-    private boolean isBlind; // 스포일러 방지로 흐림 처리 (true or false)
+    private boolean blind; // 스포일러 방지로 흐림 처리 (true or false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
