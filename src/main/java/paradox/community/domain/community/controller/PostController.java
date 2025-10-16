@@ -1,4 +1,4 @@
-package paradox.community.controller;
+package paradox.community.domain.community.controller;
 
 
 import ch.qos.logback.core.model.Model;
