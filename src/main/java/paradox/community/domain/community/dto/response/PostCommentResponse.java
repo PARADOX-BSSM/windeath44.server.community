@@ -12,9 +12,5 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostCommentResponse {
-    private Long commentId;
-    private String userId;
-    private Long parentCommentId;
-    private String body;
-    private LocalDateTime createdAt;
+
 }
