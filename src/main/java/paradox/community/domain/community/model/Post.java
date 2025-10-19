@@ -51,4 +51,11 @@ public class Post {
 
     @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Long likesCount = 0L; // 좋아요
+
+    public void publish() {
+        if (this.status == PostStatus.PUBLISHED) {
+            throw new IllegalStateException("Post is already published");
+        }
+        this.status = PostStatus.PUBLISHED;
+    }
 }

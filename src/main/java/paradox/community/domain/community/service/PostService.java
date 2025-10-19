@@ -22,12 +22,25 @@ public class PostService {
                 .characterId(request.characterId())
                 .title(request.title())
                 .body(request.body())
-                .blind(request.isBlind())
+                .isBlind(request.isBlind())
                 .status(request.status())
                 .likesCount(0L)
                 .build();
 
         Post savedPost = postRepository.save(post);
         return PostResponse.from(savedPost);
+    }
+
+    @Transactional
+    public PostResponse publishPost(Long postId, String userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+
+        if (!post.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Post can only be published by authors!");
+        }
+
+        post.publish();
+        return PostResponse.from(post);
     }
 }
