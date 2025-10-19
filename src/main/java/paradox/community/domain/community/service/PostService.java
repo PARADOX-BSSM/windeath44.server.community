@@ -102,4 +102,12 @@ public class PostService {
 
         return posts.map(PostResponse::from);
     }
+
+    @Transactional
+    public void toggleLike(Long postId, String userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+
+        // 좋아요 토글 로직은 PostLikeService에서 처리
+    }
 }
