@@ -82,4 +82,12 @@ public class PostService {
 
         post.delete();
     }
+
+    @Transactional
+    public PostResponse getPost(Long postId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+
+        return  PostResponse.from(post);
+    }
 }
