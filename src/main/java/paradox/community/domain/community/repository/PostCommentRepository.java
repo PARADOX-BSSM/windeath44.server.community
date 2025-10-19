@@ -11,14 +11,14 @@ import java.util.List;
 @Repository
 public interface PostCommentRepository extends JpaRepository<PostComment, Long> {
 
-    List<PostComment> findByPostId(Integer postId);
+    List<PostComment> findByPostId(Long postId);
 
     List<PostComment> findByUserId(String userId);
 
-    List<PostComment> findByParentCommentId(Integer parentCommentId);
+    List<PostComment> findByParentCommentId(Long parentCommentId);
 
-    List<PostComment> findByPostIdAndParentCommentIdIsNull(Integer postId);
+    List<PostComment> findByPostIdAndParentCommentIdIsNull(Long postId);
 
     @Query("SELECT COUNT(pc) FROM PostComment pc WHERE pc.postId = :postId")
-    Long countByPostId(@Param("postId") Integer postId);
+    Long countByPostId(@Param("postId") Long postId);
 }

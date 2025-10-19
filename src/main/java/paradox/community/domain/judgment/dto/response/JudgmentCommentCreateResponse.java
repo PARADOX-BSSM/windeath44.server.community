@@ -2,9 +2,10 @@ package paradox.community.domain.judgment.dto.response;
 
 import java.time.LocalDateTime;
 
-public record JudgmentCommentResponse(
+public record JudgmentCommentCreateResponse(
         Long commentId,
         String userId,
+        Long judgmentId,
         Long parentCommentId,
         String body,
         LocalDateTime createdAt,
