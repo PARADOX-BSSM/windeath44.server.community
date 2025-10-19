@@ -16,7 +16,6 @@ import java.time.LocalDateTime;
 @Builder
 @Table(name = "posts")
 public class Post {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long postId; // 게시글 고유 식별자
@@ -50,6 +49,6 @@ public class Post {
     @Column(name = "views_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
     private Long viewsCount = 0L; // 조회수
 
-    @Column(name = "like_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Long likesCount = 0L; // 좋아요
 }

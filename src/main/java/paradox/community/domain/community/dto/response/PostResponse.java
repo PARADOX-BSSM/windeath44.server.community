@@ -1,5 +1,6 @@
 package paradox.community.domain.community.dto.response;
 import paradox.community.domain.community.model.Post;
+
 import paradox.community.domain.community.model.PostStatus;
 
 import java.time.LocalDateTime;
