@@ -20,27 +20,27 @@ public class JudgmentComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 댓글 고유 식별자
+    private Long commentId; // 댓글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
     private String userId; // 댓글 작성자(users.id) 참조
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "judgment_id", nullable = false)
-    private Judgment judgmentId; // 소속 재판
+    @Column(name = "judgment_id", nullable = false)
+    private Long judgmentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "parent_comment_id")
+    @JoinColumn(name = "judgment_id", insertable = false, updatable = false)
+    private Judgment judgment; // 소속 재판
+
+    @Column(name = "parent_comment_id")
+    private Long parentCommentId;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "parent_comment_id", insertable = false, updatable = false)
     private JudgmentComment parentComment; // 부모 댓글 (대댓글인 경우)
-
-    @OneToMany(mappedBy = "parentComment", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<JudgmentComment> childComments; // 대댓글 리스트
 
     @Column(nullable = false)
     private String body; // 댓글 내용
-
-    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
-    private Integer likesCount = 0; // 댓글 좋아요 수
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

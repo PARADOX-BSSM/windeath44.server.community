@@ -1,10 +1,11 @@
-package paradox.community.domain.community.dto.response;
+package paradox.community.domain.judgment.dto.response;
 
 import java.time.LocalDateTime;
 
-public record PostCommentResponse(
+public record JudgmentCommentCreateResponse(
         Long commentId,
         String userId,
+        Long judgmentId,
         Long parentCommentId,
         String body,
         LocalDateTime createdAt,
