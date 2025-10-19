@@ -58,4 +58,11 @@ public class Post {
         }
         this.status = PostStatus.PUBLISHED;
     }
+
+    public void draft() {
+        if (this.status == PostStatus.DRAFT) {
+            throw new IllegalStateException("Post is already drafted");
+        }
+        this.status = PostStatus.DRAFT;
+    }
 }

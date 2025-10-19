@@ -43,4 +43,17 @@ public class PostService {
         post.publish();
         return PostResponse.from(post);
     }
+
+    @Transactional
+    public PostResponse draftPost(Long postId, String userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+
+        if (!post.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Post can only be drafted by authors!");
+        }
+
+        post.draft();
+        return PostResponse.from(post);
+    }
 }
