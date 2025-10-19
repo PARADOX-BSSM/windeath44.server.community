@@ -10,11 +10,14 @@ import java.util.Optional;
 @Repository
 public interface PostLikeRepository extends JpaRepository<PostLike, Long> {
 
-    boolean existsByUserIdAndPostId(String userId, Integer postId);
+    boolean existsByUserIdAndPostId(String userId, Long postId);
 
-    Optional<PostLike> findByUserIdAndPostId(String userId, Integer postId);
+    Optional<PostLike> findByUserIdAndPostId(String userId, Long postId);
 
-    List<PostLike> findByPostId(Integer postId);
+    void deleteByUserIdAndPostId(String userId, Long postId);
+    long countByPostId(Long postId);
+
+    List<PostLike> findByPostId(Long postId);
 
     List<PostLike> findByUserId(String userId);
 }

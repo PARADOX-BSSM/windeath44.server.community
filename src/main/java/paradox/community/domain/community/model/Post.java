@@ -19,7 +19,6 @@ public class Post {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private Long postId; // 게시글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
@@ -34,14 +33,11 @@ public class Post {
     private String body; // 게시글의 내용 (이미지 URL 등 포함)
 
     @Column(name = "is_blind", nullable = false)
-    private boolean blind; // 스포일러 방지로 흐림 처리 (true or false)
+    private boolean isBlind; // 스포일러 방지로 흐림 처리 (true or false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private PostStatus status; // 게시글 상태 (DRAFT, PUBLISHED)
-
-    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
-    private Integer likesCount = 0; // 게시글의 좋아요 수
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
@@ -52,5 +48,5 @@ public class Post {
     private LocalDateTime updatedAt; // 게시글 수정 시간
 
     @Column(name = "view_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
-    private Integer viewsCount = 0; // 조회수
+    private Long viewCount = 0L; // 조회수
 }

@@ -19,10 +19,10 @@ public class PostComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id; // 게시글 댓글 고유 식별자
+    private Long commentId; // 게시글 댓글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
-    private Long userId; // 댓글 작성자(users.id) 참조
+    private String userId; // 댓글 작성자(users.id) 참조
 
     @Column(name = "post_id", nullable = false)
     private Long postId; // 소속 게시글(posts.id) 참조
@@ -32,9 +32,6 @@ public class PostComment {
 
     @Column(nullable = false)
     private String body; // 댓글의 내용
-
-    @Column(name = "like_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
-    private Integer likeCount = 0; // 게시글 댓글의 좋아요 수
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
