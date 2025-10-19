@@ -47,6 +47,9 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 수정 시간
 
-    @Column(name = "view_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
-    private Long viewCount = 0L; // 조회수
+    @Column(name = "views_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
+    private Long viewsCount = 0L; // 조회수
+
+    @Column(name = "like_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Long likesCount = 0L; // 좋아요
 }
