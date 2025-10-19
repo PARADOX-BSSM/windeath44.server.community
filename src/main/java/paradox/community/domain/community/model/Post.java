@@ -65,4 +65,10 @@ public class Post {
         }
         this.status = PostStatus.DRAFT;
     }
+
+    public void update(String title, String body) {
+        if (title == null) throw new IllegalArgumentException("Title cannot be null");
+        this.title = title;
+        this.body = body;
+    }
 }
