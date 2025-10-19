@@ -1,12 +1,15 @@
 package paradox.community.domain.community.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.community.dto.request.PostCreateRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.model.Post;
+import paradox.community.domain.community.model.PostStatus;
 import paradox.community.domain.community.repository.PostRepository;
 
 @Service
@@ -89,5 +92,14 @@ public class PostService {
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
 
         return  PostResponse.from(post);
+    }
+
+    @Transactional
+    public Page<PostResponse> getPosts(Long characterId, Pageable pageable) {
+        Page<Post> posts = characterId != null
+                ? postRepository.findByCharacterIdAndStatus(characterId, PostStatus.PUBLISHED, pageable)
+                : postRepository.findByStatus(PostStatus.PUBLISHED, pageable);
+
+        return posts.map(PostResponse::from);
     }
 }
