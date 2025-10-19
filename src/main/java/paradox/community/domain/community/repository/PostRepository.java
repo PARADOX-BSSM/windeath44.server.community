@@ -1,5 +1,7 @@
 package paradox.community.domain.community.repository;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -11,11 +13,13 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    Page<Post> findByCharacterIdAndStatus(Long characterId, PostStatus status, Pageable pageable);
+
     List<Post> findByUserId(String userId);
 
     List<Post> findByCharacterId(Long characterId);
 
-    List<Post> findByStatus(PostStatus status);
+    Page<Post> findByStatus(PostStatus status, Pageable pageable);
 
     List<Post> findByIsBlindTrue();
 

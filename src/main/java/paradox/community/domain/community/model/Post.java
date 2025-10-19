@@ -51,4 +51,34 @@ public class Post {
 
     @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Long likesCount = 0L; // 좋아요
+
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted = false; // 논리 삭제
+
+    public void publish() {
+        if (this.status == PostStatus.PUBLISHED) {
+            throw new IllegalStateException("Post is already published");
+        }
+        this.status = PostStatus.PUBLISHED;
+    }
+
+    public void draft() {
+        if (this.status == PostStatus.DRAFT) {
+            throw new IllegalStateException("Post is already drafted");
+        }
+        this.status = PostStatus.DRAFT;
+    }
+
+    public void update(String title, String body) {
+        if (title == null) throw new IllegalArgumentException("Title cannot be null");
+        this.title = title;
+        this.body = body;
+    }
+
+    public void delete() {
+        if (this.isDeleted) {
+            throw new IllegalStateException("Post is already deleted");
+        }
+        this.isDeleted = true;
+    }
 }
