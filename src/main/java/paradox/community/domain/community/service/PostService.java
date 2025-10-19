@@ -70,4 +70,16 @@ public class PostService {
         post.update(request.title(), request.body());
         return PostResponse.from(post);
     }
+
+    @Transactional
+    public void deletePost(Long postId, String userId) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+
+        if (!post.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("Post can only be deleted by authors!");
+        }
+
+        post.delete();
+    }
 }
