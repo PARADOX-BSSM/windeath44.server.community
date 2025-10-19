@@ -11,14 +11,14 @@ import java.util.List;
 @Repository
 public interface JudgmentCommentRepository extends JpaRepository<JudgmentComment, Long> {
 
-    List<JudgmentComment> findByJudgmentId(Integer judgmentId);
+    List<JudgmentComment> findByJudgmentId(Long judgmentId);
 
     List<JudgmentComment> findByUserId(String userId);
 
-    List<JudgmentComment> findByParentCommentId(Integer parentCommentId);
+    List<JudgmentComment> findByParentCommentId(Long parentCommentId);
 
-    List<JudgmentComment> findByJudgmentIdAndParentCommentIdIsNull(Integer judgmentId);
+    List<JudgmentComment> findByJudgmentIdAndParentCommentIdIsNull(Long judgmentId);
 
     @Query("SELECT COUNT(jc) FROM JudgmentComment jc WHERE jc.judgmentId = :judgmentId")
-    Long countByJudgmentId(@Param("judgmentId") Integer judgmentId);
+    Long countByJudgmentId(@Param("judgmentId") Long judgmentId);
 }
