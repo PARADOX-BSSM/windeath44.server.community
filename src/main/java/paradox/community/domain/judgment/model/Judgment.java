@@ -33,7 +33,7 @@ public class Judgment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private JudgmentStatus status; // 재판 (1심, 2심, 3심)
+    private JudgmentStatus instance; // 재판 (1심, 2심, 3심)
 
     @Column(name = "start_at", nullable = false, updatable = false)
     private LocalDateTime startAt; // 재판 시간 시간
@@ -57,4 +57,15 @@ public class Judgment {
 
     @Column(name = "likes_count", nullable = false)
     private Long likesCount; // 좋아요 수
+
+    public void update(String title, LocalDateTime startAt, LocalDateTime endAt) {
+        if (title == null || title.trim().isEmpty()) throw new IllegalArgumentException("Title cannot be null or empty");
+        this.title = title.trim();
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
+
+    public void end() {
+        this.isEnd = true;
+    }
 }
