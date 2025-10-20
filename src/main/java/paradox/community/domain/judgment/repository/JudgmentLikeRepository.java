@@ -1,7 +1,5 @@
 package paradox.community.domain.judgment.repository;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import paradox.community.domain.judgment.model.JudgmentLike;
@@ -14,7 +12,7 @@ public interface JudgmentLikeRepository extends JpaRepository<JudgmentLike, Long
 
     boolean existsByUserIdAndJudgmentId(String userId, Long judgmentId);
 
-    Page<JudgmentLike> findByUserIdAndJudgmentId(String userId, Long judgmentId, Pageable pageable);
+    Optional<JudgmentLike> findByUserIdAndJudgmentId(String userId, Long judgmentId);
 
     void deleteByUserIdAndJudgmentId(String userId, Long judgmentId);
 
