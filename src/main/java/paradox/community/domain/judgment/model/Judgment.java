@@ -32,7 +32,7 @@ public class Judgment {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private JudgmentStatus status; // 재판 (1심, 2심, 3심)
+    private JudgmentStatus instance; // 재판 (1심, 2심, 3심)
 
     @Column(name = "start_at", nullable = false, updatable = false)
     private LocalDateTime startAt; // 재판 시간 시간

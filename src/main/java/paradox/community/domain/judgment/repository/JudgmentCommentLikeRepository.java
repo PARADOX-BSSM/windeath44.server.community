@@ -10,11 +10,15 @@ import java.util.Optional;
 @Repository
 public interface JudgmentCommentLikeRepository extends JpaRepository<JudgmentCommentLike, Long> {
 
-    boolean existsByUserIdAndJudgmentCommentId(String userId, Long judgmentCommentId);
+    boolean existsByUserIdAndCommentId(String userId, Long commentId);
 
-    Optional<JudgmentCommentLike> findByUserIdAndJudgmentCommentId(String userId, Long judgmentCommentId);
+    Optional<JudgmentCommentLike> findByUserIdAndCommentId(String userId, Long commentId);
 
-    List<JudgmentCommentLike> findByJudgmentCommentId(Long judgmentCommentId);
+    void deleteByUserIdAndCommentId(String userId, Long commentId);
+
+    long countByCommentId(Long commentId);
+
+    List<JudgmentCommentLike> findByCommentId(Long commentId);
 
     List<JudgmentCommentLike> findByUserId(String userId);
 }

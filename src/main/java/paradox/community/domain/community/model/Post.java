@@ -33,7 +33,7 @@ public class Post {
     private String body; // 게시글의 내용 (이미지 URL 등 포함)
 
     @Column(name = "is_blind", nullable = false)
-    private boolean blind; // 스포일러 방지로 흐림 처리 (true or false)
+    private boolean isBlind; // 스포일러 방지로 흐림 처리 (true or false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
