@@ -22,10 +22,10 @@ public class JudgmentCommentLike {
     @Column(name = "user_id", nullable = false)
     private String userId; // 좋아요를 누른 사용자
 
-    @Column(name = "judgment_comment_id", nullable = false)
+    @Column(name = "comment_id", nullable = false)
     private Long commentId;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "judgment_comment_id", insertable = false, updatable = false)
+    @JoinColumn(name = "comment_id", insertable = false, updatable = false)
     private JudgmentComment judgmentComment; // 좋아요가 달린 댓글
 }
