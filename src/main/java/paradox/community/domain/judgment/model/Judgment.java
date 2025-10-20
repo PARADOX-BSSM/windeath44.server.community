@@ -2,6 +2,7 @@ package paradox.community.domain.judgment.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import paradox.community.global.constclass.ColumnDefaults;
@@ -46,5 +47,25 @@ public class Judgment {
 
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt; // 재판 수정 시간
+
+    @Column(name = "heaven_count", nullable = false)
+    private Long heavenCount; // 천국 투표 수
+
+    @Column(name = "hell_count", nullable = false)
+    private Long hellCount; // 지옥 투표 수
+
+    @Column(name = "likes_count", nullable = false)
+    private Long likesCount; // 좋아요 수
+
+    public void update(String title, LocalDateTime startAt, LocalDateTime endAt) {
+        if (title == null || title.trim().isEmpty()) throw new IllegalArgumentException("Title cannot be null or empty");
+        this.title = title.trim();
+        this.startAt = startAt;
+        this.endAt = endAt;
+    }
+
+    public void end() {
+        this.isEnd = true;
+    }
 }

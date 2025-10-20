@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "post_id")
     private Long postId; // 게시글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
@@ -47,6 +46,39 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 수정 시간
 
-    @Column(name = "view_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
-    private Long viewCount = 0L; // 조회수
+    @Column(name = "views_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
+    private Long viewsCount = 0L; // 조회수
+
+    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Long likesCount = 0L; // 좋아요
+
+    @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
+    private boolean isDeleted = false; // 논리 삭제
+
+    public void publish() {
+        if (this.status == PostStatus.PUBLISHED) {
+            throw new IllegalStateException("Post is already published");
+        }
+        this.status = PostStatus.PUBLISHED;
+    }
+
+    public void draft() {
+        if (this.status == PostStatus.DRAFT) {
+            throw new IllegalStateException("Post is already drafted");
+        }
+        this.status = PostStatus.DRAFT;
+    }
+
+    public void update(String title, String body) {
+        if (title == null) throw new IllegalArgumentException("Title cannot be null");
+        this.title = title;
+        this.body = body;
+    }
+
+    public void delete() {
+        if (this.isDeleted) {
+            throw new IllegalStateException("Post is already deleted");
+        }
+        this.isDeleted = true;
+    }
 }
