@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
+import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
@@ -44,8 +45,15 @@ public class JudgmentController {
 
     // 재판 수정 (관리자용)
     @PostMapping("/{judgmentId}")
-    public ResponseEntity<JudgmentResponse> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentCreateRequest request) {
+    public ResponseEntity<JudgmentResponse> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request) {
         JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request);
+        return ResponseEntity.ok(judgment);
+    }
+
+    // 재판 종료 (관리자용)
+    @PatchMapping("/{judgmentId}")
+    public ResponseEntity<JudgmentResponse> endJudgment(@PathVariable Long judgmentId) {
+        JudgmentResponse judgment = judgmentService.endJudgment(judgmentId);
         return ResponseEntity.ok(judgment);
     }
 }
