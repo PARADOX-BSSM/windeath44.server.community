@@ -11,6 +11,7 @@ import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
+import paradox.community.domain.judgment.dto.response.VoteResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
 import jakarta.validation.Valid;
 
@@ -55,5 +56,11 @@ public class JudgmentController {
     public ResponseEntity<JudgmentResponse> endJudgment(@PathVariable Long judgmentId) {
         JudgmentResponse judgment = judgmentService.endJudgment(judgmentId);
         return ResponseEntity.ok(judgment);
+    }
+
+    // 투표
+    @PostMapping("/{judgment-id}/votes")
+    public ResponseEntity<VoteResponse> vote(@PathVariable Long judgmentId, @RequestBody) {
+        
     }
 }
