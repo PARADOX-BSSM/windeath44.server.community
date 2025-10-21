@@ -1,16 +1,23 @@
 package paradox.community.domain.community.controller;
 
+import com.google.api.Page;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+import paradox.community.domain.community.dto.response.PostResponse;
+import paradox.community.domain.community.service.PostService;
+import paradox.community.domain.judgment.model.Judgment;
 
-import ch.qos.logback.core.model.Model;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-
-@Controller
+@RestController
+@RequestMapping("/communities/posts")
+@RequiredArgsConstructor
 public class PostController {
 
-    @GetMapping("/communities/posts/{post-id}/comments")
-    public String getPostComments(@PathVariable("post-id") long postId, Model model) {
+    private final PostService postService;
+
+    // 게시글 목록 조회
+    @PostMapping
+    public ResponseEntity<Page<PostResponse>> save(@RequestBody Judgment judgment) {
 
     }
 }
