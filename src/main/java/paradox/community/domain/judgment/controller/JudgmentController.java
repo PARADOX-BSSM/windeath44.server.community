@@ -41,4 +41,11 @@ public class JudgmentController {
         JudgmentCreateResponse judgment = judgmentService.createJudgment(request);
         return ResponseEntity.status(HttpStatus.CREATED).body(judgment);
     }
+
+    // 재판 수정 (관리자용)
+    @PostMapping("/{judgmentId}")
+    public ResponseEntity<JudgmentResponse> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentCreateRequest request) {
+        JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request);
+        return ResponseEntity.ok(judgment);
+    }
 }
