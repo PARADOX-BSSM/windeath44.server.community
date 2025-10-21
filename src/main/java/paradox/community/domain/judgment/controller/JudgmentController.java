@@ -3,13 +3,16 @@ package paradox.community.domain.judgment.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
+import paradox.community.domain.judgment.dto.response.JudgmentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
+import jakarta.validation.Valid;
+
 
 @RestController
 @RequestMapping("/communities/judgments")
@@ -23,5 +26,19 @@ public class JudgmentController {
     public ResponseEntity<Page<JudgmentResponse>> getJudgments(JudgmentListRequest request, Pageable pageable) {
         Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.isEnd(), request.instance(), pageable);
         return ResponseEntity.ok(judgments);
+    }
+
+    // 제판 상세 조회
+    @GetMapping("/{judgmentId}")
+    public ResponseEntity<JudgmentResponse> getJudgment(@PathVariable Long judgmentId) {
+        JudgmentResponse judgment = judgmentService.getJudgment(judgmentId);
+        return ResponseEntity.ok(judgment);
+    }
+
+    // 재판 생성 (관리자용)
+    @PostMapping
+    public ResponseEntity<JudgmentCreateResponse> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
+        JudgmentCreateResponse judgment = judgmentService.createJudgment(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(judgment);
     }
 }
