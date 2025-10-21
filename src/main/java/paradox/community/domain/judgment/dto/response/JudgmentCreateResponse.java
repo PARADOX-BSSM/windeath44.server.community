@@ -22,7 +22,7 @@ public record JudgmentCreateResponse(
                 judgment.getJudgmentId(),
                 judgment.getCharacterId(),
                 judgment.getTitle(),
-                judgment.getStatus(),
+                judgment.getInstance(),
                 judgment.getIsEnd(),
                 judgment.getStartAt(),
                 judgment.getEndAt(),
