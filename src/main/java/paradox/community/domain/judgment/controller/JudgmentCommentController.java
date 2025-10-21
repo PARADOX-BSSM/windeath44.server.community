@@ -37,9 +37,10 @@ public class JudgmentCommentController {
         );
     }
 
-    @PatchMapping("/comments/{commentId}")
+    @PatchMapping("/{judgmentId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<JudgmentCommentResponse>> updateComment(
             @RequestHeader("user-id") String userId,
+            @PathVariable Long judgmentId,
             @PathVariable Long commentId,
             @RequestBody JudgmentCommentRequest request) {
         JudgmentCommentResponse response = commentService.updateComment(userId, commentId, request);
@@ -52,9 +53,10 @@ public class JudgmentCommentController {
         );
     }
 
-    @DeleteMapping("/comments/{commentId}")
+    @DeleteMapping("/{judgmentId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(
             @RequestHeader("user-id") String userId,
+            @PathVariable Long judgmentId,
             @PathVariable Long commentId) {
         commentService.deleteComment(userId, commentId);
 
@@ -79,9 +81,10 @@ public class JudgmentCommentController {
         );
     }
 
-    @GetMapping("/comments/{parentCommentId}/replies")
+    @GetMapping("/{judgmentId}/comments/{parentCommentId}/replies")
     public ResponseEntity<ApiResponse<List<JudgmentCommentResponse>>> getReplies(
             @RequestHeader("user-id") String userId,
+            @PathVariable Long judgmentId,
             @PathVariable Long parentCommentId) {
         List<JudgmentCommentResponse> replies = commentService.getRepliesByComment(userId, parentCommentId);
 
