@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCommentRequest;
-import paradox.community.domain.judgment.dto.response.JudgmentCommentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentCommentResponse;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentComment;
@@ -25,7 +24,7 @@ public class JudgmentCommentService {
     private final JudgmentRepository judgmentRepository;
     private final JudgmentCommentLikeRepository commentLikeRepository;
 
-    public JudgmentCommentCreateResponse createComment(String userId, Long judgmentId, JudgmentCommentRequest request) {
+    public JudgmentCommentResponse createComment(String userId, Long judgmentId, JudgmentCommentRequest request) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
 
@@ -50,7 +49,7 @@ public class JudgmentCommentService {
 
         log.info("Comment created - commentId: {}, userId: {}, judgmentId: {}", savedComment.getCommentId(), userId, judgmentId);
 
-        return new JudgmentCommentCreateResponse(
+        return new JudgmentCommentResponse(
                 savedComment.getCommentId(),
                 savedComment.getUserId(),
                 savedComment.getJudgmentId(),
@@ -82,6 +81,7 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 updatedComment.getCommentId(),
                 updatedComment.getUserId(),
+                updatedComment.getJudgmentId(),
                 updatedComment.getParentCommentId(),
                 updatedComment.getBody(),
                 updatedComment.getCreatedAt(),
@@ -122,6 +122,7 @@ public class JudgmentCommentService {
                     return new JudgmentCommentResponse(
                             comment.getCommentId(),
                             comment.getUserId(),
+                            comment.getJudgmentId(),
                             comment.getParentCommentId(),
                             comment.getBody(),
                             comment.getCreatedAt(),
@@ -148,6 +149,7 @@ public class JudgmentCommentService {
                     return new JudgmentCommentResponse(
                             reply.getCommentId(),
                             reply.getUserId(),
+                            reply.getJudgmentId(),
                             reply.getParentCommentId(),
                             reply.getBody(),
                             reply.getCreatedAt(),
@@ -157,5 +159,13 @@ public class JudgmentCommentService {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public Long getCommentsCount(Long judgmentId) {
+        judgmentRepository.findById(judgmentId)
+                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+
+        return commentRepository.countByJudgmentId(judgmentId);
     }
 }

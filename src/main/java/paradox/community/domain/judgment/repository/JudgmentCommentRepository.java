@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import paradox.community.domain.judgment.model.JudgmentComment;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface JudgmentCommentRepository extends JpaRepository<JudgmentComment, Long> {
