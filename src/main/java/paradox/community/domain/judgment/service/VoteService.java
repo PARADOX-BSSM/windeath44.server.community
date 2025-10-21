@@ -73,7 +73,6 @@ public class VoteService {
 
         return new VoteCreateResponse (
                 vote.getVoteId(),
-                vote.getJudgmentId(),
                 vote.getUserId(),
                 vote.getIsHeaven(),
                 vote.getVotedAt(),
@@ -106,14 +105,14 @@ public class VoteService {
         double heavenRatio = totalVotes > 0 ? (heavenCount * 100.0) / totalVotes : 0;
         double hellRatio = totalVotes > 0 ? (hellCount * 100.0) / totalVotes : 0;
 
-        return VoteResponse.builder()
-                .judgmentId(judgmentId)
-                .heavenCount(heavenCount)
-                .hellCount(hellCount)
-                .totalVotes(totalVotes)
-                .heavenRatio(heavenRatio)
-                .hellRatio(hellRatio)
-                .build();
+        return new VoteResponse(
+                judgmentId,
+                heavenCount,
+                hellCount,
+                totalVotes,
+                heavenRatio,
+                hellRatio
+        );
     }
 
     public void deleteVote(String userId, Long judgmentId) {
