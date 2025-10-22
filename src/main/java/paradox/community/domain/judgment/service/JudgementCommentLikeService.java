@@ -17,7 +17,7 @@ public class JudgementCommentLikeService {
     private final JudgmentCommentRepository judgmentCommentRepository;
 
     @Transactional
-    public boolean toggleLike(String userId, Long commentId) {
+    public Boolean toggleLike(String userId, Long commentId) {
         JudgmentComment judgmentComment = judgmentCommentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("Judgment not found"));
 
