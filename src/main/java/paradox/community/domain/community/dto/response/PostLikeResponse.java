@@ -1,9 +1,15 @@
 package paradox.community.domain.community.dto.response;
 
+import paradox.community.domain.community.model.PostLike;
+
 public record PostLikeResponse(
-        Long likeId,
         Long postId,
-        String userId,
-        Long likeCount,
-        Boolean isLiked
-) {}
+        String userId
+) {
+    public static PostLikeResponse from(PostLike postLike) {
+        return new PostLikeResponse(
+                postLike.getPostId(),
+                postLike.getUserId()
+        );
+    }
+}
