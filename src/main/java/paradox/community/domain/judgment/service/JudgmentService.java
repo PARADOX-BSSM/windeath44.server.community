@@ -47,11 +47,12 @@ public class JudgmentService {
     }
 
     @Transactional
-    public void endJudgment(Long judgmentId) {
+    public JudgmentResponse endJudgment(Long judgmentId) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
 
         judgment.end();
+        return JudgmentResponse.from(judgment);
     }
 
     public JudgmentResponse getJudgment(Long judgmentId) {

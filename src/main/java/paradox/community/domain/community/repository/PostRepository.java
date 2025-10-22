@@ -13,17 +13,21 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    Page<Post> findByCharacterIdAndStatusAndIsBlind(Long characterId, PostStatus status, Boolean isBLind, Pageable pageable);
+
+    Page<Post> findByCharacterIdAndIsBlind(Long characterId, Boolean isBlind, Pageable pageable);
+
+    Page<Post> findByStatusAndIsBlind(PostStatus status, Boolean isBlind, Pageable pageable);
+
     Page<Post> findByCharacterIdAndStatus(Long characterId, PostStatus status, Pageable pageable);
 
     List<Post> findByUserId(String userId);
 
-    List<Post> findByCharacterId(Long characterId);
+    Page<Post> findByCharacterId(Long characterId, Pageable pageable);
 
     Page<Post> findByStatus(PostStatus status, Pageable pageable);
 
-    List<Post> findByIsBlindTrue();
-
-    List<Post> findByIsBlindFalse();
+    Page<Post> findByIsBlind(Boolean isBlind, Pageable pageable);
 
     @Query("SELECT p FROM Post p LEFT JOIN PostLike pl ON p.postId = pl.postId " + "GROUP BY p.postId ORDER BY COUNT(pl.likeId) DESC")
     List<Post> findAllByOrderByLikeCountDesc();

@@ -24,7 +24,7 @@ public record JudgmentResponse(
                 judgment.getJudgmentId(),
                 judgment.getTitle(),
                 judgment.getCharacterId(),
-                judgment.getStatus(),
+                judgment.getInstance(),
                 judgment.getIsEnd(),
                 judgment.getStartAt(),
                 judgment.getEndAt(),
