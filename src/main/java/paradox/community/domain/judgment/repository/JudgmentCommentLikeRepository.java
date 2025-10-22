@@ -18,6 +18,8 @@ public interface JudgmentCommentLikeRepository extends JpaRepository<JudgmentCom
 
     long countByCommentId(Long commentId);
 
+    void deleteByCommentId(Long commentId);
+
     List<JudgmentCommentLike> findByCommentId(Long commentId);
 
     List<JudgmentCommentLike> findByUserId(String userId);

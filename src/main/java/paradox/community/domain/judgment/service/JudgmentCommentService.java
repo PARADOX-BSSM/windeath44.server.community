@@ -101,8 +101,11 @@ public class JudgmentCommentService {
 
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(commentId);
 
+        for (JudgmentComment reply : replies) {
+            commentLikeRepository.deleteByCommentId(reply.getCommentId());
+        }
         commentRepository.deleteAll(replies);
-
+        commentLikeRepository.deleteByCommentId(commentId);
         commentRepository.delete(comment);
         log.info("Comment deleted - commentId: {}, userId: {}", commentId, userId);
     }

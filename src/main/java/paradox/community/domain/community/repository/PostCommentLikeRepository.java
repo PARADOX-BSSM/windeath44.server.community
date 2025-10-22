@@ -22,6 +22,8 @@ public interface PostCommentLikeRepository extends JpaRepository<PostCommentLike
     void deleteByUserIdAndPostCommentId(String userId, Long postCommentId);
     Long countByPostCommentId(Long postCommentId);
 
+    void deleteByPostCommentId(Long postCommentId);
+
     List<PostCommentLike> findByPostCommentId(Long postCommentId);
 
     List<PostCommentLike> findByUserId(String userId);
