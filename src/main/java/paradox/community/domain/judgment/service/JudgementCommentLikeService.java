@@ -37,4 +37,8 @@ public class JudgementCommentLikeService {
                     return true;
                 });
     }
+
+    public Boolean isLiked(Long commentId, String userId) {
+        return judgmentCommentLikeRepository.findByUserIdAndCommentId(userId, commentId).isPresent();
+    }
 }
