@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.community.dto.request.PostCreateRequest;
+import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.model.Post;
@@ -95,10 +96,21 @@ public class PostService {
     }
 
     @Transactional
-    public Page<PostResponse> getPosts(Long characterId, Pageable pageable) {
-        Page<Post> posts = characterId != null
-                ? postRepository.findByCharacterIdAndStatus(characterId, PostStatus.PUBLISHED, pageable)
-                : postRepository.findByStatus(PostStatus.PUBLISHED, pageable);
+    public Page<PostResponse> getPosts(PostSearchRequest request, Pageable pageable) {
+        Page<Post> posts;
+        if (request.characterId() != null && request.isBlind() != null && request.status() != null) {
+            posts = postRepository.findByCharacterIdAndStatusAndIsBlind(request.characterId(), request.status(), request.isBlind(), pageable);
+        }else if (request.characterId() != null && request.isBlind()) {
+            posts = postRepository.findByCharacterIdAndIsBlind(request.characterId(), request.isBlind(), pageable);
+        }else if (request.characterId() != null && request.status() != null) {
+            posts = postRepository.findByCharacterIdAndStatus(request.characterId(), request.status(), pageable);
+        }else if (request.status() != null && request.isBlind() != null) {
+            posts = postRepository.findByStatusAndIsBlind(request.status(), request.isBlind(), pageable);
+        }else if (request.characterId() != null) {
+            posts = postRepository.findByCharacterId(request.characterId(), pageable);
+        }else if (request.status() != null) {
+            posts =
+        }
 
         return posts.map(PostResponse::from);
     }

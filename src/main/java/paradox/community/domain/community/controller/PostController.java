@@ -4,6 +4,7 @@ import com.google.api.Page;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.service.PostService;
 import paradox.community.domain.judgment.model.Judgment;
@@ -17,7 +18,7 @@ public class PostController {
 
     // 게시글 목록 조회
     @PostMapping
-    public ResponseEntity<Page<PostResponse>> save(@RequestBody Judgment judgment) {
-
+    public ResponseEntity<Page<PostResponse>> getPosts(@RequestBody PostSearchRequest request) {
+        PostResponse post = postService.getPosts()
     }
 }

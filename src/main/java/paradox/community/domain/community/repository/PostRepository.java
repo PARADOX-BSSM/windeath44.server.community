@@ -13,6 +13,12 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    Page<Post> findByCharacterIdAndStatusAndIsBlind(Long characterId, PostStatus status, Boolean isBLind, Pageable pageable);
+
+    Page<Post> findByCharacterIdAndIsBlind(Long characterId, Boolean isBlind, Pageable pageable);
+
+    Page<Post> findByStatusAndIsBlind(PostStatus status, Boolean isBlind);
+
     Page<Post> findByCharacterIdAndStatus(Long characterId, PostStatus status, Pageable pageable);
 
     List<Post> findByUserId(String userId);
