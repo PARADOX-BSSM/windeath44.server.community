@@ -23,7 +23,7 @@ public class JudgmentCommentLike {
     private String userId; // 좋아요를 누른 사용자
 
     @Column(name = "comment_id", nullable = false)
-    private Long commentId;
+    private Long commentId; // 댓글 아이디
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "comment_id", insertable = false, updatable = false)
