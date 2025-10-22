@@ -49,4 +49,15 @@ public class JudgmentComment {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 댓글 수정 시간
+
+    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Long likesCount = 0L; // 좋아요 개수
+
+    public void decrementLikesCount() {
+        this.likesCount--;
+    }
+
+    public void incrementLikesCount() {
+        this.likesCount++;
+    }
 }
