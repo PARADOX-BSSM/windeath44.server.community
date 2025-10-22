@@ -16,6 +16,8 @@ import paradox.community.domain.judgment.dto.response.VoteResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
 import jakarta.validation.Valid;
 import paradox.community.domain.judgment.service.VoteService;
+import paradox.community.global.dto.ApiResponse;
+import paradox.community.global.util.HttpUtil;
 
 
 @RestController
@@ -28,36 +30,36 @@ public class JudgmentController {
 
     // 제판 목록 조회
     @PostMapping
-    public ResponseEntity<Page<JudgmentResponse>> getJudgments(JudgmentListRequest request, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<JudgmentResponse>>> getJudgments(JudgmentListRequest request, Pageable pageable) {
         Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.isEnd(), request.instance(), pageable);
-        return ResponseEntity.ok(judgments);
+        return ResponseEntity.ok(HttpUtil.success("success judgment list search", judgments));
     }
 
     // 제판 상세 조회
     @GetMapping("/{judgmentId}")
-    public ResponseEntity<JudgmentResponse> getJudgment(@PathVariable Long judgmentId) {
+    public ResponseEntity<ApiResponse<JudgmentResponse>> getJudgment(@PathVariable Long judgmentId) {
         JudgmentResponse judgment = judgmentService.getJudgment(judgmentId);
-        return ResponseEntity.ok(judgment);
+        return ResponseEntity.ok(HttpUtil.success("success judgment search", judgment));
     }
 
     // 재판 생성 (관리자용)
     @PostMapping
-    public ResponseEntity<JudgmentCreateResponse> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
+    public ResponseEntity<ApiResponse<JudgmentCreateResponse>> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
         JudgmentCreateResponse judgment = judgmentService.createJudgment(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(judgment);
+        return ResponseEntity.status(HttpStatus.CREATED).body(HttpUtil.success("success judgment create response", judgment));
     }
 
     // 재판 수정 (관리자용)
     @PostMapping("/{judgmentId}")
-    public ResponseEntity<JudgmentResponse> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request) {
+    public ResponseEntity<ApiResponse<JudgmentResponse>> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request) {
         JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request);
-        return ResponseEntity.ok(judgment);
+        return ResponseEntity.ok(HttpUtil.success("success judgment cancel", judgment));
     }
 
     // 재판 종료 (관리자용)
     @PatchMapping("/{judgmentId}")
-    public ResponseEntity<JudgmentResponse> endJudgment(@PathVariable Long judgmentId) {
+    public ResponseEntity<ApiResponse<JudgmentResponse>> endJudgment(@PathVariable Long judgmentId) {
         JudgmentResponse judgment = judgmentService.endJudgment(judgmentId);
-        return ResponseEntity.ok(judgment);
+        return ResponseEntity.ok(HttpUtil.success("success judgment end", judgment));
     }
 }
