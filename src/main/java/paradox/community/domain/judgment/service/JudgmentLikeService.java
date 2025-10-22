@@ -1,12 +1,10 @@
 package paradox.community.domain.judgment.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentLike;
-import paradox.community.domain.judgment.repository.JudgmentCommentLikeRepository;
 import paradox.community.domain.judgment.repository.JudgmentLikeRepository;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
 
