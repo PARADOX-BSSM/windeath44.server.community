@@ -15,7 +15,6 @@ public record JudgmentResponse(
         LocalDateTime endAt,
         Long heavenCount,
         Long hellCount,
-        Long likeCount,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {
@@ -30,7 +29,6 @@ public record JudgmentResponse(
                 judgment.getEndAt(),
                 judgment.getHeavenCount(),
                 judgment.getHellCount(),
-                judgment.getLikesCount(),
                 judgment.getCreatedAt(),
                 judgment.getUpdatedAt()
                 );
