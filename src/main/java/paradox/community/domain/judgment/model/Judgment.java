@@ -68,4 +68,12 @@ public class Judgment {
     public void end() {
         this.isEnd = true;
     }
+
+    public void decrementLikesCount() {
+        this.likesCount--;
+    }
+
+    public void incrementLikesCount() {
+        this.likesCount++;
+    }
 }

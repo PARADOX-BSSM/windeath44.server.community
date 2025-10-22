@@ -14,7 +14,7 @@ public interface JudgmentLikeRepository extends JpaRepository<JudgmentLike, Long
 
     Boolean existsByUserIdAndJudgmentId(String userId, Long judgmentId);
 
-    Page<JudgmentLike> findByUserIdAndJudgmentId(String userId, Long judgmentId);
+    Optional<JudgmentLike> findByUserIdAndJudgmentId(String userId, Long judgmentId);
 
     Void deleteByUserIdAndJudgmentId(String userId, Long judgmentId);
 
