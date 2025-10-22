@@ -109,7 +109,11 @@ public class PostService {
         }else if (request.characterId() != null) {
             posts = postRepository.findByCharacterId(request.characterId(), pageable);
         }else if (request.status() != null) {
-            posts =
+            posts = postRepository.findByStatus(request.status(), pageable);
+        }else if (request.isBlind() != null) {
+            posts = postRepository.findByIsBlind(request.isBlind(), pageable);
+        }else {
+            posts = postRepository.findAll(pageable);
         }
 
         return posts.map(PostResponse::from);
