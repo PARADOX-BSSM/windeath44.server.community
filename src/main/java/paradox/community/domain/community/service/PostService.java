@@ -10,7 +10,6 @@ import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.model.Post;
-import paradox.community.domain.community.model.PostStatus;
 import paradox.community.domain.community.repository.PostRepository;
 
 @Service
@@ -21,7 +20,7 @@ public class PostService {
     private final PostRepository postRepository;
 
     @Transactional
-    public PostResponse createResponse(String userId, PostCreateRequest request) {
+    public PostResponse createPost(String userId, PostCreateRequest request) {
         Post post = Post.builder()
                 .userId(userId)
                 .characterId(request.characterId())
