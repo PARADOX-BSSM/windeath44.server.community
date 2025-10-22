@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.model.Judgment;
+import paradox.community.domain.judgment.model.JudgmentLike;
 import paradox.community.domain.judgment.repository.JudgmentCommentLikeRepository;
 import paradox.community.domain.judgment.repository.JudgmentLikeRepository;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
@@ -22,6 +23,25 @@ public class JudgmentLikeService {
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Judgment with id: " + judgmentId + " not found"));
 
+        return judgmentLikeRepository.findByUserIdAndJudgmentId(userId, judgmentId)
+                .map(like -> {
+                    judgmentLikeRepository.delete(like);
+                    judgment.decrementLikesCount();
+                    return false;
+                })
+                .orElseGet(() -> {
+                    JudgmentLike newLike = JudgmentLike.builder()
+                            .userId(userId)
+                            .judgmentId(judgmentId)
+                            .build();
+                    judgmentLikeRepository.save(newLike);
+                    judgment.incrementLikesCount();
+                    return true;
+                });
+
+    }
+
+    public Boolean isLiked(String userId, Long judgmentId) {
         return judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId);
     }
 }
