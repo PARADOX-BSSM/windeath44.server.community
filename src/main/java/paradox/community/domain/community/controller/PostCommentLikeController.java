@@ -46,11 +46,7 @@ public class PostCommentLikeController {
             return ResponseEntity.badRequest().build();
         }
 
-        ApiResponse<PostCommentLikeResponse> response = new ApiResponse<>(
-                "like deleted successfully",
-                postCommentLikeResponse
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(HttpUtil.success("like deleted successfully", postCommentLikeResponse));
     }
 
     // 좋아요 여부 확인
