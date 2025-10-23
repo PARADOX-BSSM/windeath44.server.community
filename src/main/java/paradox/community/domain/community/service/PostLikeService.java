@@ -33,7 +33,7 @@ public class PostLikeService {
     // 좋아요 취소
     @Transactional
     public void removePostLike(Long postId, String userId) {
-        if (!postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
+        if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
             postLikeRepository.deleteByUserIdAndPostId(userId, postId);
         }
     }
@@ -42,4 +42,6 @@ public class PostLikeService {
     public Boolean isLiked(String userId, Long postId) {
         return postLikeRepository.existsByUserIdAndPostId(userId, postId);
     }
+
+    // ㅈ
 }
