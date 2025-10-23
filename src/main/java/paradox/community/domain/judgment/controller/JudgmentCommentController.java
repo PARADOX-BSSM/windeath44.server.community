@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.request.JudgmentCommentRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentCommentResponse;
-import paradox.community.domain.judgment.repository.JudgmentRepository;
 import paradox.community.domain.judgment.service.JudgmentCommentService;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
@@ -19,7 +18,6 @@ import java.util.List;
 @Slf4j
 public class JudgmentCommentController {
     private final JudgmentCommentService commentService;
-    private final JudgmentRepository judgmentRepository;
 
     @PostMapping("/{judgmentId}/comments")
     public ResponseEntity<ApiResponse<JudgmentCommentResponse>> createComment(

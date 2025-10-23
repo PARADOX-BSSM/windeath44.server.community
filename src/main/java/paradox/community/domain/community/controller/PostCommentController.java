@@ -6,8 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.request.PostCommentRequest;
 import paradox.community.domain.community.dto.response.PostCommentResponse;
-import paradox.community.domain.community.model.PostComment;
-import paradox.community.domain.community.repository.PostRepository;
 import paradox.community.domain.community.service.PostCommentService;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
@@ -19,7 +17,6 @@ import java.util.List;
 @RequestMapping("/communities/posts")
 public class PostCommentController {
     private final PostCommentService commentService;
-    private final PostRepository postRepository;
 
     @PostMapping("/{postId}/comments")
     public ResponseEntity<ApiResponse<PostCommentResponse>> createComment(
