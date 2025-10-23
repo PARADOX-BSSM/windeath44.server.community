@@ -2,28 +2,29 @@ package paradox.community.domain.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.response.PostLikeResponse;
 import paradox.community.domain.community.service.PostLikeService;
 import paradox.community.global.dto.ApiResponse;
+import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/communities/posts/{post-id}/likes")
 public class PostLikeController {
+
     private final PostLikeService postLikeService;
 
+    // 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<PostLikeResponse>> registerPostLike(
             @PathVariable("post-id") Long postId,
             @RequestHeader("user-id") String userId
     ) {
-        PostLikeResponse postLikeResponse =
-                postLikeService.addPostLike(postId, userId);
+        PostLikeResponse postLikeResponse = postLikeService.addPostLike(postId, userId);
 
-        if (postLikeResponse == null) {
-            return ResponseEntity.badRequest().build();
-        }
+        if (postLikeResponse == null) return ResponseEntity.badRequest().build();
 
         ApiResponse<PostLikeResponse> response = new ApiResponse<>(
                 "like registered successfully",
@@ -32,22 +33,21 @@ public class PostLikeController {
         return ResponseEntity.status(201).body(response);
     }
 
+    // 좋아요 취소
     @DeleteMapping
-    public ResponseEntity<ApiResponse<PostLikeResponse>> deletePostLike(
+    public ResponseEntity<ApiResponse<Void>> deletePostLike(
             @PathVariable("post-id") Long postId,
             @RequestHeader("user-id") String userId
     ) {
-        PostLikeResponse postLikeResponse =
-                postLikeService.removePostLike(postId, userId);
-
-        if (postLikeResponse == null) {
-            return ResponseEntity.badRequest().build();
+        if (postLikeService.isLiked(userId, postId)) {
+            postLikeService.removePostLike(postId, userId);
         }
 
-        ApiResponse<PostLikeResponse> response = new ApiResponse<>(
-                "like deleted successfully",
-                postLikeResponse
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(HttpUtil.success("success canceal post like"));
+    }
+
+    // 좋아요 여부 확인
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostLiked(@PathVariable Long postId, @RequestParam String userId) {
+        return ResponseEntity.ok(HttpUtil.success("succes check post liked",  postLikeService.isLiked(userId, postId)));
     }
 }

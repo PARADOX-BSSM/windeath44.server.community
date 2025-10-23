@@ -22,7 +22,7 @@ public class JudgmentLikeController {
 
         if (judgmentLikeResponse == null) return ResponseEntity.badRequest().build();
 
-        return ResponseEntity.ok(HttpUtil.success("Success add judgment like",  judgmentLikeResponse));
+        return ResponseEntity.status(201).body(HttpUtil.success("Success register judgment like",  judgmentLikeResponse));
     }
 
     // 좋아요 취소
