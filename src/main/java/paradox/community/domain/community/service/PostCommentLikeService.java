@@ -11,23 +11,23 @@ import paradox.community.domain.community.repository.PostCommentLikeRepository;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostCommentLikeService {
+
     private final PostCommentLikeRepository postCommentLikeRepository;
 
-    public PostCommentLikeResponse addPostCommentLike(Long commentId, String userId) {
+    @Transactional
+    public PostCommentLikeResponse addPostCommentLike(Long commentId, Long postId, String userId) {
         if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
             return null;
+        }else {
+            PostCommentLike postCommentLike = PostCommentLike.builder()
+                    .postId(postId)
+                    .postCommentId(commentId)
+                    .build();
+
+            PostCommentLike saved = postCommentLikeRepository.save(postCommentLike);
+
+            return PostCommentLikeResponse.from(saved);
         }
-
-        PostCommentLike postLike = PostCommentLike.builder()
-                .postCommentId(commentId).userId(userId).build();
-
-        PostCommentLike saved = postCommentLikeRepository.save(postLike);
-
-        return new PostCommentLikeResponse(
-                saved.getPostCommentId(),
-                postCommentLikeRepository.findPostIdByPostCommentId(saved.getPostCommentId()),
-                saved.getUserId()
-        );
     }
 
     public PostCommentLikeResponse removePostCommentLike(Long commentId, String userId) {
@@ -40,5 +40,9 @@ public class PostCommentLikeService {
                 postCommentLikeRepository.findPostIdByPostCommentId(commentId),
                 userId
         );
+    }
+
+    public Boolean isLiked(Long postCommentId, String userId) {
+        return postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, postCommentId);
     }
 }

@@ -22,10 +22,9 @@ public class PostCommentLike {
     @Column(name = "user_id", nullable = false)
     private String userId; // 좋아요를 누른 사용자
 
-    @Column(name = "post_comment_id", nullable = false)
-    private Long postCommentId;
+    @Column(name = "post_id", nullable = false)
+    private Long postId; // 좋아요가 달린 게시글
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "post_comment_id", insertable = false, updatable = false)
-    private PostComment postComment; // 좋아요가 달린 게시글 댓글
+    @Column(name = "post_comment_id", nullable = false)
+    private Long postCommentId; // 좋아요가 달린 게시글 댓글
 }
