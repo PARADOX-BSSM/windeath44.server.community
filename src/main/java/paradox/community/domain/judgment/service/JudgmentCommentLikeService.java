@@ -11,7 +11,7 @@ import paradox.community.domain.judgment.repository.JudgmentCommentRepository;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class JudgementCommentLikeService {
+public class JudgmentCommentLikeService {
 
     private final JudgmentCommentLikeRepository judgmentCommentLikeRepository;
     private final JudgmentCommentRepository judgmentCommentRepository;
