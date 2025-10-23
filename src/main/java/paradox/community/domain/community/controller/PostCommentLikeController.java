@@ -35,18 +35,17 @@ public class PostCommentLikeController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<PostCommentLikeResponse>> deletePostCommentLike(
+    public ResponseEntity<ApiResponse<Void>> deletePostCommentLike(
             @PathVariable("comment-id") Long commentId,
             @RequestHeader("user-id") String userId
     ) {
-        PostCommentLikeResponse postCommentLikeResponse =
-                postCommentLikeService.removePostCommentLike(commentId, userId);
+        if (postCommentLikeService.isLiked(commentId, userId)) {
+            postCommentLikeService.removePostCommentLike(commentId, userId);
 
-        if (postCommentLikeResponse == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(HttpUtil.success("like deleted successfully"));
         }
 
-        return ResponseEntity.ok(HttpUtil.success("like deleted successfully", postCommentLikeResponse));
+        return ResponseEntity.badRequest().build();
     }
 
     // 좋아요 여부 확인
