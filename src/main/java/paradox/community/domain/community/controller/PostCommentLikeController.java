@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.response.PostCommentLikeResponse;
 import paradox.community.domain.community.service.PostCommentLikeService;
 import paradox.community.global.dto.ApiResponse;
+import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -16,10 +17,11 @@ public class PostCommentLikeController {
     @PostMapping
     public ResponseEntity<ApiResponse<PostCommentLikeResponse>> registerPostCommentLike(
             @PathVariable("comment-id") Long commentId,
+            @PathVariable("post-id") Long postId,
             @RequestHeader("user-id") String userId
     ) {
         PostCommentLikeResponse postCommentLikeResponse =
-                postCommentLikeService.addPostCommentLike(commentId, userId);
+                postCommentLikeService.addPostCommentLike(commentId, postId, userId);
 
         if (postCommentLikeResponse == null) {
             return ResponseEntity.badRequest().build();
@@ -49,5 +51,11 @@ public class PostCommentLikeController {
                 postCommentLikeResponse
         );
         return ResponseEntity.ok(response);
+    }
+
+    // 좋아요 여부 확인
+    @GetMapping
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long postId, @PathVariable Long commentId, @RequestHeader String userId) {
+        return ResponseEntity.ok(HttpUtil.success("success check post comment liked"), postCommentLikeService.isLiked(commentId, userId));
     }
 }
