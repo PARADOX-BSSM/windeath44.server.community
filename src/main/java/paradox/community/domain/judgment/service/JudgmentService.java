@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
-import paradox.community.domain.judgment.dto.response.JudgmentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentStatus;
@@ -23,7 +22,7 @@ public class JudgmentService {
     private final VoteRepository voteRepository;
 
     @Transactional
-    public JudgmentCreateResponse createJudgment(JudgmentCreateRequest request) {
+    public JudgmentResponse createJudgment(JudgmentCreateRequest request) {
         Judgment judgment = Judgment.builder()
                 .characterId(request.characterId())
                 .title(request.title())
@@ -34,7 +33,7 @@ public class JudgmentService {
                 .build();
 
         Judgment savedJudgment = judgmentRepository.save(judgment);
-        return JudgmentCreateResponse.from(savedJudgment);
+        return JudgmentResponse.from(savedJudgment);
     }
 
     @Transactional

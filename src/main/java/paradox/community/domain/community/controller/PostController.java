@@ -45,7 +45,7 @@ public class PostController {
     }
 
     // 게시글 수정
-    @PutMapping("/{postId}")
+    @PatchMapping("/{postId}")
     public ResponseEntity<ApiResponse<PostResponse>> updatePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @Valid @RequestBody PostUpdateRequest request) {
         PostResponse post = postService.updatePost(postId, userId, request);
         return ResponseEntity.ok(HttpUtil.success("success post update", post));

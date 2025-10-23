@@ -86,7 +86,7 @@ public class JudgmentCommentController {
             @RequestHeader("user-id") String userId,
             @PathVariable Long judgmentId,
             @PathVariable Long parentCommentId) {
-        List<JudgmentCommentResponse> replies = commentService.getRepliesByComment(userId, parentCommentId);
+        List<JudgmentCommentResponse> replies = commentService.getRepliesByParentCommentId(userId, parentCommentId);
 
         return ResponseEntity.ok(
                 HttpUtil.success(

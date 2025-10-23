@@ -101,8 +101,11 @@ public class JudgmentCommentService {
 
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(commentId);
 
+        for (JudgmentComment reply : replies) {
+            commentLikeRepository.deleteByCommentId(reply.getCommentId());
+        }
         commentRepository.deleteAll(replies);
-
+        commentLikeRepository.deleteByCommentId(commentId);
         commentRepository.delete(comment);
         log.info("Comment deleted - commentId: {}, userId: {}", commentId, userId);
     }
@@ -135,7 +138,7 @@ public class JudgmentCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<JudgmentCommentResponse> getRepliesByComment(String userId, Long parentCommentId) {
+    public List<JudgmentCommentResponse> getRepliesByParentCommentId(String userId, Long parentCommentId) {
         commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
 
