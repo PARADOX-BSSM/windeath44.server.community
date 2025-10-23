@@ -1,7 +1,6 @@
 package paradox.community.domain.community.controller;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Null;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -12,7 +11,6 @@ import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.service.PostService;
-import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 

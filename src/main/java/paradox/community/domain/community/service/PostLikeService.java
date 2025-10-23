@@ -13,6 +13,7 @@ import paradox.community.domain.community.repository.PostLikeRepository;
 public class PostLikeService {
     private final PostLikeRepository postLikeRepository;
 
+    @Transactional
     public PostLikeResponse addPostLike(Long postId, String userId) {
         if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
             return null;
@@ -25,6 +26,7 @@ public class PostLikeService {
         return PostLikeResponse.from(saved);
     }
 
+    @Transactional
     public PostLikeResponse removePostLike(Long postId, String userId) {
         if (!postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
             return null;
