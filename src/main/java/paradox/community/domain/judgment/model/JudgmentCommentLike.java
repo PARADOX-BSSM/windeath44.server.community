@@ -25,7 +25,6 @@ public class JudgmentCommentLike {
     @Column(name = "comment_id", nullable = false)
     private Long commentId; // 댓글 아이디
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id", insertable = false, updatable = false)
-    private JudgmentComment judgmentComment; // 좋아요가 달린 댓글
+    @Column(name = "judgment_comment_id", nullable = false)
+    private Long judgmentCommentId; // 좋아요가 달린 댓글
 }
