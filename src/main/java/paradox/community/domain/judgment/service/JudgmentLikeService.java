@@ -1,16 +1,11 @@
 package paradox.community.domain.judgment.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import paradox.community.domain.community.dto.response.PostLikeResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentLikeResponse;
-import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentLike;
 import paradox.community.domain.judgment.repository.JudgmentLikeRepository;
-import paradox.community.domain.judgment.repository.JudgmentRepository;
-import paradox.community.global.dto.ApiResponse;
 
 @Service
 @Transactional(readOnly = true)
@@ -37,7 +32,7 @@ public class JudgmentLikeService {
     @Transactional
     public void removeJudgmentLike(String userId, Long judgmentId) {
         if (judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
-            judgmentLikeRepository.deleteById(judgmentId);
+            judgmentLikeRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
         }
     }
 

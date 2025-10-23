@@ -11,27 +11,28 @@ import paradox.community.domain.community.repository.PostLikeRepository;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostLikeService {
+
     private final PostLikeRepository postLikeRepository;
 
     @Transactional
     public PostLikeResponse addPostLike(Long postId, String userId) {
         if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
             return null;
+        }else {
+            PostLike postLike = PostLike.builder()
+                    .postId(postId)
+                    .userId(userId)
+                    .build();
+
+            PostLike saved = postLikeRepository.save(postLike);
+            return PostLikeResponse.from(saved);
         }
-        PostLike postLike = PostLike.builder()
-                        .postId(postId).userId(userId).build();
-
-        PostLike saved = postLikeRepository.save(postLike);
-
-        return PostLikeResponse.from(saved);
     }
 
     @Transactional
-    public PostLikeResponse removePostLike(Long postId, String userId) {
+    public void removePostLike(Long postId, String userId) {
         if (!postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
-            return null;
+            postLikeRepository.deleteByUserIdAndPostId(userId, postId);
         }
-        postLikeRepository.deleteByUserIdAndPostId(userId, postId);
-        return new PostLikeResponse(postId, userId);
     }
 }
