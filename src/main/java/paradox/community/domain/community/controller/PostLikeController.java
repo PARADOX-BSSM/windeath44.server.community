@@ -41,9 +41,11 @@ public class PostLikeController {
     ) {
         if (postLikeService.isLiked(userId, postId)) {
             postLikeService.removePostLike(postId, userId);
+
+            return ResponseEntity.ok(HttpUtil.success("success canceal post like"));
         }
 
-        return ResponseEntity.ok(HttpUtil.success("success canceal post like"));
+        return ResponseEntity.badRequest().build();
     }
 
     // 좋아요 여부 확인
