@@ -43,5 +43,4 @@ public class PostLikeService {
         return postLikeRepository.existsByUserIdAndPostId(userId, postId);
     }
 
-    // ㅈ
 }
