@@ -3,10 +3,10 @@ package paradox.community.domain.judgment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import paradox.community.domain.judgment.dto.response.JudgmentCommentLikeResponse;
 import paradox.community.domain.judgment.model.JudgmentComment;
 import paradox.community.domain.judgment.model.JudgmentCommentLike;
 import paradox.community.domain.judgment.repository.JudgmentCommentLikeRepository;
-import paradox.community.domain.judgment.repository.JudgmentCommentRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -14,28 +14,26 @@ import paradox.community.domain.judgment.repository.JudgmentCommentRepository;
 public class JudgmentCommentLikeService {
 
     private final JudgmentCommentLikeRepository judgmentCommentLikeRepository;
-    private final JudgmentCommentRepository judgmentCommentRepository;
 
     @Transactional
-    public Boolean toggleLike(String userId, Long commentId) {
-        JudgmentComment judgmentComment = judgmentCommentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("Judgment not found"));
+    public JudgmentCommentLikeResponse addJudgmentCommentLike(String userId, Long judgmentCommentId) {
+        if (judgmentCommentLikeRepository.existsByUserIdAndCommentId(userId, judgmentCommentId)) {
+            return null;
+        }else {
+            JudgmentCommentLike judgmentCommentLike = JudgmentCommentLike.builder()
+                    .userId(userId)
+                    .judgmentCommentId(judgmentCommentId).build();
 
-        return judgmentCommentLikeRepository.findByUserIdAndCommentId(userId, commentId)
-                .map(like -> {
-                    judgmentCommentLikeRepository.delete(like);
-                    judgmentComment.decrementLikesCount();
-                    return false;
-                })
-                .orElseGet(() -> {
-                    JudgmentCommentLike newlike = JudgmentCommentLike.builder()
-                            .userId(userId)
-                            .commentId(commentId)
-                            .build();
-                    judgmentCommentLikeRepository.save(newlike);
-                    judgmentComment.incrementLikesCount();
-                    return true;
-                });
+            JudgmentCommentLike saved = judgmentCommentLikeRepository.save(judgmentCommentLike);
+            return JudgmentCommentLikeResponse.from(saved);
+        }
+    }
+
+    @Transactional
+    public void removeJudgmentCommentLike(String userId, Long judgmentCommentId) {
+        if (judgmentCommentLikeRepository.existsByUserIdAndCommentId(userId, judgmentCommentId)) {
+            judgmentCommentLikeRepository.deleteById(judgmentCommentId);
+        }
     }
 
     public Boolean isLiked(Long commentId, String userId) {
