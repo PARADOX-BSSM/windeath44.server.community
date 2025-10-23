@@ -47,6 +47,7 @@ public class PostLikeController {
     }
 
     // 좋아요 여부 확인
+    @GetMapping
     public ResponseEntity<ApiResponse<Boolean>> alreadyPostLiked(@PathVariable Long postId, @RequestHeader String userId) {
         return ResponseEntity.ok(HttpUtil.success("succes check post liked",  postLikeService.isLiked(userId, postId)));
     }
