@@ -4,10 +4,9 @@ import paradox.community.domain.judgment.model.JudgmentLike;
 
 public record JudgmentLikeResponse(
         Long likeId,
-        Long judgmentId,
-        String userId
+        Long judgmentId
 ) {
     public static JudgmentLikeResponse from(JudgmentLike judgmentLike) {
-        return new JudgmentLikeResponse(judgmentLike.getLikeId(), judgmentLike.getJudgmentId(), judgmentLike.getUserId());
+        return new JudgmentLikeResponse(judgmentLike.getLikeId(), judgmentLike.getJudgmentId());
     }
 }
