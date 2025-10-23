@@ -10,18 +10,17 @@ import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/posts/{post-id}/comments/{comment-id}/likes")
+@RequestMapping("/communities/posts/comments/{comment-id}/likes")
 public class PostCommentLikeController {
     private final PostCommentLikeService postCommentLikeService;
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostCommentLikeResponse>> registerPostCommentLike(
             @PathVariable("comment-id") Long commentId,
-            @PathVariable("post-id") Long postId,
             @RequestHeader("user-id") String userId
     ) {
         PostCommentLikeResponse postCommentLikeResponse =
-                postCommentLikeService.addPostCommentLike(commentId, postId, userId);
+                postCommentLikeService.addPostCommentLike(commentId, userId);
 
         if (postCommentLikeResponse == null) {
             return ResponseEntity.badRequest().build();
@@ -50,7 +49,7 @@ public class PostCommentLikeController {
 
     // 좋아요 여부 확인
     @GetMapping
-    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long postId, @PathVariable Long commentId, @RequestHeader String userId) {
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long commentId, @RequestHeader String userId) {
         return ResponseEntity.ok(HttpUtil.success("success check post comment liked", postCommentLikeService.isLiked(commentId, userId)));
     }
 }

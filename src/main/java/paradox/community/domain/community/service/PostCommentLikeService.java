@@ -15,12 +15,11 @@ public class PostCommentLikeService {
     private final PostCommentLikeRepository postCommentLikeRepository;
 
     @Transactional
-    public PostCommentLikeResponse addPostCommentLike(Long commentId, Long postId, String userId) {
+    public PostCommentLikeResponse addPostCommentLike(Long commentId, String userId) {
         if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
             return null;
         }else {
             PostCommentLike postCommentLike = PostCommentLike.builder()
-                    .postId(postId)
                     .postCommentId(commentId)
                     .build();
 
