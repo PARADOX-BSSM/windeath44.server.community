@@ -138,7 +138,7 @@ public class JudgmentCommentService {
     }
 
     @Transactional(readOnly = true)
-    public List<JudgmentCommentResponse> getRepliesByComment(String userId, Long parentCommentId) {
+    public List<JudgmentCommentResponse> getRepliesByParentCommentId(String userId, Long parentCommentId) {
         commentRepository.findById(parentCommentId)
                 .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
 
