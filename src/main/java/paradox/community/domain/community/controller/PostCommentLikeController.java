@@ -56,6 +56,6 @@ public class PostCommentLikeController {
     // 좋아요 여부 확인
     @GetMapping
     public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long postId, @PathVariable Long commentId, @RequestHeader String userId) {
-        return ResponseEntity.ok(HttpUtil.success("success check post comment liked"), postCommentLikeService.isLiked(commentId, userId));
+        return ResponseEntity.ok(HttpUtil.success("success check post comment liked", postCommentLikeService.isLiked(commentId, userId)));
     }
 }
