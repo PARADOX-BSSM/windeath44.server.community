@@ -31,16 +31,10 @@ public class PostCommentLikeService {
     }
 
     @Transactional
-    public PostCommentLikeResponse removePostCommentLike(Long commentId, String userId) {
-        if (!postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
-            return null;
+    public void removePostCommentLike(Long commentId, String userId) {
+        if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
+            postCommentLikeRepository.deleteByUserIdAndPostCommentId(userId, commentId);
         }
-        postCommentLikeRepository.deleteByUserIdAndPostCommentId(userId, commentId);
-        return new PostCommentLikeResponse(
-                commentId,
-                postCommentLikeRepository.findPostIdByPostCommentId(commentId),
-                userId
-        );
     }
 
     public Boolean isLiked(Long postCommentId, String userId) {
