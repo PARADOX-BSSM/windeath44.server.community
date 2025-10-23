@@ -30,6 +30,7 @@ public class PostCommentLikeService {
         }
     }
 
+    @Transactional
     public PostCommentLikeResponse removePostCommentLike(Long commentId, String userId) {
         if (!postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
             return null;
