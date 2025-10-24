@@ -3,10 +3,9 @@ package paradox.community.domain.judgment.service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import paradox.community.domain.judgment.model.Judgment;
+import paradox.community.domain.judgment.dto.response.JudgmentLikeResponse;
 import paradox.community.domain.judgment.model.JudgmentLike;
 import paradox.community.domain.judgment.repository.JudgmentLikeRepository;
-import paradox.community.domain.judgment.repository.JudgmentRepository;
 
 @Service
 @Transactional(readOnly = true)
@@ -14,29 +13,27 @@ import paradox.community.domain.judgment.repository.JudgmentRepository;
 public class JudgmentLikeService {
 
     private final JudgmentLikeRepository judgmentLikeRepository;
-    private final JudgmentRepository judgmentRepository;
 
     @Transactional
-    public Boolean toggleLike(String userId, Long judgmentId) {
-        Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Judgment with id: " + judgmentId + " not found"));
+    public JudgmentLikeResponse addJudgmentLike(String userId, Long judgmentId) {
+        if (judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
+            return null;
+        }else {
+            JudgmentLike judgmentLike = JudgmentLike.builder()
+                    .judgmentId(judgmentId)
+                    .userId(userId)
+                    .build();
 
-        return judgmentLikeRepository.findByUserIdAndJudgmentId(userId, judgmentId)
-                .map(like -> {
-                    judgmentLikeRepository.delete(like);
-                    judgment.decrementLikesCount();
-                    return false;
-                })
-                .orElseGet(() -> {
-                    JudgmentLike newLike = JudgmentLike.builder()
-                            .userId(userId)
-                            .judgmentId(judgmentId)
-                            .build();
-                    judgmentLikeRepository.save(newLike);
-                    judgment.incrementLikesCount();
-                    return true;
-                });
+            JudgmentLike saved = judgmentLikeRepository.save(judgmentLike);
+            return JudgmentLikeResponse.from(saved);
+        }
+    }
 
+    @Transactional
+    public void removeJudgmentLike(String userId, Long judgmentId) {
+        if (judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
+            judgmentLikeRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
+        }
     }
 
     public Boolean isLiked(String userId, Long judgmentId) {

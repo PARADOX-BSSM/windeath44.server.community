@@ -6,10 +6,11 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.response.PostCommentLikeResponse;
 import paradox.community.domain.community.service.PostCommentLikeService;
 import paradox.community.global.dto.ApiResponse;
+import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/posts/{post-id}/comments/{comment-id}/likes")
+@RequestMapping("/communities/posts/comments/{comment-id}/likes")
 public class PostCommentLikeController {
     private final PostCommentLikeService postCommentLikeService;
 
@@ -33,21 +34,22 @@ public class PostCommentLikeController {
     }
 
     @DeleteMapping
-    public ResponseEntity<ApiResponse<PostCommentLikeResponse>> deletePostCommentLike(
+    public ResponseEntity<ApiResponse<Void>> deletePostCommentLike(
             @PathVariable("comment-id") Long commentId,
             @RequestHeader("user-id") String userId
     ) {
-        PostCommentLikeResponse postCommentLikeResponse =
-                postCommentLikeService.removePostCommentLike(commentId, userId);
+        if (postCommentLikeService.isLiked(commentId, userId)) {
+            postCommentLikeService.removePostCommentLike(commentId, userId);
 
-        if (postCommentLikeResponse == null) {
-            return ResponseEntity.badRequest().build();
+            return ResponseEntity.ok(HttpUtil.success("like deleted successfully"));
         }
 
-        ApiResponse<PostCommentLikeResponse> response = new ApiResponse<>(
-                "like deleted successfully",
-                postCommentLikeResponse
-        );
-        return ResponseEntity.ok(response);
+        return ResponseEntity.badRequest().build();
+    }
+
+    // 좋아요 여부 확인
+    @GetMapping
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long commentId, @RequestHeader String userId) {
+        return ResponseEntity.ok(HttpUtil.success("success check post comment liked", postCommentLikeService.isLiked(commentId, userId)));
     }
 }

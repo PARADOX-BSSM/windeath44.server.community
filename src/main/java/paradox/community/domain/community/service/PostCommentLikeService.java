@@ -11,34 +11,32 @@ import paradox.community.domain.community.repository.PostCommentLikeRepository;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class PostCommentLikeService {
+
     private final PostCommentLikeRepository postCommentLikeRepository;
 
+    @Transactional
     public PostCommentLikeResponse addPostCommentLike(Long commentId, String userId) {
         if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
             return null;
+        }else {
+            PostCommentLike postCommentLike = PostCommentLike.builder()
+                    .postCommentId(commentId)
+                    .build();
+
+            PostCommentLike saved = postCommentLikeRepository.save(postCommentLike);
+
+            return PostCommentLikeResponse.from(saved);
         }
-
-        PostCommentLike postLike = PostCommentLike.builder()
-                .postCommentId(commentId).userId(userId).build();
-
-        PostCommentLike saved = postCommentLikeRepository.save(postLike);
-
-        return new PostCommentLikeResponse(
-                saved.getPostCommentId(),
-                postCommentLikeRepository.findPostIdByPostCommentId(saved.getPostCommentId()),
-                saved.getUserId()
-        );
     }
 
-    public PostCommentLikeResponse removePostCommentLike(Long commentId, String userId) {
-        if (!postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
-            return null;
+    @Transactional
+    public void removePostCommentLike(Long commentId, String userId) {
+        if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
+            postCommentLikeRepository.deleteByUserIdAndPostCommentId(userId, commentId);
         }
-        postCommentLikeRepository.deleteByUserIdAndPostCommentId(userId, commentId);
-        return new PostCommentLikeResponse(
-                commentId,
-                postCommentLikeRepository.findPostIdByPostCommentId(commentId),
-                userId
-        );
+    }
+
+    public Boolean isLiked(Long postCommentId, String userId) {
+        return postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, postCommentId);
     }
 }
