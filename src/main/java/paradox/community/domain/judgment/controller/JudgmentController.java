@@ -44,9 +44,9 @@ public class JudgmentController {
 
     // 재판 생성 (관리자용)
     @PostMapping
-    public ResponseEntity<ApiResponse<JudgmentCreateResponse>> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
-        JudgmentCreateResponse judgment = judgmentService.createJudgment(request);
-        return ResponseEntity.status(HttpStatus.CREATED).body(HttpUtil.success("success judgment create response", judgment));
+    public ResponseEntity<ApiResponse<JudgmentResponse>> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
+        JudgmentResponse judgment = judgmentService.createJudgment(request);
+        return ResponseEntity.status(201).body(HttpUtil.success("success judgment create response", judgment));
     }
 
     // 재판 수정 (관리자용)
