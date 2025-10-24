@@ -39,7 +39,7 @@ public class PostController {
     @PostMapping
     public ResponseEntity<ApiResponse<PostResponse>> createPost(@RequestHeader("user-id") String userId, @Valid @RequestBody PostCreateRequest request) {
         PostResponse post = postService.createPost(userId, request);
-        return ResponseEntity.ok(HttpUtil.success("success post create", post));
+        return ResponseEntity.status(201).body(HttpUtil.success("success post create", post));
     }
 
     // 게시글 수정
