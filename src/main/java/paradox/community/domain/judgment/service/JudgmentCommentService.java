@@ -44,8 +44,8 @@ public class JudgmentCommentService {
 
         JudgmentComment savedComment = commentRepository.save(comment);
 
-        Long likeCount = commentLikeRepository.countByCommentId(savedComment.getCommentId());
-        Boolean isLiked = commentLikeRepository.existsByUserIdAndCommentId(userId, savedComment.getCommentId());
+        Long likeCount = commentLikeRepository.countByJudgmentCommentId(savedComment.getCommentId());
+        Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, savedComment.getCommentId());
 
         log.info("Comment created - commentId: {}, userId: {}, judgmentId: {}", savedComment.getCommentId(), userId, judgmentId);
 
@@ -73,8 +73,8 @@ public class JudgmentCommentService {
         comment.setBody(request.body());
         JudgmentComment updatedComment = commentRepository.save(comment);
 
-        Long likeCount = commentLikeRepository.countByCommentId(commentId);
-        Boolean isLiked = commentLikeRepository.existsByUserIdAndCommentId(userId, commentId);
+        Long likeCount = commentLikeRepository.countByJudgmentCommentId(commentId);
+        Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, commentId);
 
         log.info("Comment update - commentId: {}, userId: {}", commentId, userId);
 
@@ -102,10 +102,10 @@ public class JudgmentCommentService {
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(commentId);
 
         for (JudgmentComment reply : replies) {
-            commentLikeRepository.deleteByCommentId(reply.getCommentId());
+            commentLikeRepository.deleteByJudgmentCommentId(reply.getCommentId());
         }
         commentRepository.deleteAll(replies);
-        commentLikeRepository.deleteByCommentId(commentId);
+        commentLikeRepository.deleteByJudgmentCommentId(commentId);
         commentRepository.delete(comment);
         log.info("Comment deleted - commentId: {}, userId: {}", commentId, userId);
     }
@@ -119,8 +119,8 @@ public class JudgmentCommentService {
 
         return comments.stream()
                 .map(comment -> {
-                    Long likeCount = commentLikeRepository.countByCommentId(comment.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndCommentId(userId, comment.getCommentId());
+                    Long likeCount = commentLikeRepository.countByJudgmentCommentId(comment.getCommentId());
+                    Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, comment.getCommentId());
 
                     return new JudgmentCommentResponse(
                             comment.getCommentId(),
@@ -146,8 +146,8 @@ public class JudgmentCommentService {
 
         return replies.stream()
                 .map(reply -> {
-                    Long likeCount = commentLikeRepository.countByCommentId(reply.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndCommentId(userId, reply.getCommentId());
+                    Long likeCount = commentLikeRepository.countByJudgmentCommentId(reply.getCommentId());
+                    Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, reply.getCommentId());
 
                     return new JudgmentCommentResponse(
                             reply.getCommentId(),
