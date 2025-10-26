@@ -17,7 +17,7 @@ public class JudgmentCommentLikeService {
 
     @Transactional
     public JudgmentCommentLikeResponse addJudgmentCommentLike(String userId, Long judgmentCommentId) {
-        if (judgmentCommentLikeRepository.existsByUserIdAndCommentId(userId, judgmentCommentId)) {
+        if (judgmentCommentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, judgmentCommentId)) {
             return null;
         }else {
             JudgmentCommentLike judgmentCommentLike = JudgmentCommentLike.builder()
@@ -31,12 +31,12 @@ public class JudgmentCommentLikeService {
 
     @Transactional
     public void removeJudgmentCommentLike(String userId, Long judgmentCommentId) {
-        if (judgmentCommentLikeRepository.existsByUserIdAndCommentId(userId, judgmentCommentId)) {
+        if (judgmentCommentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, judgmentCommentId)) {
             judgmentCommentLikeRepository.deleteById(judgmentCommentId);
         }
     }
 
     public Boolean isLiked(Long commentId, String userId) {
-        return judgmentCommentLikeRepository.findByUserIdAndCommentId(userId, commentId).isPresent();
+        return judgmentCommentLikeRepository.findByUserIdAndJudgmentCommentId(userId, commentId).isPresent();
     }
 }

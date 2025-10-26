@@ -10,7 +10,6 @@ import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.request.VoteRequest;
-import paradox.community.domain.judgment.dto.response.JudgmentCreateResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.dto.response.VoteResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
@@ -29,7 +28,7 @@ public class JudgmentController {
     private final VoteService voteService;
 
     // 제판 목록 조회
-    @PostMapping
+    @PostMapping("/list")
     public ResponseEntity<ApiResponse<Page<JudgmentResponse>>> getJudgments(JudgmentListRequest request, Pageable pageable) {
         Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.isEnd(), request.instance(), pageable);
         return ResponseEntity.ok(HttpUtil.success("success judgment list search", judgments));

@@ -22,7 +22,7 @@ public class PostController {
     private final PostService postService;
 
     // 게시글 목록 조회
-    @PostMapping
+    @PostMapping("/list")
     public ResponseEntity<ApiResponse<Page<PostResponse>>> getPosts(@RequestBody PostSearchRequest request, Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(request, pageable);
         return ResponseEntity.ok(HttpUtil.success("success post search", posts));
