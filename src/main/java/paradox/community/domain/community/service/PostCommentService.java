@@ -56,16 +56,15 @@ public class PostCommentService {
                 savedComment.getBody(),
                 savedComment.getCreatedAt(),
                 savedComment.getUpdatedAt(),
-                likeCount,
-                isLiked
+                likeCount
         );
     }
 
-    public PostCommentResponse updateComment(String userId, Long commentId, JudgmentCommentRequest request) {
+    public PostCommentResponse updateComment(String userId, Long commentId, PostCommentRequest request, String role) {
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
 
-        if (!comment.getUserId().equals(userId)) {
+        if (!role.equals("ADMIN") && !comment.getUserId().equals(userId)) {
             throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
         }
 
@@ -73,7 +72,6 @@ public class PostCommentService {
         PostComment updatedComment = commentRepository.save(comment);
 
         Long likeCount = commentLikeRepository.countByPostCommentId(commentId);
-        Boolean isLiked = commentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId);
 
         return new PostCommentResponse(
                 updatedComment.getCommentId(),
@@ -83,15 +81,14 @@ public class PostCommentService {
                 updatedComment.getBody(),
                 updatedComment.getCreatedAt(),
                 updatedComment.getUpdatedAt(),
-                likeCount,
-                isLiked
+                likeCount
         );
     }
 
-    public void deleteComment(String userId, Long commentId) {
+    public void deleteComment(String userId, Long commentId, String role) {
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
-        if (!comment.getUserId().equals(userId)) {
+        if (!role.equals("ADMIN") && !comment.getUserId().equals(userId)) {
             throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
         }
 
@@ -114,7 +111,6 @@ public class PostCommentService {
         return comments.stream()
                 .map(comment -> {
                     Long likeCount = commentLikeRepository.countByPostCommentId(comment.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndPostCommentId(userId, comment.getCommentId());
 
                     return new PostCommentResponse(
                             comment.getCommentId(),
@@ -124,8 +120,7 @@ public class PostCommentService {
                             comment.getBody(),
                             comment.getCreatedAt(),
                             comment.getUpdatedAt(),
-                            likeCount,
-                            isLiked
+                            likeCount
                     );
                 }).collect(Collectors.toList());
     }
@@ -140,7 +135,6 @@ public class PostCommentService {
         return replies.stream()
                 .map(reply -> {
                     Long likeCount = commentLikeRepository.countByPostCommentId(reply.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndPostCommentId(userId, reply.getCommentId());
 
                     return new PostCommentResponse(
                             reply.getCommentId(),
@@ -150,8 +144,7 @@ public class PostCommentService {
                             reply.getBody(),
                             reply.getCreatedAt(),
                             reply.getUpdatedAt(),
-                            likeCount,
-                            isLiked
+                            likeCount
                     );
                 }).collect(Collectors.toList());
     }
