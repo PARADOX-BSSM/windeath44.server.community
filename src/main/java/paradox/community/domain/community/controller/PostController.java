@@ -44,15 +44,15 @@ public class PostController {
 
     // 게시글 수정
     @PatchMapping("/{postId}")
-    public ResponseEntity<ApiResponse<PostResponse>> updatePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @Valid @RequestBody PostUpdateRequest request) {
-        PostResponse post = postService.updatePost(postId, userId, request);
+    public ResponseEntity<ApiResponse<PostResponse>> updatePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @RequestHeader("role") String role, @Valid @RequestBody PostUpdateRequest request) {
+        PostResponse post = postService.updatePost(postId, userId, request, role);
         return ResponseEntity.ok(HttpUtil.success("success post update", post));
     }
 
     // 게시글 삭제
     @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId, @RequestHeader("user-id") String userId) {
-        postService.deletePost(postId, userId);
+    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @RequestHeader("role") String role) {
+        postService.deletePost(postId, userId, role);
         return ResponseEntity.ok(HttpUtil.success("success post delete"));
     }
 }

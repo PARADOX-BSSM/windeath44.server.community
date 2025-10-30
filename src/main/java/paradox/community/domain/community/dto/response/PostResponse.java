@@ -26,7 +26,7 @@ public record PostResponse (
                 post.getTitle(),
                 post.getBody(),
                 post.getStatus(),
-                post.isBlind(),
+                post.getIsBlind(),
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 post.getViewsCount(),
