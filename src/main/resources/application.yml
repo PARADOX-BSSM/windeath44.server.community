@@ -16,6 +16,7 @@ spring:
   web:
     cors:
       allowed-origins:
+        - https://localhost:5173
         - https://localhost:5174
         - https://windeath44.wiki
       allowed-methods:
