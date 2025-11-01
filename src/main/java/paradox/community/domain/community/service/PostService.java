@@ -28,7 +28,7 @@ public class PostService {
                 .body(request.body())
                 .isBlind(request.isBlind())
                 .status(request.status())
-                .likesCount(0L)
+                .likesCount((Long) 0L)
                 .build();
 
         Post savedPost = postRepository.save(post);
@@ -62,11 +62,11 @@ public class PostService {
     }
 
     @Transactional
-    public PostResponse updatePost(Long postId, String userId, PostUpdateRequest request) {
+    public PostResponse updatePost(Long postId, String userId, PostUpdateRequest request, String role) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
 
-        if (!post.getUserId().equals(userId)) {
+        if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
             throw new IllegalArgumentException("Post can only be updated by authors!");
         }
 
@@ -75,11 +75,11 @@ public class PostService {
     }
 
     @Transactional
-    public void deletePost(Long postId, String userId) {
+    public void deletePost(Long postId, String userId, String role) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
 
-        if (!post.getUserId().equals(userId)) {
+        if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
             throw new IllegalArgumentException("Post can only be deleted by authors!");
         }
 

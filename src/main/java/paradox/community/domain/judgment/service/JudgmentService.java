@@ -22,7 +22,8 @@ public class JudgmentService {
     private final VoteRepository voteRepository;
 
     @Transactional
-    public JudgmentResponse createJudgment(JudgmentCreateRequest request) {
+    public JudgmentResponse createJudgment(JudgmentCreateRequest request, String role) {
+        if (!role.equals("ADMIN")) return null;
         Judgment judgment = Judgment.builder()
                 .characterId(request.characterId())
                 .title(request.title())
@@ -37,7 +38,9 @@ public class JudgmentService {
     }
 
     @Transactional
-    public JudgmentResponse updateJudgment(Long judgmentId, JudgmentUpdateRequest request) {
+    public JudgmentResponse updateJudgment(Long judgmentId, JudgmentUpdateRequest request, String role) {
+        if (!role.equals("ADMIN")) return null;
+
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
 
@@ -46,7 +49,9 @@ public class JudgmentService {
     }
 
     @Transactional
-    public JudgmentResponse endJudgment(Long judgmentId) {
+    public JudgmentResponse endJudgment(Long judgmentId, String role) {
+        if (!role.equals("ADMIN")) return null;
+
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
 

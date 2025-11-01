@@ -12,7 +12,6 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-@Setter
 @Builder
 @Table(name = "posts")
 public class Post {
@@ -32,7 +31,7 @@ public class Post {
     private String body; // 게시글의 내용 (이미지 URL 등 포함)
 
     @Column(name = "is_blind", nullable = false)
-    private boolean isBlind; // 스포일러 방지로 흐림 처리 (true or false)
+    private Boolean isBlind; // 스포일러 방지로 흐림 처리 (true or false)
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
@@ -47,10 +46,10 @@ public class Post {
     private LocalDateTime updatedAt; // 게시글 수정 시간
 
     @Column(name = "views_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
-    private Long viewsCount = 0L; // 조회수
+    private Long viewsCount = (Long) 0L; // 조회수
 
     @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
-    private Long likesCount = 0L; // 좋아요
+    private Long likesCount = (Long) 0L; // 좋아요
 
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted = false; // 논리 삭제

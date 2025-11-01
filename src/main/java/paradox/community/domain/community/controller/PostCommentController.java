@@ -24,6 +24,7 @@ public class PostCommentController {
     @PostMapping("/{postId}/comments")
     public ResponseEntity<ApiResponse<PostCommentResponse>> createComment(
             @RequestHeader("user-id") String userId,
+            @RequestHeader("role")
             @PathVariable Long postId,
             @RequestBody PostCommentRequest request) {
         PostCommentResponse response = commentService.createComment(userId, postId, request);
@@ -40,11 +41,12 @@ public class PostCommentController {
     @PatchMapping("/{postId}/comments/{commentId}")
     public ResponseEntity<ApiResponse<PostCommentResponse>> updateComment(
             @RequestHeader("user-id") String userId,
+            @RequestHeader("role") String role,
             @PathVariable Long postId,
             @PathVariable Long commnetId,
             @RequestBody PostCommentRequest request
     ) {
-        PostCommentResponse response = commentService.createComment(userId, postId, request);
+        PostCommentResponse response = commentService.updateComment(userId, postId, request, role);
 
         return ResponseEntity.ok(
                 HttpUtil.success("User id: " + userId + " successfully updated comment id: " + commnetId, response)
@@ -52,8 +54,8 @@ public class PostCommentController {
     }
 
     @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@RequestHeader("user-id") String userId, @PathVariable Long postId, @PathVariable Long commentId) {
-        commentService.deleteComment(userId, commentId);
+    public ResponseEntity<ApiResponse<Void>> deleteComment(@RequestHeader("user-id") String userId, @RequestHeader("role") String role, @PathVariable Long postId, @PathVariable Long commentId) {
+        commentService.deleteComment(userId, commentId, role);
 
         return ResponseEntity.ok(HttpUtil.success("User id: " + userId + " successfully deleted comment id: " + commentId));
     }

@@ -25,7 +25,6 @@ import paradox.community.global.util.HttpUtil;
 public class JudgmentController {
 
     private final JudgmentService judgmentService;
-    private final VoteService voteService;
 
     // 제판 목록 조회
     @PostMapping("/list")
@@ -43,22 +42,31 @@ public class JudgmentController {
 
     // 재판 생성 (관리자용)
     @PostMapping
-    public ResponseEntity<ApiResponse<JudgmentResponse>> createJudgment(@Valid @RequestBody JudgmentCreateRequest request) {
-        JudgmentResponse judgment = judgmentService.createJudgment(request);
+    public ResponseEntity<ApiResponse<JudgmentResponse>> createJudgment(@Valid @RequestBody JudgmentCreateRequest request, @RequestHeader("role") String role) {
+        JudgmentResponse judgment = judgmentService.createJudgment(request, role);
+
+        if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         return ResponseEntity.status(201).body(HttpUtil.success("success judgment create response", judgment));
     }
 
     // 재판 수정 (관리자용)
     @PostMapping("/{judgmentId}")
-    public ResponseEntity<ApiResponse<JudgmentResponse>> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request) {
-        JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request);
+    public ResponseEntity<ApiResponse<JudgmentResponse>> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request, @RequestHeader("role") String role) {
+        JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request, role);
+
+        if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         return ResponseEntity.ok(HttpUtil.success("success judgment cancel", judgment));
     }
 
     // 재판 종료 (관리자용)
     @PatchMapping("/{judgmentId}")
-    public ResponseEntity<ApiResponse<JudgmentResponse>> endJudgment(@PathVariable Long judgmentId) {
-        JudgmentResponse judgment = judgmentService.endJudgment(judgmentId);
+    public ResponseEntity<ApiResponse<JudgmentResponse>> endJudgment(@PathVariable Long judgmentId, @RequestHeader("role") String role) {
+        JudgmentResponse judgment = judgmentService.endJudgment(judgmentId, role);
+
+        if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+
         return ResponseEntity.ok(HttpUtil.success("success judgment end", judgment));
     }
 }
