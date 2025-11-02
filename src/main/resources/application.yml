@@ -13,19 +13,3 @@ spring:
     database-platform: ${DB_PLATFORM}
   server:
     port: ${SERVER_PORT}
-  web:
-    cors:
-      allowed-origins:
-        - https://localhost:5173
-        - https://localhost:5174
-        - https://windeath44.wiki
-      allowed-methods:
-        - GET
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-        - OPTIONS
-      allowed-headers: "*"
-      allow-credentials: true
-      max-age: 3600
