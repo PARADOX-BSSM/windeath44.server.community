@@ -17,6 +17,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/communities/judgments")
 @Slf4j
+@CrossOrigin(
+        origins = {
+                "http://localhost:5173",       // 테스트 1
+                "http://localhost:5174",      // 테스트 2
+                "https://windeath44.wiki" // 배포용 URL
+        },
+        allowCredentials = "true" // 필요하면 쿠키 허용
+)
 public class JudgmentCommentController {
     private final JudgmentCommentService commentService;
     private final JudgmentRepository judgmentRepository;
