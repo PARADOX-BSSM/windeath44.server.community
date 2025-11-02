@@ -10,5 +10,5 @@ public record PostCommentResponse(
         String body,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long likeCount
+        Long likesCount
 ) {}

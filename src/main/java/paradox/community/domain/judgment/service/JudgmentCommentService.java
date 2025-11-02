@@ -119,7 +119,7 @@ public class JudgmentCommentService {
 
         return comments.stream()
                 .map(comment -> {
-                    Long likeCount = commentLikeRepository.countByJudgmentCommentId(comment.getCommentId());
+                    Long likesCount = commentLikeRepository.countByJudgmentCommentId(comment.getCommentId());
                     Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, comment.getCommentId());
 
                     return new JudgmentCommentResponse(
@@ -130,7 +130,7 @@ public class JudgmentCommentService {
                             comment.getBody(),
                             comment.getCreatedAt(),
                             comment.getUpdatedAt(),
-                            likeCount,
+                            likesCount,
                             isLiked
                     );
                 })
@@ -146,7 +146,7 @@ public class JudgmentCommentService {
 
         return replies.stream()
                 .map(reply -> {
-                    Long likeCount = commentLikeRepository.countByJudgmentCommentId(reply.getCommentId());
+                    Long likesCount = commentLikeRepository.countByJudgmentCommentId(reply.getCommentId());
                     Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, reply.getCommentId());
 
                     return new JudgmentCommentResponse(
@@ -157,7 +157,7 @@ public class JudgmentCommentService {
                             reply.getBody(),
                             reply.getCreatedAt(),
                             reply.getUpdatedAt(),
-                            likeCount,
+                            likesCount,
                             isLiked
                     );
                 })

@@ -10,6 +10,6 @@ public record JudgmentCommentResponse(
         String body,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long likeCount,
+        Long likesCount,
         Boolean isLiked
 ) {}
