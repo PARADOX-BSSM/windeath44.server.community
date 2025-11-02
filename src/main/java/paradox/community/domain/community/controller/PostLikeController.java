@@ -2,7 +2,6 @@ package paradox.community.domain.community.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.response.PostLikeResponse;
 import paradox.community.domain.community.service.PostLikeService;
@@ -12,14 +11,6 @@ import paradox.community.global.util.HttpUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/communities/posts/{post-id}/likes")
-@CrossOrigin(
-        origins = {
-                "http://localhost:5173",       // 테스트 1
-                "http://localhost:5174",      // 테스트 2
-                "https://windeath44.wiki" // 배포용 URL
-        },
-        allowCredentials = "true" // 필요하면 쿠키 허용
-)
 public class PostLikeController {
 
     private final PostLikeService postLikeService;
