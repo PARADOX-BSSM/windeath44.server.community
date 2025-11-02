@@ -2,10 +2,8 @@ package paradox.community.domain.judgment.model;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.checkerframework.checker.units.qual.C;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 
@@ -28,12 +26,12 @@ public class Judgment {
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
 
-    @Column(name = "is_end", nullable = false)
-    private Boolean isEnd; // 재판이 끝났는지의 여부 (true or false)
+    @Column(name = "status", nullable = false)
+    private JudgementStatus status; // 재판의 상태 (
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private JudgmentStatus instance; // 재판 (1심, 2심, 3심)
+    private JudgmentInstance instance; // 재판 (1심, 2심, 3심)
 
     @Column(name = "start_at", nullable = false, updatable = false)
     private LocalDateTime startAt; // 재판 시간 시간
@@ -66,7 +64,7 @@ public class Judgment {
     }
 
     public void end() {
-        this.isEnd = true;
+        this.status = JudgementStatus.Ended;
     }
 
     public void decrementLikesCount() {

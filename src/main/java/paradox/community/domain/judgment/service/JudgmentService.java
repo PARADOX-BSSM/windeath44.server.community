@@ -8,8 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
+import paradox.community.domain.judgment.model.JudgementStatus;
 import paradox.community.domain.judgment.model.Judgment;
-import paradox.community.domain.judgment.model.JudgmentStatus;
+import paradox.community.domain.judgment.model.JudgmentInstance;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
 import paradox.community.domain.judgment.repository.VoteRepository;
 
@@ -27,7 +28,7 @@ public class JudgmentService {
                 .characterId(request.characterId())
                 .title(request.title())
                 .instance(request.instance())
-                .isEnd(false)
+                .status(JudgementStatus.InProgress)
                 .startAt(request.startAt())
                 .endAt(request.endAt())
                 .build();
@@ -61,7 +62,7 @@ public class JudgmentService {
         return JudgmentResponse.from(judgment);
     }
 
-    public Page<JudgmentResponse> getJudgments(Long characterId, Boolean isEnd, JudgmentStatus instance, Pageable pageable) {
+    public Page<JudgmentResponse> getJudgments(Long characterId, Boolean isEnd, JudgmentInstance instance, Pageable pageable) {
         Page<Judgment> judgments;
 
         if (characterId != null && isEnd != null && instance != null) {

@@ -1,7 +1,8 @@
 package paradox.community.domain.judgment.dto.response;
 
+import paradox.community.domain.judgment.model.JudgementStatus;
 import paradox.community.domain.judgment.model.Judgment;
-import paradox.community.domain.judgment.model.JudgmentStatus;
+import paradox.community.domain.judgment.model.JudgmentInstance;
 
 import java.time.LocalDateTime;
 
@@ -9,8 +10,8 @@ public record JudgmentResponse(
         Long judgmentId,
         String title,
         Long characterId,
-        JudgmentStatus instance,
-        Boolean isEnd,
+        JudgmentInstance instance,
+        JudgementStatus status,
         LocalDateTime startAt,
         LocalDateTime endAt,
         Long heavenCount,
@@ -24,7 +25,7 @@ public record JudgmentResponse(
                 judgment.getTitle(),
                 judgment.getCharacterId(),
                 judgment.getInstance(),
-                judgment.getIsEnd(),
+                judgment.getStatus(),
                 judgment.getStartAt(),
                 judgment.getEndAt(),
                 judgment.getHeavenCount(),
