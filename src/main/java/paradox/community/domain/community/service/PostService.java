@@ -96,25 +96,13 @@ public class PostService {
 
     @Transactional
     public Page<PostResponse> getPosts(PostSearchRequest request, Pageable pageable) {
-        Page<Post> posts;
-        if (request.characterId() != null && request.isBlind() != null && request.status() != null) {
-            posts = postRepository.findByCharacterIdAndStatusAndIsBlind(request.characterId(), request.status(), request.isBlind(), pageable);
-        }else if (request.characterId() != null && request.isBlind()) {
-            posts = postRepository.findByCharacterIdAndIsBlind(request.characterId(), request.isBlind(), pageable);
-        }else if (request.characterId() != null && request.status() != null) {
-            posts = postRepository.findByCharacterIdAndStatus(request.characterId(), request.status(), pageable);
-        }else if (request.status() != null && request.isBlind() != null) {
-            posts = postRepository.findByStatusAndIsBlind(request.status(), request.isBlind(), pageable);
-        }else if (request.characterId() != null) {
-            posts = postRepository.findByCharacterId(request.characterId(), pageable);
-        }else if (request.status() != null) {
-            posts = postRepository.findByStatus(request.status(), pageable);
-        }else if (request.isBlind() != null) {
-            posts = postRepository.findByIsBlind(request.isBlind(), pageable);
-        }else {
-            posts = postRepository.findAll(pageable);
-        }
-
+        Page<Post> posts = postRepository.searchPosts(
+                request.characterId(),
+                request.status(),
+                request.isBlind(),
+                request.title(),
+                pageable
+        );
         return posts.map(PostResponse::from);
     }
 }
