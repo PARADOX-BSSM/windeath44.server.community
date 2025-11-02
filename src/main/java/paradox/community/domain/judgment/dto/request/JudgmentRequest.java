@@ -1,12 +1,12 @@
 package paradox.community.domain.judgment.dto.request;
 
-import paradox.community.domain.judgment.model.JudgmentStatus;
+import paradox.community.domain.judgment.model.JudgmentInstance;
 import java.time.LocalDateTime;
 
 public record JudgmentRequest(
         Long characterId,
         String title,
-        JudgmentStatus instance,
+        JudgmentInstance instance,
         LocalDateTime startAt,
         LocalDateTime endAt
 ) {}

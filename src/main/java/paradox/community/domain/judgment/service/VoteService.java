@@ -7,6 +7,7 @@ import paradox.community.domain.judgment.dto.response.VoteCreateResponse;
 import org.springframework.stereotype.Service;
 import paradox.community.domain.judgment.dto.response.VoteHistoryResponse;
 import paradox.community.domain.judgment.dto.response.VoteResponse;
+import paradox.community.domain.judgment.model.JudgementStatus;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.Vote;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
@@ -29,7 +30,7 @@ public class VoteService {
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
 
-        if (judgment.getIsEnd()) {
+        if (judgment.getStatus() == JudgementStatus.Ended) {
             throw new IllegalArgumentException("종료된 재판에는 투표할 수 없습니다.");
         }
 
