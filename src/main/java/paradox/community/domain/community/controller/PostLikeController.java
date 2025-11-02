@@ -12,6 +12,14 @@ import paradox.community.global.util.HttpUtil;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/communities/posts/{post-id}/likes")
+@CrossOrigin(
+        origins = {
+                "http://localhost:5173",       // 테스트 1
+                "http://localhost:5174",      // 테스트 2
+                "https://windeath44.wiki" // 배포용 URL
+        },
+        allowCredentials = "true" // 필요하면 쿠키 허용
+)
 public class PostLikeController {
 
     private final PostLikeService postLikeService;
