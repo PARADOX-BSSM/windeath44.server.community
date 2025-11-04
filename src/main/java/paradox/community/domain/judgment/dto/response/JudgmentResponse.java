@@ -17,7 +17,8 @@ public record JudgmentResponse(
         Long heavenCount,
         Long hellCount,
         LocalDateTime createdAt,
-        LocalDateTime updatedAt
+        LocalDateTime updatedAt,
+        Long likesCount
 ) {
     public static JudgmentResponse from(Judgment judgment) {
         return new JudgmentResponse(
@@ -31,7 +32,8 @@ public record JudgmentResponse(
                 judgment.getHeavenCount(),
                 judgment.getHellCount(),
                 judgment.getCreatedAt(),
-                judgment.getUpdatedAt()
+                judgment.getUpdatedAt(),
+                judgment.getLikesCount()
                 );
     }
 }
