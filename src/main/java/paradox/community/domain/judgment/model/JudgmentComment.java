@@ -25,6 +25,12 @@ public class JudgmentComment {
     @Column(name = "user_id", nullable = false)
     private String userId; // 댓글 작성자(users.id) 참조
 
+    @Column(name = "user_name", nullable = false)
+    private String userName;
+
+    @Column(name = "profile")
+    private String profile;
+
     @Column(name = "judgment_id", nullable = false)
     private Long judgmentId;
 

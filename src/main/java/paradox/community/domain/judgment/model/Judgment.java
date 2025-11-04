@@ -23,6 +23,15 @@ public class Judgment {
     @Column(name = "character_id", nullable = false)
     private Long characterId; // 재판 대상 캐릭터(characters.id) 참조
 
+    @Column(name = "character_name", nullable = false)
+    private String characterName;
+
+    @Column(name = "anime_id", nullable = false)
+    private Long animeId;
+
+    @Column(name = "anime_name", nullable = false)
+    private String animeName;
+
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
 
