@@ -52,6 +52,8 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 savedComment.getCommentId(),
                 savedComment.getUserId(),
+                savedComment.getUserName(),
+                savedComment.getProfile(),
                 savedComment.getJudgmentId(),
                 savedComment.getParentCommentId(),
                 savedComment.getBody(),
@@ -81,6 +83,8 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 updatedComment.getCommentId(),
                 updatedComment.getUserId(),
+                updatedComment.getUserName(),
+                updatedComment.getProfile(),
                 updatedComment.getJudgmentId(),
                 updatedComment.getParentCommentId(),
                 updatedComment.getBody(),
@@ -125,6 +129,8 @@ public class JudgmentCommentService {
                     return new JudgmentCommentResponse(
                             comment.getCommentId(),
                             comment.getUserId(),
+                            comment.getUserName(),
+                            comment.getProfile(),
                             comment.getJudgmentId(),
                             comment.getParentCommentId(),
                             comment.getBody(),
@@ -152,6 +158,8 @@ public class JudgmentCommentService {
                     return new JudgmentCommentResponse(
                             reply.getCommentId(),
                             reply.getUserId(),
+                            reply.getUserName(),
+                            reply.getProfile(),
                             reply.getJudgmentId(),
                             reply.getParentCommentId(),
                             reply.getBody(),
