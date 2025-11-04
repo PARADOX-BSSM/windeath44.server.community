@@ -23,15 +23,24 @@ public class Judgment {
     @Column(name = "character_id", nullable = false)
     private Long characterId; // 재판 대상 캐릭터(characters.id) 참조
 
+    @Column(name = "character_name", nullable = false)
+    private String characterName;
+
+    @Column(name = "anime_id", nullable = false)
+    private Long animeId;
+
+    @Column(name = "anime_name", nullable = false)
+    private String animeName;
+
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
-
-    @Column(name = "status", nullable = false)
-    private JudgementStatus status; // 재판의 상태 (
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private JudgmentInstance instance; // 재판 (1심, 2심, 3심)
+
+    @Column(name = "status", nullable = false)
+    private JudgmentStatus status; // 재판의 상태 (
 
     @Column(name = "start_at", nullable = false, updatable = false)
     private LocalDateTime startAt; // 재판 시간 시간

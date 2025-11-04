@@ -6,9 +6,11 @@ public record PostCommentResponse(
         Long commentId,
         Long postId,
         String userId,
+        String name,
+        String profile,
         Long parentCommentId,
         String body,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long likeCount
+        Long likesCount
 ) {}
