@@ -23,7 +23,6 @@ public class PostService {
     public PostResponse createPost(String userId, PostCreateRequest request) {
         Post post = Post.builder()
                 .userId(userId)
-                .characterId(request.characterId())
                 .title(request.title())
                 .body(request.body())
                 .isBlind(request.isBlind())
