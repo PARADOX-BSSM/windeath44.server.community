@@ -1,6 +1,6 @@
 package paradox.community.domain.judgment.dto.response;
 
-import paradox.community.domain.judgment.model.JudgementStatus;
+import paradox.community.domain.judgment.model.JudgmentStatus;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentInstance;
 
@@ -10,8 +10,11 @@ public record JudgmentResponse(
         Long judgmentId,
         String title,
         Long characterId,
+        String characterName,
+        Long animeId,
+        String animeName,
         JudgmentInstance instance,
-        JudgementStatus status,
+        JudgmentStatus status,
         LocalDateTime startAt,
         LocalDateTime endAt,
         Long heavenCount,
@@ -25,6 +28,9 @@ public record JudgmentResponse(
                 judgment.getJudgmentId(),
                 judgment.getTitle(),
                 judgment.getCharacterId(),
+                judgment.getCharacterName(),
+                judgment.getAnimeId(),
+                judgment.getAnimeName(),
                 judgment.getInstance(),
                 judgment.getStatus(),
                 judgment.getStartAt(),

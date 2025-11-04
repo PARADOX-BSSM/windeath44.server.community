@@ -8,7 +8,8 @@ import java.time.LocalDateTime;
 public record PostResponse (
     Long postId,
     String userId,
-    Long characterId,
+    String name,
+    String profile,
     String title,
     String body,
     PostStatus status,
@@ -22,7 +23,8 @@ public record PostResponse (
         return new PostResponse(
                 post.getPostId(),
                 post.getUserId(),
-                post.getCharacterId(),
+                post.getUserName(),
+                post.getProfile(),
                 post.getTitle(),
                 post.getBody(),
                 post.getStatus(),

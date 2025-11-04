@@ -35,12 +35,12 @@ public class Judgment {
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
 
-    @Column(name = "status", nullable = false)
-    private JudgementStatus status; // 재판의 상태 (
-
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private JudgmentInstance instance; // 재판 (1심, 2심, 3심)
+
+    @Column(name = "status", nullable = false)
+    private JudgmentStatus status; // 재판의 상태 (
 
     @Column(name = "start_at", nullable = false, updatable = false)
     private LocalDateTime startAt; // 재판 시간 시간
