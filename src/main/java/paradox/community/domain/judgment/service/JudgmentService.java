@@ -8,9 +8,9 @@ import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
-import paradox.community.domain.judgment.model.JudgementStatus;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentInstance;
+import paradox.community.domain.judgment.model.JudgmentStatus;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
 import paradox.community.domain.judgment.repository.VoteRepository;
 
@@ -29,7 +29,7 @@ public class JudgmentService {
                 .characterId(request.characterId())
                 .title(request.title())
                 .instance(request.instance())
-                .status(JudgementStatus.InProgress)
+                .status(JudgmentStatus.InProgress)
                 .startAt(request.startAt())
                 .endAt(request.endAt())
                 .build();
