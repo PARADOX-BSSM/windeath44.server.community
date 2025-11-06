@@ -8,6 +8,7 @@ import paradox.community.domain.judgment.dto.request.VoteRequest;
 import paradox.community.domain.judgment.dto.response.VoteHistoryResponse;
 import paradox.community.domain.judgment.dto.response.VoteResponse;
 import paradox.community.domain.judgment.service.VoteService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.domain.judgment.dto.response.VoteCreateResponse;
 import paradox.community.global.util.HttpUtil;
@@ -17,7 +18,7 @@ import java.util.Optional;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities")
+@RequestMapping(Path.PATH + "/communities")
 @Slf4j
 public class VoteController {
     private final VoteService voteService;

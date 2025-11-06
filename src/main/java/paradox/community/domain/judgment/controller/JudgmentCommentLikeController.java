@@ -5,12 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.response.JudgmentCommentLikeResponse;
 import paradox.community.domain.judgment.service.JudgmentCommentLikeService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/judgments/comments/{comment-id}/likes")
+@RequestMapping(Path.PATH + "/communities/judgments/comments/{comment-id}/likes")
 public class JudgmentCommentLikeController {
 
     private final JudgmentCommentLikeService judgmentCommentLikeService;

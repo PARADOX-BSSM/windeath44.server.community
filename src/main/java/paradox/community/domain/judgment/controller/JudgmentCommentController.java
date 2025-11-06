@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.request.JudgmentCommentRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentCommentResponse;
 import paradox.community.domain.judgment.service.JudgmentCommentService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/judgments")
+@RequestMapping(Path.PATH + "/communities/judgments")
 @Slf4j
 public class JudgmentCommentController {
     private final JudgmentCommentService commentService;
