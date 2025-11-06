@@ -6,6 +6,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCommentRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentCommentResponse;
+import paradox.community.domain.judgment.exception.JudgmentCommentDeleteForbiddenException;
+import paradox.community.domain.judgment.exception.JudgmentCommentNotFoundException;
+import paradox.community.domain.judgment.exception.JudgmentNotFoundException;
+import paradox.community.domain.judgment.exception.JudgmentParentCommentException;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentComment;
 import paradox.community.domain.judgment.repository.JudgmentCommentLikeRepository;
@@ -26,13 +30,13 @@ public class JudgmentCommentService {
 
     public JudgmentCommentResponse createComment(String userId, Long judgmentId, JudgmentCommentRequest request) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
         JudgmentComment parentComment = parentCommentId == null ? null : commentRepository.findById(parentCommentId).orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
 
         if (parentComment != null && !parentComment.getJudgmentId().equals(judgmentId)) {
-            throw new IllegalArgumentException("부모 댓글이 해당 재판에 속하지 않습니다.");
+            throw JudgmentParentCommentException.getInstance();
         }
 
         JudgmentComment comment = JudgmentComment.builder()
@@ -66,10 +70,10 @@ public class JudgmentCommentService {
 
     public JudgmentCommentResponse updateComment(String userId, Long commentId, JudgmentCommentRequest request) {
         JudgmentComment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
+                .orElseThrow(JudgmentCommentNotFoundException::getInstance);
 
         if (!comment.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
+            throw JudgmentCommentDeleteForbiddenException.getInstance();
         }
 
         comment.setBody(request.body());
@@ -97,10 +101,10 @@ public class JudgmentCommentService {
 
     public void deleteComment(String userId, Long commentId) {
         JudgmentComment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
+                .orElseThrow(JudgmentCommentNotFoundException::getInstance);
 
         if (!comment.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
+            throw JudgmentCommentDeleteForbiddenException.getInstance();
         }
 
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(commentId);
@@ -117,7 +121,7 @@ public class JudgmentCommentService {
     @Transactional(readOnly = true)
     public List<JudgmentCommentResponse> getCommentsByJudgmentId(String userId, Long judgmentId) {
         judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         List<JudgmentComment> comments = commentRepository.findByJudgmentIdAndParentCommentIdIsNull(judgmentId);
 
@@ -146,7 +150,7 @@ public class JudgmentCommentService {
     @Transactional(readOnly = true)
     public List<JudgmentCommentResponse> getRepliesByParentCommentId(String userId, Long parentCommentId) {
         commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
+                .orElseThrow(JudgmentCommentNotFoundException::getInstance);
 
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(parentCommentId);
 
@@ -175,7 +179,7 @@ public class JudgmentCommentService {
     @Transactional(readOnly = true)
     public Long getCommentsCount(Long judgmentId) {
         judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         return commentRepository.countByJudgmentId(judgmentId);
     }

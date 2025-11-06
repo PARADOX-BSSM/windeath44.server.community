@@ -39,6 +39,7 @@ public class Judgment {
     @Column(nullable = false)
     private JudgmentInstance instance; // 재판 (1심, 2심, 3심)
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false)
     private JudgmentStatus status; // 재판의 상태 (
 
