@@ -21,7 +21,6 @@ import paradox.community.domain.judgment.repository.VoteRepository;
 public class JudgmentService {
 
     private final JudgmentRepository judgmentRepository;
-    private final VoteRepository voteRepository;
 
     @Transactional
     public JudgmentResponse createJudgment(JudgmentCreateRequest request, String role) {
@@ -68,21 +67,21 @@ public class JudgmentService {
         return JudgmentResponse.from(judgment);
     }
 
-    public Page<JudgmentResponse> getJudgments(Long characterId, Boolean isEnd, JudgmentInstance instance, Pageable pageable) {
+    public Page<JudgmentResponse> getJudgments(Long characterId, JudgmentStatus status, JudgmentInstance instance, Pageable pageable) {
         Page<Judgment> judgments;
 
-        if (characterId != null && isEnd != null && instance != null) {
-            judgments = judgmentRepository.findByCharacterIdAndIsEndAndInstance(characterId, isEnd, instance, pageable);
-        }else if (characterId != null && isEnd != null) {
-            judgments = judgmentRepository.findByCharacterIdAndIsEnd(characterId, isEnd, pageable);
+        if (characterId != null && status != null && instance != null) {
+            judgments = judgmentRepository.findByCharacterIdAndStatusAndInstance(characterId, status, instance, pageable);
+        }else if (characterId != null && status != null) {
+            judgments = judgmentRepository.findByCharacterIdAndStatus(characterId, status, pageable);
         }else  if (characterId != null && instance != null) {
             judgments = judgmentRepository.findByCharacterIdAndInstance(characterId, instance, pageable);
-        }else if (isEnd != null && instance != null) {
-            judgments = judgmentRepository.findByIsEndAndInstance(isEnd, instance, pageable);
+        }else if (status != null && instance != null) {
+            judgments = judgmentRepository.findByStatusAndInstance(status, instance, pageable);
         }else if (characterId != null) {
             judgments = judgmentRepository.findByCharacterId(characterId, pageable);
-        }else if (isEnd != null) {
-            judgments = judgmentRepository.findByIsEnd(isEnd, pageable);
+        }else if (status != null) {
+            judgments = judgmentRepository.findByStatus(status, pageable);
         }else if (instance != null) {
             judgments = judgmentRepository.findByInstance(instance, pageable);
         }else {

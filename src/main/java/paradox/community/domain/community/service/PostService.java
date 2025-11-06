@@ -96,7 +96,6 @@ public class PostService {
     @Transactional
     public Page<PostResponse> getPosts(PostSearchRequest request, Pageable pageable) {
         Page<Post> posts = postRepository.searchPosts(
-                request.characterId(),
                 request.status(),
                 request.isBlind(),
                 request.title(),
