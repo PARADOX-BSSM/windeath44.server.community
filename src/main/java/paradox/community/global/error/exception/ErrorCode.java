@@ -12,6 +12,10 @@ public enum ErrorCode {
     POST_ALREADY_DELETED(400, "Post already deleted"),
     POST_COMMENT_ALREADY_DELETED(400, "Post comment already deleted"),
     POST_COMMENT_DELETE_FORBIDDEN(403, "Post comment delete forbidden"),
+    POST_PUBLISH_FORBIDDEN(403, "Post can only be published by authors"),
+    POST_DRAFT_FORBIDDEN(403, "Post can only be drafted by authors"),
+    POST_UPDATE_FORBIDDEN(403, "Post can only be updated by authors"),
+    POST_DELETE_FORBIDDEN(403, "Post can only be deleted by authors"),
 
     JUDGMENT_NOT_FOUND(404, "Judgment not found"),
     JUDGMENT_PARENT_COMMENT_NOT_FOUND(404, "Judgment parent comment not found"),
