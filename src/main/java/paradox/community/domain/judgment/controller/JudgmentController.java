@@ -9,18 +9,16 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
-import paradox.community.domain.judgment.dto.request.VoteRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
-import paradox.community.domain.judgment.dto.response.VoteResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
 import jakarta.validation.Valid;
-import paradox.community.domain.judgment.service.VoteService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
 
 @RestController
-@RequestMapping("/communities/judgments")
+@RequestMapping(Path.PATH + "/communities/judgments")
 @RequiredArgsConstructor
 public class JudgmentController {
 

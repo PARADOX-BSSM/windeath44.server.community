@@ -11,6 +11,7 @@ import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
 import paradox.community.domain.community.service.PostService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
@@ -22,7 +23,7 @@ public class PostController {
     private final PostService postService;
 
     // 게시글 목록 조회
-    @PostMapping("/list")
+    @PostMapping(Path.PATH + "/list")
     public ResponseEntity<ApiResponse<Page<PostResponse>>> getPosts(@RequestBody PostSearchRequest request, Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(request, pageable);
         return ResponseEntity.ok(HttpUtil.success("success post search", posts));
