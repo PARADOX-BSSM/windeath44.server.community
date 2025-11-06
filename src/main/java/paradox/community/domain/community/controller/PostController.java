@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.request.PostCreateRequest;
@@ -16,14 +17,14 @@ import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
 @RestController
-@RequestMapping("/communities/posts")
+@RequestMapping(Path.PATH + "/communities/posts")
 @RequiredArgsConstructor
 public class PostController {
 
     private final PostService postService;
 
     // 게시글 목록 조회
-    @PostMapping(Path.PATH + "/list")
+    @PostMapping("/list")
     public ResponseEntity<ApiResponse<Page<PostResponse>>> getPosts(@RequestBody PostSearchRequest request, Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(request, pageable);
         return ResponseEntity.ok(HttpUtil.success("success post search", posts));

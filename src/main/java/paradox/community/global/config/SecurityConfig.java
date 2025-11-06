@@ -11,6 +11,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import paradox.community.global.Path;
 
 import java.util.Arrays;
 import java.util.List;
@@ -28,9 +29,8 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/communities/posts/**").permitAll()
-                        .requestMatchers("/communities/judgments/**").permitAll()
-                        .requestMatchers("/communities/users/**").authenticated()
+                        .requestMatchers(Path.PATH + "/communities/posts/**").permitAll()
+                        .requestMatchers(Path.PATH + "/communities/judgments/**").permitAll()
                         .anyRequest().authenticated()
                 );
 
@@ -41,8 +41,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.setAllowedOrigins(Arrays.asList(
-                "https://localhost:5173",
-                "https://localhost:5174",
+                "http://localhost:5173",
+                "http://localhost:5174",
                 "https://windeath44.wiki"
         ));
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"));
