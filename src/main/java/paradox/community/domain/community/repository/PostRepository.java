@@ -14,20 +14,12 @@ import java.util.List;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
-    Page<Post> findByCharacterIdAndStatusAndIsBlind(Long characterId, PostStatus status, Boolean isBlind, Pageable pageable);
-
-    Page<Post> findByCharacterIdAndIsBlind(Long characterId, Boolean isBlind, Pageable pageable);
-
     Page<Post> findByStatusAndIsBlind(PostStatus status, Boolean isBlind, Pageable pageable);
 
-    Page<Post> findByCharacterIdAndStatus(Long characterId, PostStatus status, Pageable pageable);
-
-    @Query("SELECT p FROM Post p WHERE (:characterId IS NULL OR p.characterId = :characterId) AND (:status IS NULL OR p.status = :status) AND (:isBlind IS NULL OR p.isBlind = :isBlind) AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
-    Page<Post> searchPosts(@Param("characterId") Long characterId, @Param("status") PostStatus status, @Param("isBlind") Boolean isBlind, @Param("title") String title, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE (:status IS NULL OR p.status = :status) AND (:isBlind IS NULL OR p.isBlind = :isBlind) AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
+    Page<Post> searchPosts(@Param("status") PostStatus status, @Param("isBlind") Boolean isBlind, @Param("title") String title, Pageable pageable);
 
     List<Post> findByUserId(String userId);
-
-    Page<Post> findByCharacterId(Long characterId, Pageable pageable);
 
     Page<Post> findByStatus(PostStatus status, Pageable pageable);
 

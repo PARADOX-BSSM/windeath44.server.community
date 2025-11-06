@@ -73,7 +73,7 @@ public class Judgment {
     }
 
     public void end() {
-        this.status = JudgementStatus.Ended;
+        this.status = JudgmentStatus.Ended;
     }
 
     public void decrementLikesCount() {
