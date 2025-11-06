@@ -5,12 +5,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.response.PostLikeResponse;
 import paradox.community.domain.community.service.PostLikeService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/posts/{post-id}/likes")
+@RequestMapping(Path.PATH + "/communities/posts/{post-id}/likes")
 public class PostLikeController {
 
     private final PostLikeService postLikeService;

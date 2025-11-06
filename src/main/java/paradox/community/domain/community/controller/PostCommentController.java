@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.request.PostCommentRequest;
 import paradox.community.domain.community.dto.response.PostCommentResponse;
 import paradox.community.domain.community.service.PostCommentService;
+import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
@@ -14,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/communities/posts")
+@RequestMapping(Path.PATH + "/communities/posts")
 public class PostCommentController {
     private final PostCommentService commentService;
 
