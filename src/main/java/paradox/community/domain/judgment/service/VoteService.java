@@ -7,6 +7,8 @@ import paradox.community.domain.judgment.dto.response.VoteCreateResponse;
 import org.springframework.stereotype.Service;
 import paradox.community.domain.judgment.dto.response.VoteHistoryResponse;
 import paradox.community.domain.judgment.dto.response.VoteResponse;
+import paradox.community.domain.judgment.exception.JudgmentNotFoundException;
+import paradox.community.domain.judgment.exception.VoteHistoryNotFoundException;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentStatus;
 import paradox.community.domain.judgment.model.Vote;
@@ -28,7 +30,7 @@ public class VoteService {
 
     public VoteCreateResponse recordVote(String userId, Long judgmentId, Boolean isHeaven) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         if (judgment.getStatus() == JudgmentStatus.Ended) {
             throw new IllegalArgumentException("종료된 재판에는 투표할 수 없습니다.");
@@ -97,7 +99,7 @@ public class VoteService {
     @Transactional(readOnly = true)
     public VoteResponse getVotingStats(Long judgmentId) {
         judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         Long heavenCount = voteRepository.countHeavenVotes(judgmentId);
         Long hellCount = voteRepository.countHellVotes(judgmentId);
@@ -118,7 +120,7 @@ public class VoteService {
 
     public void deleteVote(String userId, Long judgmentId) {
         if (!voteRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
-            throw new IllegalArgumentException("투표 내역을 찾을 수 없습니다.");
+            throw VoteHistoryNotFoundException.getInstance();
         }
         voteRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
         log.info("Vote deleted - userId: {}, judgmentId: {}", userId, judgmentId);

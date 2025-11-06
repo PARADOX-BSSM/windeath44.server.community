@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
+import paradox.community.domain.judgment.exception.JudgmentNotFoundException;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentInstance;
 import paradox.community.domain.judgment.model.JudgmentStatus;
@@ -43,7 +44,7 @@ public class JudgmentService {
         if (!role.equals("ADMIN")) return null;
 
         Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         judgment.update(request.title(), request.startAt(), request.endAt());
         return JudgmentResponse.from(judgment);
@@ -54,7 +55,7 @@ public class JudgmentService {
         if (!role.equals("ADMIN")) return null;
 
         Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         judgment.end();
         return JudgmentResponse.from(judgment);
@@ -62,7 +63,7 @@ public class JudgmentService {
 
     public JudgmentResponse getJudgment(Long judgmentId) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid judgmentId: " + judgmentId));
+                .orElseThrow(JudgmentNotFoundException::getInstance);
 
         return JudgmentResponse.from(judgment);
     }
