@@ -9,6 +9,10 @@ import paradox.community.domain.community.dto.request.PostCreateRequest;
 import paradox.community.domain.community.dto.request.PostSearchRequest;
 import paradox.community.domain.community.dto.request.PostUpdateRequest;
 import paradox.community.domain.community.dto.response.PostResponse;
+import paradox.community.domain.community.exception.PostDeleteForbiddenException;
+import paradox.community.domain.community.exception.PostDraftForbiddenException;
+import paradox.community.domain.community.exception.PostNotFoundException;
+import paradox.community.domain.community.exception.PostUpdateForbiddenException;
 import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.repository.PostRepository;
 
@@ -37,10 +41,10 @@ public class PostService {
     @Transactional
     public PostResponse publishPost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+                .orElseThrow(PostNotFoundException::getInstance);
 
         if (!post.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Post can only be published by authors!");
+            throw PostNotFoundException.getInstance();
         }
 
         post.publish();
@@ -50,10 +54,10 @@ public class PostService {
     @Transactional
     public PostResponse draftPost(Long postId, String userId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+                .orElseThrow(PostNotFoundException::getInstance);
 
         if (!post.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Post can only be drafted by authors!");
+            throw PostDraftForbiddenException.getInstance();
         }
 
         post.draft();
@@ -63,10 +67,10 @@ public class PostService {
     @Transactional
     public PostResponse updatePost(Long postId, String userId, PostUpdateRequest request, String role) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+                .orElseThrow(PostNotFoundException::getInstance);
 
         if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Post can only be updated by authors!");
+            throw PostUpdateForbiddenException.getInstance();
         }
 
         post.update(request.title(), request.body());
@@ -76,10 +80,10 @@ public class PostService {
     @Transactional
     public void deletePost(Long postId, String userId, String role) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+                .orElseThrow(PostNotFoundException::getInstance);
 
         if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("Post can only be deleted by authors!");
+            throw PostDeleteForbiddenException.getInstance();
         }
 
         post.delete();
@@ -88,7 +92,7 @@ public class PostService {
     @Transactional
     public PostResponse getPost(Long postId) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("Post with id " + postId + " does not exist!"));
+                .orElseThrow(PostNotFoundException::getInstance);
 
         return  PostResponse.from(post);
     }

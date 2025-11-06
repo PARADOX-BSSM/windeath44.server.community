@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.community.dto.request.PostCommentRequest;
 import paradox.community.domain.community.dto.response.PostCommentResponse;
+import paradox.community.domain.community.exception.*;
 import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.model.PostComment;
 import paradox.community.domain.community.repository.PostCommentLikeRepository;
@@ -26,14 +27,14 @@ public class PostCommentService {
     @Transactional
     public PostCommentResponse createComment(String userId, Long postId, PostCommentRequest request) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + postId));
+                .orElseThrow(PostCommentNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
         PostComment parentComment = parentCommentId == null ? null : commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
+                .orElseThrow(PostCommentParentNotFoundException::getInstance);
 
         if (parentComment != null && !parentComment.getPostId().equals(postId)) {
-            throw new IllegalArgumentException("부모 댓글이 해당 게시글에 속하지 않습니다.");
+            throw PostCommentParentNotHereException.getInstance();
         }
 
         PostComment comment = PostComment.builder()
@@ -46,7 +47,6 @@ public class PostCommentService {
         PostComment savedComment = commentRepository.save(comment);
 
         Long likeCount = 0L;
-        Boolean isLiked = false;
 
         return new PostCommentResponse(
                 savedComment.getCommentId(),
@@ -64,10 +64,10 @@ public class PostCommentService {
 
     public PostCommentResponse updateComment(String userId, Long commentId, PostCommentRequest request, String role) {
         PostComment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
+                .orElseThrow(PostCommentNotFoundException::getInstance);
 
         if (!role.equals("ADMIN") && !comment.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("댓글 작성자만 수정할 수 있습니다.");
+            throw PostCommentUpdateForbiddenException.getInstance();
         }
 
         comment.setBody(request.body());
@@ -91,9 +91,9 @@ public class PostCommentService {
 
     public void deleteComment(String userId, Long commentId, String role) {
         PostComment comment = commentRepository.findById(commentId)
-                .orElseThrow(() -> new IllegalArgumentException("댓글을 찾을 수 없습니다: " + commentId));
+                .orElseThrow(PostCommentNotFoundException::getInstance);
         if (!role.equals("ADMIN") && !comment.getUserId().equals(userId)) {
-            throw new IllegalArgumentException("댓글 작성자만 삭제할 수 있습니다.");
+            throw PostCommentDeleteForbiddenException.getInstance();
         }
 
         List<PostComment> replies = commentRepository.findByParentCommentId(commentId);
@@ -109,7 +109,7 @@ public class PostCommentService {
     @Transactional(readOnly = true)
     public List<PostCommentResponse> getCommentsByPostId(String userId, Long postId) {
         commentRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + postId));
+                .orElseThrow(PostCommentNotFoundException::getInstance);
         List<PostComment> comments = commentRepository.findByPostIdAndParentCommentIdIsNull(postId);
 
         return comments.stream()
@@ -134,7 +134,7 @@ public class PostCommentService {
     @Transactional(readOnly = true)
     public List<PostCommentResponse> getRepliesByParentCommentId(String userId, Long parentCommentId) {
         commentRepository.findById(parentCommentId)
-                .orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
+                .orElseThrow(PostCommentParentNotFoundException::getInstance);
 
         List<PostComment> replies = commentRepository.findByParentCommentId(parentCommentId);
 
@@ -159,8 +159,8 @@ public class PostCommentService {
 
     @Transactional(readOnly = true)
     public Long getCommentsCount(Long postId) {
-        commentRepository.findById(postId)
-                .orElseThrow(() -> new IllegalArgumentException("재판을 찾을 수 없습니다: " + postId));
+        postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::getInstance);
         return commentRepository.countByPostId(postId);
     }
 }
