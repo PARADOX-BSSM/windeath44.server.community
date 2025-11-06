@@ -20,7 +20,7 @@ import paradox.community.global.util.HttpUtil;
 
 
 @RestController
-@RequestMapping("/communities/judgments")
+@RequestMapping("api/communities/judgments")
 @RequiredArgsConstructor
 public class JudgmentController {
 
