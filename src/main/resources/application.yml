@@ -11,5 +11,8 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: ${DB_PLATFORM}
-  server:
-    port: ${SERVER_PORT}
+server:
+  port: ${SERVER_PORT}
+logging:
+  level:
+    org.springframework.security: DEBUG
