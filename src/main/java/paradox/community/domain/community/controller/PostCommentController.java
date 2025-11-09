@@ -71,10 +71,4 @@ public class PostCommentController {
 
         return ResponseEntity.ok(HttpUtil.success("Commet id: " +  parentCommentId + " replies count: " + replies.size(), replies));
     }
-
-    @GetMapping("/{postId}/comments/count")
-    public ResponseEntity<ApiResponse<Long>> getCommentsCount(@PathVariable Long postId) {
-        Long count = commentService.getCommentsCount(postId);
-        return ResponseEntity.ok(HttpUtil.success(  "post id: " + postId + "total comment count: " + count, count));
-    }
 }

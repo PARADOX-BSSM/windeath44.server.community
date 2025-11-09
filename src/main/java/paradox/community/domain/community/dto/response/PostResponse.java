@@ -17,9 +17,10 @@ public record PostResponse (
     LocalDateTime createdAt,
     LocalDateTime updatedAt,
     Long viewsCount,
-    Long likesCount
+    Long likesCount,
+    Long postCommentCount
 ) {
-    public static PostResponse from(Post post) {
+    public static PostResponse from(Post post, Long postCommentCount) {
         return new PostResponse(
                 post.getPostId(),
                 post.getUserId(),
@@ -32,7 +33,8 @@ public record PostResponse (
                 post.getCreatedAt(),
                 post.getUpdatedAt(),
                 post.getViewsCount(),
-                post.getLikesCount()
+                post.getLikesCount(),
+                postCommentCount
         );
     }
 }

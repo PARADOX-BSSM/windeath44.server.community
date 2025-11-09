@@ -14,6 +14,7 @@ import paradox.community.domain.community.exception.PostDraftForbiddenException;
 import paradox.community.domain.community.exception.PostNotFoundException;
 import paradox.community.domain.community.exception.PostUpdateForbiddenException;
 import paradox.community.domain.community.model.Post;
+import paradox.community.domain.community.repository.PostCommentRepository;
 import paradox.community.domain.community.repository.PostRepository;
 
 @Service
@@ -22,6 +23,7 @@ import paradox.community.domain.community.repository.PostRepository;
 public class PostService {
 
     private final PostRepository postRepository;
+    private final PostCommentRepository postCommentRepository;
 
     @Transactional
     public PostResponse createPost(String userId, PostCreateRequest request) {
@@ -35,7 +37,7 @@ public class PostService {
                 .build();
 
         Post savedPost = postRepository.save(post);
-        return PostResponse.from(savedPost);
+        return PostResponse.from(savedPost, (Long)0L);
     }
 
     @Transactional
@@ -48,7 +50,8 @@ public class PostService {
         }
 
         post.publish();
-        return PostResponse.from(post);
+        Long postCommentsCount = postCommentRepository.countByPostId(postId);
+        return PostResponse.from(post, postCommentsCount);
     }
 
     @Transactional
@@ -61,7 +64,8 @@ public class PostService {
         }
 
         post.draft();
-        return PostResponse.from(post);
+        Long postCommentsCount = postCommentRepository.countByPostId(postId);
+        return PostResponse.from(post, postCommentsCount);
     }
 
     @Transactional
@@ -74,7 +78,8 @@ public class PostService {
         }
 
         post.update(request.title(), request.body());
-        return PostResponse.from(post);
+        Long postCommentsCount = postCommentRepository.countByPostId(postId);
+        return PostResponse.from(post, postCommentsCount);
     }
 
     @Transactional
@@ -94,7 +99,8 @@ public class PostService {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::getInstance);
 
-        return  PostResponse.from(post);
+        Long postCommentCount = postCommentRepository.countByPostId(postId);
+        return  PostResponse.from(post, postCommentCount);
     }
 
     @Transactional
@@ -105,6 +111,9 @@ public class PostService {
                 request.title(),
                 pageable
         );
-        return posts.map(PostResponse::from);
+        return posts.map((post) -> {
+            Long postCommentCount = postCommentRepository.countByPostId(post.getPostId());
+            return  PostResponse.from(post, postCommentCount);
+        });
     }
 }
