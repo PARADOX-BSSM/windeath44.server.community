@@ -16,6 +16,7 @@ public enum ErrorCode {
     POST_COMMENT_PARENT_NOT_HERE(404, "Post parent comment not here"),
     POST_COMMENT_UPDATE_FORBIDDEN(403, "Post comment can only be updated by authors"),
     POST_COMMENT_DELETE_FORBIDDEN(403, "Post comment can only be deleted by authors"),
+    POST_COMMENT_2DEPTH_OVER_FORBIDDEN(403, "Post comment can only be created up to 2depths"),
 
     JUDGMENT_NOT_FOUND(404, "Judgment not found"),
     JUDGMENT_PARENT_COMMENT_NOT_FOUND(404, "Judgment parent comment not found"),

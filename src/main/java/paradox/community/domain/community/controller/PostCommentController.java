@@ -1,6 +1,5 @@
 package paradox.community.domain.community.controller;
 
-import com.google.api.Http;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,56 +18,63 @@ import java.util.List;
 public class PostCommentController {
     private final PostCommentService commentService;
 
-    @PostMapping("/{postId}/comments")
+    @PostMapping("/{post-id}/comments")
     public ResponseEntity<ApiResponse<PostCommentResponse>> createComment(
             @RequestHeader("user-id") String userId,
-            @RequestHeader("role")
-            @PathVariable Long postId,
+            @PathVariable("post-id") Long postId,
             @RequestBody PostCommentRequest request) {
         PostCommentResponse response = commentService.createComment(userId, postId, request);
 
-        String messageType = request.parentCommentId() == null ? "comment" : "reply";
         return ResponseEntity.status(201).body(
                 HttpUtil.success(
-                        "User id: " + userId + " successfully created " + messageType + " on post id: " + postId,
-                        response
+                        "successfully created", response
                 )
         );
     }
 
-    @PatchMapping("/{postId}/comments/{commentId}")
+    @PatchMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<PostCommentResponse>> updateComment(
             @RequestHeader("user-id") String userId,
             @RequestHeader("role") String role,
-            @PathVariable Long postId,
-            @PathVariable Long commnetId,
+            @PathVariable("comment-id") Long commentId,
             @RequestBody PostCommentRequest request
     ) {
-        PostCommentResponse response = commentService.updateComment(userId, postId, request, role);
+        PostCommentResponse response = commentService.updateComment(userId, commentId, request, role);
 
         return ResponseEntity.ok(
-                HttpUtil.success("User id: " + userId + " successfully updated comment id: " + commnetId, response)
+                HttpUtil.success("successfully updated", response)
         );
     }
 
-    @DeleteMapping("/{postId}/comments/{commentId}")
-    public ResponseEntity<ApiResponse<Void>> deleteComment(@RequestHeader("user-id") String userId, @RequestHeader("role") String role, @PathVariable Long postId, @PathVariable Long commentId) {
+    @DeleteMapping("/comments/{comment-id}")
+    public ResponseEntity<ApiResponse<Void>> deleteComment(
+            @RequestHeader("user-id") String userId,
+            @RequestHeader("role") String role,
+            @PathVariable("comment-id") Long commentId) {
         commentService.deleteComment(userId, commentId, role);
 
-        return ResponseEntity.ok(HttpUtil.success("User id: " + userId + " successfully deleted comment id: " + commentId));
+        return ResponseEntity.ok(
+                HttpUtil.success("successfully deleted")
+        );
     }
 
-    @GetMapping("/{postId}/comments")
-    public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getComments(@RequestHeader("user-id") String userId, @PathVariable Long postId) {
-        List<PostCommentResponse> comments = commentService.getCommentsByPostId(userId, postId);
+    @GetMapping("/{post-id}/comments")
+    public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getComments(
+            @PathVariable("post-id") Long postId) {
+        List<PostCommentResponse> comments = commentService.getCommentsByPostId(postId);
 
-        return ResponseEntity.ok(HttpUtil.success("Post id: " + postId + " comments count: " + comments.size(), comments));
+        return ResponseEntity.ok(
+                HttpUtil.success("successfully searched", comments)
+        );
     }
 
-    @GetMapping("/{postId}/comments/{commentId}/replies")
-    public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getReplies(@RequestHeader("user-id") String userId, @PathVariable Long postId, @PathVariable Long parentCommentId) {
-        List<PostCommentResponse> replies = commentService.getRepliesByParentCommentId(userId, parentCommentId);
+    @GetMapping("/comments/{parent-comment-id}/replies")
+    public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getReplies(
+            @PathVariable("parent-comment-id") Long parentCommentId) {
+        List<PostCommentResponse> replies = commentService.getRepliesByParentCommentId(parentCommentId);
 
-        return ResponseEntity.ok(HttpUtil.success("Commet id: " +  parentCommentId + " replies count: " + replies.size(), replies));
+        return ResponseEntity.ok(
+                HttpUtil.success("Comment id: " + parentCommentId + " replies count: " + replies.size(), replies)
+        );
     }
 }

@@ -11,9 +11,9 @@ import paradox.community.domain.community.model.PostComment;
 import paradox.community.domain.community.repository.PostCommentLikeRepository;
 import paradox.community.domain.community.repository.PostCommentRepository;
 import paradox.community.domain.community.repository.PostRepository;
-import paradox.community.domain.judgment.dto.request.JudgmentCommentRequest;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,14 +27,24 @@ public class PostCommentService {
     @Transactional
     public PostCommentResponse createComment(String userId, Long postId, PostCommentRequest request) {
         Post post = postRepository.findById(postId)
-                .orElseThrow(PostCommentNotFoundException::getInstance);
+                .orElseThrow(PostNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
-        PostComment parentComment = parentCommentId == null ? null : commentRepository.findById(parentCommentId)
-                .orElseThrow(PostCommentParentNotFoundException::getInstance);
+        PostComment parentComment = null;
 
-        if (parentComment != null && !parentComment.getPostId().equals(postId)) {
-            throw PostCommentParentNotHereException.getInstance();
+        if (parentCommentId != null) {
+            parentComment = commentRepository.findById(parentCommentId)
+                    .orElseThrow(PostCommentParentNotFoundException::getInstance);
+
+            // 부모 댓글이 같은 게시글에 속하는지 확인
+            if (!parentComment.getPostId().equals(postId)) {
+                throw PostCommentParentNotHereException.getInstance();
+            }
+
+            // 2depth 제한: 부모 댓글이 이미 대댓글이면 생성 불가
+            if (parentComment.getParentCommentId() != null) {
+                throw PostComment2DepthOverForbiddenException.getInstance();
+            }
         }
 
         PostComment comment = PostComment.builder()
@@ -62,6 +72,7 @@ public class PostCommentService {
         );
     }
 
+    @Transactional
     public PostCommentResponse updateComment(String userId, Long commentId, PostCommentRequest request, String role) {
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(PostCommentNotFoundException::getInstance);
@@ -89,79 +100,97 @@ public class PostCommentService {
         );
     }
 
+    @Transactional
     public void deleteComment(String userId, Long commentId, String role) {
         PostComment comment = commentRepository.findById(commentId)
                 .orElseThrow(PostCommentNotFoundException::getInstance);
+
         if (!role.equals("ADMIN") && !comment.getUserId().equals(userId)) {
             throw PostCommentDeleteForbiddenException.getInstance();
         }
 
+        // 대댓글이 있는 경우 함께 삭제
         List<PostComment> replies = commentRepository.findByParentCommentId(commentId);
 
-        for (PostComment reply : replies) {
-            commentLikeRepository.deleteByPostCommentId(reply.getCommentId());
+        // 대댓글들의 좋아요 bulk 삭제
+        if (!replies.isEmpty()) {
+            List<Long> replyIds = replies.stream()
+                    .map(PostComment::getCommentId)
+                    .collect(Collectors.toList());
+            commentLikeRepository.deleteByPostCommentIdIn(replyIds);
+            commentRepository.deleteAll(replies);
         }
-        commentRepository.deleteAll(replies);
+
+        // 부모 댓글 좋아요 삭제
         commentLikeRepository.deleteByPostCommentId(commentId);
         commentRepository.delete(comment);
     }
 
     @Transactional(readOnly = true)
-    public List<PostCommentResponse> getCommentsByPostId(String userId, Long postId) {
-        commentRepository.findById(postId)
-                .orElseThrow(PostCommentNotFoundException::getInstance);
+    public List<PostCommentResponse> getCommentsByPostId(Long postId) {
+        postRepository.findById(postId)
+                .orElseThrow(PostNotFoundException::getInstance);
+
         List<PostComment> comments = commentRepository.findByPostIdAndParentCommentIdIsNull(postId);
 
-        return comments.stream()
-                .map(comment -> {
-                    Long likeCount = commentLikeRepository.countByPostCommentId(comment.getCommentId());
+        if (comments.isEmpty()) {
+            return List.of();
+        }
 
-                    return new PostCommentResponse(
-                            comment.getCommentId(),
-                            comment.getPostId(),
-                            comment.getUserId(),
-                            comment.getUserName(),
-                            comment.getProfile(),
-                            comment.getParentCommentId(),
-                            comment.getBody(),
-                            comment.getCreatedAt(),
-                            comment.getUpdatedAt(),
-                            likeCount
-                    );
-                }).collect(Collectors.toList());
+        // 좋아요 수 bulk 조회
+        List<Long> commentIds = comments.stream()
+                .map(PostComment::getCommentId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(commentIds);
+
+        return comments.stream()
+                .map(comment -> new PostCommentResponse(
+                        comment.getCommentId(),
+                        comment.getPostId(),
+                        comment.getUserId(),
+                        comment.getUserName(),
+                        comment.getProfile(),
+                        comment.getParentCommentId(),
+                        comment.getBody(),
+                        comment.getCreatedAt(),
+                        comment.getUpdatedAt(),
+                        likesCountMap.getOrDefault(comment.getCommentId(), 0L)
+                ))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public List<PostCommentResponse> getRepliesByParentCommentId(String userId, Long parentCommentId) {
+    public List<PostCommentResponse> getRepliesByParentCommentId(Long parentCommentId) {
         commentRepository.findById(parentCommentId)
                 .orElseThrow(PostCommentParentNotFoundException::getInstance);
 
         List<PostComment> replies = commentRepository.findByParentCommentId(parentCommentId);
 
+        if (replies.isEmpty()) {
+            return List.of();
+        }
+
+        // 좋아요 수 bulk 조회
+        List<Long> replyIds = replies.stream()
+                .map(PostComment::getCommentId)
+                .collect(Collectors.toList());
+
+        Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(replyIds);
+
         return replies.stream()
-                .map(reply -> {
-                    Long likeCount = commentLikeRepository.countByPostCommentId(reply.getCommentId());
-
-                    return new PostCommentResponse(
-                            reply.getCommentId(),
-                            reply.getPostId(),
-                            reply.getUserId(),
-                            reply.getUserName(),
-                            reply.getProfile(),
-                            reply.getParentCommentId(),
-                            reply.getBody(),
-                            reply.getCreatedAt(),
-                            reply.getUpdatedAt(),
-                            likeCount
-                    );
-                }).collect(Collectors.toList());
-    }
-
-    @Transactional(readOnly = true)
-    public Long getCommentsCount(Long postId) {
-        postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
-        return commentRepository.countByPostId(postId);
+                .map(reply -> new PostCommentResponse(
+                        reply.getCommentId(),
+                        reply.getPostId(),
+                        reply.getUserId(),
+                        reply.getUserName(),
+                        reply.getProfile(),
+                        reply.getParentCommentId(),
+                        reply.getBody(),
+                        reply.getCreatedAt(),
+                        reply.getUpdatedAt(),
+                        likesCountMap.getOrDefault(reply.getCommentId(), 0L)
+                ))
+                .collect(Collectors.toList());
     }
 }
-
