@@ -18,7 +18,8 @@ public class JudgmentLikeController {
 
     // 좋아요
     @PostMapping
-    public ResponseEntity<ApiResponse<JudgmentLikeResponse>> registerJudgmentLike(@PathVariable Long judgmentId, @RequestHeader String userId) {
+    public ResponseEntity<ApiResponse<JudgmentLikeResponse>> registerJudgmentLike(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
+        System.out.println("일단 확인\n");
         JudgmentLikeResponse judgmentLikeResponse = judgmentLikeService.addJudgmentLike(userId, judgmentId);
 
         if (judgmentLikeResponse == null) return ResponseEntity.badRequest().build();
@@ -28,7 +29,7 @@ public class JudgmentLikeController {
 
     // 좋아요 취소
     @DeleteMapping
-    public ResponseEntity<ApiResponse<Void>> cancelJudgmentLike(@PathVariable Long judgmentId, @RequestHeader String userId) {
+    public ResponseEntity<ApiResponse<Void>> cancelJudgmentLike(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
         if (judgmentLikeService.isLiked(userId, judgmentId)) {
             judgmentLikeService.removeJudgmentLike(userId, judgmentId);
         }
@@ -38,7 +39,7 @@ public class JudgmentLikeController {
 
     // 좋아요 여부 확인
     @GetMapping
-    public ResponseEntity<ApiResponse<Boolean>> alreadyJudgmentLiked(@PathVariable Long judgmentId, @RequestHeader String userId) {
+    public ResponseEntity<ApiResponse<Boolean>> alreadyJudgmentLiked(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
         return ResponseEntity.ok(HttpUtil.success("success check judgment liked", judgmentLikeService.isLiked(userId, judgmentId)));
     }
 }
