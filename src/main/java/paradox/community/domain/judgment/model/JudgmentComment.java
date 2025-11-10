@@ -72,4 +72,8 @@ public class JudgmentComment {
         if (this.likesCount == null) this.likesCount = 0L;
         this.likesCount++;
     }
+
+    public void updateBody(String body) {
+        this.body = body;
+    }
 }
