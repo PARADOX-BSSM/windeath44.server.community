@@ -74,7 +74,7 @@ public class VoteController {
 
         return ResponseEntity.ok(
                 HttpUtil.success(
-                        "User id: " + userId + " successfully deleted vote for judgment id: " + judgmentId
+                        "successfully deleted"
                 )
         );
     }

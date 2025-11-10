@@ -32,8 +32,8 @@ public class JudgmentController {
     }
 
     // 제판 상세 조회
-    @GetMapping("/{judgmentId}")
-    public ResponseEntity<ApiResponse<JudgmentResponse>> getJudgment(@PathVariable Long judgmentId) {
+    @GetMapping("/{judgment-id}")
+    public ResponseEntity<ApiResponse<JudgmentResponse>> getJudgment(@PathVariable("judgment-id") Long judgmentId) {
         JudgmentResponse judgment = judgmentService.getJudgment(judgmentId);
         return ResponseEntity.ok(HttpUtil.success("success judgment search", judgment));
     }
@@ -49,8 +49,8 @@ public class JudgmentController {
     }
 
     // 재판 수정 (관리자용)
-    @PostMapping("/{judgmentId}")
-    public ResponseEntity<ApiResponse<JudgmentResponse>> updateJudgment(@PathVariable Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request, @RequestHeader("role") String role) {
+    @PostMapping("/{judgment-id}")
+    public ResponseEntity<ApiResponse<JudgmentResponse>> updateJudgment(@PathVariable("judgment-id") Long judgmentId, @Valid @RequestBody JudgmentUpdateRequest request, @RequestHeader("role") String role) {
         JudgmentResponse judgment = judgmentService.updateJudgment(judgmentId, request, role);
 
         if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -59,8 +59,8 @@ public class JudgmentController {
     }
 
     // 재판 종료 (관리자용)
-    @PatchMapping("/{judgmentId}")
-    public ResponseEntity<ApiResponse<JudgmentResponse>> endJudgment(@PathVariable Long judgmentId, @RequestHeader("role") String role) {
+    @PatchMapping("/{judgment-id}")
+    public ResponseEntity<ApiResponse<JudgmentResponse>> endJudgment(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("role") String role) {
         JudgmentResponse judgment = judgmentService.endJudgment(judgmentId, role);
 
         if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
