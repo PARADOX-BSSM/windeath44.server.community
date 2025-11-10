@@ -26,7 +26,7 @@ public class JudgmentController {
 
     // 제판 목록 조회
     @PostMapping("/list")
-    public ResponseEntity<ApiResponse<Page<JudgmentResponse>>> getJudgments(JudgmentListRequest request, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<JudgmentResponse>>> getJudgments(@RequestBody JudgmentListRequest request, Pageable pageable) {
         Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.status(), request.instance(), pageable);
         return ResponseEntity.ok(HttpUtil.success("success judgment list search", judgments));
     }

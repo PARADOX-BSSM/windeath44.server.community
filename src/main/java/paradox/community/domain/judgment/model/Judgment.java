@@ -4,20 +4,24 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 
 @Table(name = "judgments")
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(callSuper = false)
 public class Judgment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long judgmentId; // 재판 고유 식별자
 
     @Column(name = "character_id", nullable = false)
@@ -43,10 +47,10 @@ public class Judgment {
     @Column(name = "status", nullable = false)
     private JudgmentStatus status; // 재판의 상태 (
 
-    @Column(name = "start_at", nullable = false, updatable = false)
-    private LocalDateTime startAt; // 재판 시간 시간
+    @Column(name = "start_at", nullable = false)
+    private LocalDateTime startAt; // 재판 시작 시간
 
-    @Column(name = "end_at", nullable = false, updatable = false)
+    @Column(name = "end_at", nullable = false)
     private LocalDateTime endAt; // 재판 종료 시간
 
     @CreationTimestamp
@@ -57,17 +61,22 @@ public class Judgment {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 재판 수정 시간
 
-    @Column(name = "heaven_count", nullable = false)
-    private Long heavenCount; // 천국 투표 수
+    @Builder.Default
+    @Column(name = "heaven_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Long heavenCount = 0L; // 천국 투표 수
 
+    @Builder.Default
     @Column(name = "hell_count", nullable = false)
-    private Long hellCount; // 지옥 투표 수
+    private Long hellCount = 0L; // 지옥 투표 수
 
+    @Builder.Default
     @Column(name = "likes_count", nullable = false)
-    private Long likesCount; // 좋아요 수
+    private Long likesCount = 0L; // 좋아요 수
 
     public void update(String title, LocalDateTime startAt, LocalDateTime endAt) {
         if (title == null || title.trim().isEmpty()) throw new IllegalArgumentException("Title cannot be null or empty");
+        if (startAt == null || endAt == null) throw new IllegalArgumentException("startAt and endAt cannot be null");
+        if (endAt.isBefore(startAt)) throw new IllegalArgumentException("endAt must be after startAt");
         this.title = title.trim();
         this.startAt = startAt;
         this.endAt = endAt;
@@ -78,10 +87,20 @@ public class Judgment {
     }
 
     public void decrementLikesCount() {
-        this.likesCount--;
+        if (this.likesCount == null) this.likesCount = 0L;
+        if (this.likesCount > 0) this.likesCount--;
     }
 
     public void incrementLikesCount() {
+        if (this.likesCount == null) this.likesCount = 0L;
         this.likesCount++;
+    }
+
+    @PrePersist
+    private void prePersistDefaults() {
+        if (this.heavenCount == null) this.heavenCount = 0L;
+        if (this.hellCount == null) this.hellCount = 0L;
+        if (this.likesCount == null) this.likesCount = 0L;
+        if (this.status == null) this.status = JudgmentStatus.InProgress;
     }
 }

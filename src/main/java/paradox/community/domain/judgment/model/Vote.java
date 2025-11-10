@@ -11,15 +11,18 @@ import java.time.LocalDateTime;
         name = "votes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "judgment_id"})
 )
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"judgment"}, callSuper = false)
 public class Vote {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long voteId; // 투표 고유 식별자
 
     @Column(name = "user_id", nullable = false)

@@ -20,19 +20,13 @@ public class JudgmentLikeController {
     @PostMapping
     public ResponseEntity<ApiResponse<JudgmentLikeResponse>> registerJudgmentLike(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
         JudgmentLikeResponse judgmentLikeResponse = judgmentLikeService.addJudgmentLike(userId, judgmentId);
-
-        if (judgmentLikeResponse == null) return ResponseEntity.badRequest().build();
-
         return ResponseEntity.status(201).body(HttpUtil.success("Success register judgment like",  judgmentLikeResponse));
     }
 
     // 좋아요 취소
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> cancelJudgmentLike(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
-        if (judgmentLikeService.isLiked(userId, judgmentId)) {
-            judgmentLikeService.removeJudgmentLike(userId, judgmentId);
-        }
-
+        judgmentLikeService.removeJudgmentLike(userId, judgmentId);
         return ResponseEntity.ok(HttpUtil.success("Success cancel judgment like"));
     }
 
