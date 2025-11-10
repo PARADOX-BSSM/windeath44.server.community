@@ -22,15 +22,9 @@ public class PostLikeController {
             @PathVariable(name = "post-id") Long postId,
             @RequestHeader(name = "user-id") String userId
     ) {
-        PostLikeResponse postLikeResponse = postLikeService.addPostLike(postId, userId);
-
-        if (postLikeResponse == null) {
-            ApiResponse<PostLikeResponse> err = new ApiResponse<>("already liked or invalid request", null);
-            return ResponseEntity.badRequest().body(err);
-        }
-
-        ApiResponse<PostLikeResponse> response = new ApiResponse<>("like registered successfully", postLikeResponse);
-        return ResponseEntity.status(201).body(response);
+    return postLikeService.addPostLike(postId, userId)
+        .map(body -> ResponseEntity.status(201).body(new ApiResponse<>("like registered successfully", body)))
+        .orElseGet(() -> ResponseEntity.badRequest().body(new ApiResponse<PostLikeResponse>("already liked or invalid request", null)));
     }
 
     // 좋아요 취소

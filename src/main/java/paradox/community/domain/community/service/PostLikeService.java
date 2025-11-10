@@ -16,31 +16,31 @@ public class PostLikeService {
 
     // 좋아요
     @Transactional
-    public PostLikeResponse addPostLike(Long postId, String userId) {
-        if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
-            return null;
-        }else {
+    public java.util.Optional<PostLikeResponse> addPostLike(Long postId, String userId) {
+        if (Boolean.TRUE.equals(postLikeRepository.existsByUserIdAndPostId(userId, postId))) {
+            return java.util.Optional.empty();
+        } else {
             PostLike postLike = PostLike.builder()
                     .postId(postId)
                     .userId(userId)
                     .build();
 
             PostLike saved = postLikeRepository.save(postLike);
-            return PostLikeResponse.from(saved);
+            return java.util.Optional.of(PostLikeResponse.from(saved));
         }
     }
 
     // 좋아요 취소
     @Transactional
     public void removePostLike(Long postId, String userId) {
-        if (postLikeRepository.existsByUserIdAndPostId(userId, postId)) {
+        if (Boolean.TRUE.equals(postLikeRepository.existsByUserIdAndPostId(userId, postId))) {
             postLikeRepository.deleteByUserIdAndPostId(userId, postId);
         }
     }
 
     // 좋아요 여부 판단
-    public Boolean isLiked(String userId, Long postId) {
-        return postLikeRepository.existsByUserIdAndPostId(userId, postId);
+    public boolean isLiked(String userId, Long postId) {
+        return Boolean.TRUE.equals(postLikeRepository.existsByUserIdAndPostId(userId, postId));
     }
 
 }

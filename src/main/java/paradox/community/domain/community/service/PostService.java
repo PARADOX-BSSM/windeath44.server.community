@@ -27,17 +27,16 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(String userId, PostCreateRequest request) {
-        Post post = Post.builder()
-                .userId(userId)
-                .title(request.title())
-                .body(request.body())
-                .isBlind(request.isBlind())
-                .status(request.status())
-                .likesCount((Long) 0L)
-                .build();
+    Post post = Post.builder()
+        .userId(userId)
+        .title(request.title())
+        .body(request.body())
+        .isBlind(request.isBlind())
+        .status(request.status())
+        .build();
 
-        Post savedPost = postRepository.save(post);
-        return PostResponse.from(savedPost, (Long)0L);
+    Post savedPost = postRepository.save(post);
+    return PostResponse.from(savedPost, 0L);
     }
 
     @Transactional
