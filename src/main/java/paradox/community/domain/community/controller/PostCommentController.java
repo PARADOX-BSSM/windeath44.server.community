@@ -68,6 +68,16 @@ public class PostCommentController {
         );
     }
 
+    @GetMapping("/comments/{comment-id}")
+    public ResponseEntity<ApiResponse<PostCommentResponse>> getCommentById(
+            @PathVariable("comment-id") Long commentId) {
+        PostCommentResponse comment = commentService.getCommentById(commentId);
+
+        return ResponseEntity.ok(
+                HttpUtil.success("Successfully searched", comment)
+        );
+    }
+
     @GetMapping("/comments/{parent-comment-id}/replies")
     public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getReplies(
             @PathVariable("parent-comment-id") Long parentCommentId) {
