@@ -193,4 +193,25 @@ public class PostCommentService {
                 ))
                 .collect(Collectors.toList());
     }
+
+    @Transactional(readOnly = true)
+    public PostCommentResponse getCommentById(Long commentId) {
+        PostComment comment = commentRepository.findById(commentId)
+                .orElseThrow(PostCommentNotFoundException::getInstance);
+
+        Long likeCount = commentLikeRepository.countByPostCommentId(commentId);
+
+        return new PostCommentResponse(
+                comment.getCommentId(),
+                comment.getPostId(),
+                comment.getUserId(),
+                comment.getUserName(),
+                comment.getProfile(),
+                comment.getParentCommentId(),
+                comment.getBody(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt(),
+                likeCount
+        );
+    }
 }

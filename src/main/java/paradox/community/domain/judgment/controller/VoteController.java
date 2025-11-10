@@ -23,10 +23,10 @@ import java.util.Optional;
 public class VoteController {
     private final VoteService voteService;
 
-    @PostMapping("/judgments/{judgmentId}/votes")
+    @PostMapping("/judgments/{judgment-id}/votes")
     public ResponseEntity<ApiResponse<VoteCreateResponse>> recordVote(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId,
+            @PathVariable("judgment-id") Long judgmentId,
             @RequestBody VoteRequest voteRequest) {
         VoteCreateResponse response = voteService.recordVote(
                 userId,
@@ -36,14 +36,14 @@ public class VoteController {
 
         return ResponseEntity.status(201).body(
                 HttpUtil.success(
-                        "User id: " + userId + " successfully voted for judgment id: " + judgmentId, response
+                        "successfully voted", response
                 )
         );
     }
 
-    @GetMapping("/judgments/{judgmentId}/votes")
+    @GetMapping("/judgments/{judgment-id}/votes")
     public ResponseEntity<ApiResponse<VoteResponse>> getVotingStats(
-            @PathVariable Long judgmentId) {
+            @PathVariable("judgment-id") Long judgmentId) {
         VoteResponse response = voteService.getVotingStats(judgmentId);
 
         return ResponseEntity.ok(
@@ -65,10 +65,10 @@ public class VoteController {
         );
     }
 
-    @DeleteMapping("/judgments/{judgmentId}/votes")
+    @DeleteMapping("/judgments/{judgment-id}/votes")
     public ResponseEntity<ApiResponse<Void>> deleteVote(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId) {
+            @PathVariable("judgment-id") Long judgmentId) {
 
         voteService.deleteVote(userId, judgmentId);
 
@@ -79,10 +79,10 @@ public class VoteController {
         );
     }
 
-    @GetMapping("/judgments/{judgmentId}/votes/me")
+    @GetMapping("/judgments/{judgment-id}/votes/me")
     public ResponseEntity<ApiResponse<Boolean>> getMyVote(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId) {
+            @PathVariable("judgment-id") Long judgmentId) {
 
         Optional<Boolean> voteDirection = voteService.getUserVoteDirection(userId, judgmentId);
 
