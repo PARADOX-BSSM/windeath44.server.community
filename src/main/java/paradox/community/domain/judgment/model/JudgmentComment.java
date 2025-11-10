@@ -16,10 +16,13 @@ import java.util.List;
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"judgment", "parentComment"}, callSuper = false)
 public class JudgmentComment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long commentId; // 댓글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
@@ -61,10 +64,12 @@ public class JudgmentComment {
     private Long likesCount = 0L; // 좋아요 개수
 
     public void decrementLikesCount() {
-        this.likesCount--;
+        if (this.likesCount == null) this.likesCount = 0L;
+        if (this.likesCount > 0) this.likesCount--;
     }
 
     public void incrementLikesCount() {
+        if (this.likesCount == null) this.likesCount = 0L;
         this.likesCount++;
     }
 }

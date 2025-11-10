@@ -8,20 +8,23 @@ import lombok.*;
         name = "judgment_comment_likes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "judgment_comment_id"})
 )
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(callSuper = false)
 public class JudgmentCommentLike {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long likeId; // 좋아요 고유 식별자
 
     @Column(name = "user_id", nullable = false)
     private String userId; // 좋아요를 누른 사용자
 
-    @Column(name = "comment_id", nullable = false)
+    @Column(name = "judgment_comment_id", nullable = false)
     private Long judgmentCommentId; // 댓글 아이디
 }

@@ -16,24 +16,22 @@ public class JudgmentLikeService {
 
     @Transactional
     public JudgmentLikeResponse addJudgmentLike(String userId, Long judgmentId) {
-        if (judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
-            return null;
-        }else {
-            JudgmentLike judgmentLike = JudgmentLike.builder()
-                    .judgmentId(judgmentId)
-                    .userId(userId)
-                    .build();
+        return judgmentLikeRepository.findByUserIdAndJudgmentId(userId, judgmentId)
+                .map(JudgmentLikeResponse::from)
+                .orElseGet(() -> {
+                    JudgmentLike judgmentLike = JudgmentLike.builder()
+                            .judgmentId(judgmentId)
+                            .userId(userId)
+                            .build();
 
-            JudgmentLike saved = judgmentLikeRepository.save(judgmentLike);
-            return JudgmentLikeResponse.from(saved);
-        }
+                    JudgmentLike saved = judgmentLikeRepository.save(judgmentLike);
+                    return JudgmentLikeResponse.from(saved);
+                });
     }
 
     @Transactional
     public void removeJudgmentLike(String userId, Long judgmentId) {
-        if (judgmentLikeRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
-            judgmentLikeRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
-        }
+        judgmentLikeRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
     }
 
     public Boolean isLiked(String userId, Long judgmentId) {

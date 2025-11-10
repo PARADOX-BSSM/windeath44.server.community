@@ -10,14 +10,12 @@ import paradox.community.domain.judgment.exception.JudgmentCommentDeleteForbidde
 import paradox.community.domain.judgment.exception.JudgmentCommentNotFoundException;
 import paradox.community.domain.judgment.exception.JudgmentNotFoundException;
 import paradox.community.domain.judgment.exception.JudgmentParentCommentException;
-import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentComment;
 import paradox.community.domain.judgment.repository.JudgmentCommentLikeRepository;
 import paradox.community.domain.judgment.repository.JudgmentCommentRepository;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,15 +26,18 @@ public class JudgmentCommentService {
     private final JudgmentRepository judgmentRepository;
     private final JudgmentCommentLikeRepository commentLikeRepository;
 
+    @Transactional
     public JudgmentCommentResponse createComment(String userId, Long judgmentId, JudgmentCommentRequest request) {
-        Judgment judgment = judgmentRepository.findById(judgmentId)
-                .orElseThrow(JudgmentNotFoundException::getInstance);
+        judgmentRepository.findById(judgmentId)
+            .orElseThrow(JudgmentNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
-        JudgmentComment parentComment = parentCommentId == null ? null : commentRepository.findById(parentCommentId).orElseThrow(() -> new IllegalArgumentException("부모 댓글을 찾을 수 없습니다: " + parentCommentId));
-
-        if (parentComment != null && !parentComment.getJudgmentId().equals(judgmentId)) {
+        if (parentCommentId != null) {
+            JudgmentComment parentComment = commentRepository.findById(parentCommentId)
+                .orElseThrow(JudgmentParentCommentException::getInstance);
+            if (!parentComment.getJudgmentId().equals(judgmentId)) {
             throw JudgmentParentCommentException.getInstance();
+            }
         }
 
         JudgmentComment comment = JudgmentComment.builder()
@@ -53,21 +54,10 @@ public class JudgmentCommentService {
 
         log.info("Comment created - commentId: {}, userId: {}, judgmentId: {}", savedComment.getCommentId(), userId, judgmentId);
 
-        return new JudgmentCommentResponse(
-                savedComment.getCommentId(),
-                savedComment.getUserId(),
-                savedComment.getUserName(),
-                savedComment.getProfile(),
-                savedComment.getJudgmentId(),
-                savedComment.getParentCommentId(),
-                savedComment.getBody(),
-                savedComment.getCreatedAt(),
-                savedComment.getUpdatedAt(),
-                likeCount,
-                isLiked
-        );
+        return toResponse(savedComment, likeCount, isLiked);
     }
 
+    @Transactional
     public JudgmentCommentResponse updateComment(String userId, Long commentId, JudgmentCommentRequest request) {
         JudgmentComment comment = commentRepository.findById(commentId)
                 .orElseThrow(JudgmentCommentNotFoundException::getInstance);
@@ -84,21 +74,10 @@ public class JudgmentCommentService {
 
         log.info("Comment update - commentId: {}, userId: {}", commentId, userId);
 
-        return new JudgmentCommentResponse(
-                updatedComment.getCommentId(),
-                updatedComment.getUserId(),
-                updatedComment.getUserName(),
-                updatedComment.getProfile(),
-                updatedComment.getJudgmentId(),
-                updatedComment.getParentCommentId(),
-                updatedComment.getBody(),
-                updatedComment.getCreatedAt(),
-                updatedComment.getUpdatedAt(),
-                likeCount,
-                isLiked
-        );
+        return toResponse(updatedComment, likeCount, isLiked);
     }
 
+    @Transactional
     public void deleteComment(String userId, Long commentId) {
         JudgmentComment comment = commentRepository.findById(commentId)
                 .orElseThrow(JudgmentCommentNotFoundException::getInstance);
@@ -109,11 +88,10 @@ public class JudgmentCommentService {
 
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(commentId);
 
-        for (JudgmentComment reply : replies) {
-            commentLikeRepository.deleteByJudgmentCommentId(reply.getCommentId());
-        }
-        commentRepository.deleteAll(replies);
+        replies.forEach(r -> commentLikeRepository.deleteByJudgmentCommentId(r.getCommentId()));
         commentLikeRepository.deleteByJudgmentCommentId(commentId);
+
+        commentRepository.deleteAll(replies);
         commentRepository.delete(comment);
         log.info("Comment deleted - commentId: {}, userId: {}", commentId, userId);
     }
@@ -126,25 +104,10 @@ public class JudgmentCommentService {
         List<JudgmentComment> comments = commentRepository.findByJudgmentIdAndParentCommentIdIsNull(judgmentId);
 
         return comments.stream()
-                .map(comment -> {
-                    Long likesCount = commentLikeRepository.countByJudgmentCommentId(comment.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, comment.getCommentId());
-
-                    return new JudgmentCommentResponse(
-                            comment.getCommentId(),
-                            comment.getUserId(),
-                            comment.getUserName(),
-                            comment.getProfile(),
-                            comment.getJudgmentId(),
-                            comment.getParentCommentId(),
-                            comment.getBody(),
-                            comment.getCreatedAt(),
-                            comment.getUpdatedAt(),
-                            likesCount,
-                            isLiked
-                    );
-                })
-                .collect(Collectors.toList());
+            .map(comment -> toResponse(comment,
+                commentLikeRepository.countByJudgmentCommentId(comment.getCommentId()),
+                commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, comment.getCommentId())
+            )).toList();
     }
 
     @Transactional(readOnly = true)
@@ -155,25 +118,10 @@ public class JudgmentCommentService {
         List<JudgmentComment> replies = commentRepository.findByParentCommentId(parentCommentId);
 
         return replies.stream()
-                .map(reply -> {
-                    Long likesCount = commentLikeRepository.countByJudgmentCommentId(reply.getCommentId());
-                    Boolean isLiked = commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, reply.getCommentId());
-
-                    return new JudgmentCommentResponse(
-                            reply.getCommentId(),
-                            reply.getUserId(),
-                            reply.getUserName(),
-                            reply.getProfile(),
-                            reply.getJudgmentId(),
-                            reply.getParentCommentId(),
-                            reply.getBody(),
-                            reply.getCreatedAt(),
-                            reply.getUpdatedAt(),
-                            likesCount,
-                            isLiked
-                    );
-                })
-                .collect(Collectors.toList());
+            .map(reply -> toResponse(reply,
+                commentLikeRepository.countByJudgmentCommentId(reply.getCommentId()),
+                commentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, reply.getCommentId())
+            )).toList();
     }
 
     @Transactional(readOnly = true)
@@ -182,5 +130,21 @@ public class JudgmentCommentService {
                 .orElseThrow(JudgmentNotFoundException::getInstance);
 
         return commentRepository.countByJudgmentId(judgmentId);
+    }
+
+    private JudgmentCommentResponse toResponse(JudgmentComment comment, Long likeCount, Boolean isLiked) {
+    return new JudgmentCommentResponse(
+        comment.getCommentId(),
+        comment.getUserId(),
+        comment.getUserName(),
+        comment.getProfile(),
+        comment.getJudgmentId(),
+        comment.getParentCommentId(),
+        comment.getBody(),
+        comment.getCreatedAt(),
+        comment.getUpdatedAt(),
+        likeCount,
+        isLiked
+    );
     }
 }

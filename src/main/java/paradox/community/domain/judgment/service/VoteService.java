@@ -29,6 +29,8 @@ public class VoteService {
     private final JudgmentRepository judgmentRepository;
 
     public VoteCreateResponse recordVote(String userId, Long judgmentId, Boolean isHeaven) {
+        if (isHeaven == null) throw new IllegalArgumentException("isHeaven cannot be null");
+
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(JudgmentNotFoundException::getInstance);
 
@@ -43,38 +45,36 @@ public class VoteService {
         if (now.isAfter(judgment.getEndAt())) {
             throw new IllegalArgumentException("투표 기간이 종료되었습니다.");
         }
-        Optional<Vote> existingVote = voteRepository.findByUserIdAndJudgmentId(userId, judgmentId);
 
-        Vote vote;
-        if (existingVote.isPresent()) {
-            vote = existingVote.get();
-            Boolean previousDirection = vote.getIsHeaven();
-
-            if (previousDirection.equals(isHeaven)) {
-                log.info("Same vote direction - userId: {}, judgmentId: {}, direction: {}",
-                        userId, judgmentId, isHeaven);
-            } else {
-                vote.setIsHeaven(isHeaven);
-                vote = voteRepository.save(vote);
-                log.info("Vote changed - userId: {}, judgmentId: {}, previous: {}, current: {}",
-                        userId, judgmentId, previousDirection, isHeaven);
-            }
-        } else {
-            vote = Vote.builder()
-                    .userId(userId)
-                    .judgmentId(judgmentId)
-                    .isHeaven(isHeaven)
-                    .build();
-            vote = voteRepository.save(vote);
-
-            log.info("New vote recorded - userId: {}, judgmentId: {}, direction: {}",
-                    userId, judgmentId, isHeaven);
-        }
+        Vote vote = voteRepository.findByUserIdAndJudgmentId(userId, judgmentId)
+                .map(existing -> {
+                    Boolean previousDirection = existing.getIsHeaven();
+                    if (!previousDirection.equals(isHeaven)) {
+                        existing.setIsHeaven(isHeaven);
+                        log.info("Vote changed - userId: {}, judgmentId: {}, previous: {}, current: {}",
+                                userId, judgmentId, previousDirection, isHeaven);
+                        return voteRepository.save(existing);
+                    }
+                    log.info("Same vote direction - userId: {}, judgmentId: {}, direction: {}",
+                            userId, judgmentId, isHeaven);
+                    return existing;
+                })
+                .orElseGet(() -> {
+                    Vote newVote = Vote.builder()
+                            .userId(userId)
+                            .judgmentId(judgmentId)
+                            .isHeaven(isHeaven)
+                            .build();
+                    Vote saved = voteRepository.save(newVote);
+                    log.info("New vote recorded - userId: {}, judgmentId: {}, direction: {}",
+                            userId, judgmentId, isHeaven);
+                    return saved;
+                });
 
         Long heavenCount = voteRepository.countHeavenVotes(judgmentId);
         Long hellCount = voteRepository.countHellVotes(judgmentId);
 
-        return new VoteCreateResponse (
+        return new VoteCreateResponse(
                 vote.getVoteId(),
                 vote.getUserId(),
                 vote.getIsHeaven(),

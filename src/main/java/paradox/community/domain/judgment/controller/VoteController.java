@@ -12,6 +12,7 @@ import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.domain.judgment.dto.response.VoteCreateResponse;
 import paradox.community.global.util.HttpUtil;
+import jakarta.validation.Valid;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +28,9 @@ public class VoteController {
     public ResponseEntity<ApiResponse<VoteCreateResponse>> recordVote(
             @RequestHeader("user-id") String userId,
             @PathVariable("judgment-id") Long judgmentId,
-            @RequestBody VoteRequest voteRequest) {
+            @Valid @RequestBody VoteRequest voteRequest) {
+        if (voteRequest.isHeaven() == null) return ResponseEntity.badRequest().build();
+
         VoteCreateResponse response = voteService.recordVote(
                 userId,
                 judgmentId,
@@ -94,7 +97,7 @@ public class VoteController {
             );
         }
 
-        String direction = voteDirection.get() ? "HEAVEN" : "HELL";
+        String direction = Boolean.TRUE.equals(voteDirection.get()) ? "HEAVEN" : "HELL";
         return ResponseEntity.ok(
                 HttpUtil.success(
                         "User id: " + userId + " voted " + direction + " for judgment id: " + judgmentId, voteDirection.get()

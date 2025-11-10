@@ -8,14 +8,17 @@ import lombok.*;
         name = "judgment_likes",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "judgment_id"})
 )
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = lombok.AccessLevel.PROTECTED)
+@AllArgsConstructor(access = lombok.AccessLevel.PRIVATE)
 @Getter
 @Setter
 @Builder
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@ToString(exclude = {"judgment"}, callSuper = false)
 public class JudgmentLike {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long likeId; // 좋아요 고유 식별자
 
     @Column(name = "user_id", nullable = false)
