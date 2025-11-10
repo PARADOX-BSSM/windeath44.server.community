@@ -4,7 +4,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.community.dto.request.PostCreateRequest;
@@ -31,29 +30,29 @@ public class PostController {
     }
 
     // 게시글 상세 조회
-    @GetMapping("/{postId}")
-    public ResponseEntity<ApiResponse<PostResponse>> getPost(@PathVariable Long postId, Pageable pageable) {
+    @GetMapping("/{post-id}")
+    public ResponseEntity<ApiResponse<PostResponse>> getPost(@PathVariable(name = "post-id") Long postId) {
         PostResponse post = postService.getPost(postId);
         return ResponseEntity.ok(HttpUtil.success("success post search", post));
     }
 
     // 게시글 작성
     @PostMapping
-    public ResponseEntity<ApiResponse<PostResponse>> createPost(@RequestHeader("user-id") String userId, @Valid @RequestBody PostCreateRequest request) {
+    public ResponseEntity<ApiResponse<PostResponse>> createPost(@RequestHeader(name = "user-id") String userId, @Valid @RequestBody PostCreateRequest request) {
         PostResponse post = postService.createPost(userId, request);
         return ResponseEntity.status(201).body(HttpUtil.success("success post create", post));
     }
 
     // 게시글 수정
-    @PatchMapping("/{postId}")
-    public ResponseEntity<ApiResponse<PostResponse>> updatePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @RequestHeader("role") String role, @Valid @RequestBody PostUpdateRequest request) {
+    @PatchMapping("/{post-id}")
+    public ResponseEntity<ApiResponse<PostResponse>> updatePost(@PathVariable(name = "post-id") Long postId, @RequestHeader(name = "user-id") String userId, @RequestHeader(name = "role") String role, @Valid @RequestBody PostUpdateRequest request) {
         PostResponse post = postService.updatePost(postId, userId, request, role);
         return ResponseEntity.ok(HttpUtil.success("success post update", post));
     }
 
     // 게시글 삭제
-    @DeleteMapping("/{postId}")
-    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable Long postId, @RequestHeader("user-id") String userId, @RequestHeader("role") String role) {
+    @DeleteMapping("/{post-id}")
+    public ResponseEntity<ApiResponse<Void>> deletePost(@PathVariable(name = "post-id") Long postId, @RequestHeader(name = "user-id") String userId, @RequestHeader(name = "role") String role) {
         postService.deletePost(postId, userId, role);
         return ResponseEntity.ok(HttpUtil.success("success post delete"));
     }

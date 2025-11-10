@@ -9,8 +9,8 @@ import paradox.community.global.constclass.ColumnDefaults;
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Builder
 @Table(name = "posts")
@@ -48,12 +48,15 @@ public class Post {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 수정 시간
 
+    @Builder.Default
     @Column(name = "views_count", nullable = false, columnDefinition =  ColumnDefaults.ZERO_DEFAULT)
     private Long viewsCount = (Long) 0L; // 조회수
 
+    @Builder.Default
     @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Long likesCount = (Long) 0L; // 좋아요
 
+    @Builder.Default
     @Column(name = "is_deleted", nullable = false, columnDefinition = "boolean default false")
     private boolean isDeleted = false; // 논리 삭제
 
@@ -72,7 +75,7 @@ public class Post {
     }
 
     public void update(String title, String body) {
-        if (title == null) throw new IllegalArgumentException("Title cannot be null");
+        if (title == null || title.isBlank()) throw new IllegalArgumentException("Title cannot be null or blank");
         this.title = title;
         this.body = body;
     }
@@ -82,5 +85,21 @@ public class Post {
             throw new IllegalStateException("Post is already deleted");
         }
         this.isDeleted = true;
+    }
+
+    // Domain helper methods
+    public void incrementViews() {
+        this.viewsCount = (this.viewsCount == null ? 0L : this.viewsCount) + 1L;
+    }
+
+    public void increaseLikes() {
+        this.likesCount = (this.likesCount == null ? 0L : this.likesCount) + 1L;
+    }
+
+    public void decreaseLikes() {
+        if (this.likesCount == null || this.likesCount <= 0L) {
+            return;
+        }
+        this.likesCount = this.likesCount - 1L;
     }
 }

@@ -19,39 +19,39 @@ public class PostLikeController {
     // 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<PostLikeResponse>> registerPostLike(
-            @PathVariable("post-id") Long postId,
-            @RequestHeader("user-id") String userId
+            @PathVariable(name = "post-id") Long postId,
+            @RequestHeader(name = "user-id") String userId
     ) {
         PostLikeResponse postLikeResponse = postLikeService.addPostLike(postId, userId);
 
-        if (postLikeResponse == null) return ResponseEntity.badRequest().build();
+        if (postLikeResponse == null) {
+            ApiResponse<PostLikeResponse> err = new ApiResponse<>("already liked or invalid request", null);
+            return ResponseEntity.badRequest().body(err);
+        }
 
-        ApiResponse<PostLikeResponse> response = new ApiResponse<>(
-                "like registered successfully",
-                postLikeResponse
-        );
+        ApiResponse<PostLikeResponse> response = new ApiResponse<>("like registered successfully", postLikeResponse);
         return ResponseEntity.status(201).body(response);
     }
 
     // 좋아요 취소
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> deletePostLike(
-            @PathVariable("post-id") Long postId,
-            @RequestHeader("user-id") String userId
+            @PathVariable(name = "post-id") Long postId,
+            @RequestHeader(name = "user-id") String userId
     ) {
-        if (postLikeService.isLiked(userId, postId)) {
-            postLikeService.removePostLike(postId, userId);
-
-            return ResponseEntity.ok(HttpUtil.success("success canceal post like"));
+        if (!Boolean.TRUE.equals(postLikeService.isLiked(userId, postId))) {
+            ApiResponse<Void> err = new ApiResponse<>("not liked yet", null);
+            return ResponseEntity.badRequest().body(err);
         }
 
-        return ResponseEntity.badRequest().build();
+        postLikeService.removePostLike(postId, userId);
+        return ResponseEntity.ok(HttpUtil.success("success cancel post like"));
     }
 
     // 좋아요 여부 확인
     @GetMapping
-    public ResponseEntity<ApiResponse<Boolean>> alreadyPostLiked(@PathVariable Long postId, @RequestHeader String userId) {
-        return ResponseEntity.ok(HttpUtil.success("succes check post liked", postLikeService.isLiked(userId, postId)));
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostLiked(@PathVariable(name = "post-id") Long postId, @RequestHeader(name = "user-id") String userId) {
+        return ResponseEntity.ok(HttpUtil.success("success check post liked", postLikeService.isLiked(userId, postId)));
     }
 
 }

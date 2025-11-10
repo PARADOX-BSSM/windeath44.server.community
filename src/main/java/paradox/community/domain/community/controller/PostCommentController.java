@@ -3,6 +3,7 @@ package paradox.community.domain.community.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
 import paradox.community.domain.community.dto.request.PostCommentRequest;
 import paradox.community.domain.community.dto.response.PostCommentResponse;
 import paradox.community.domain.community.service.PostCommentService;
@@ -20,9 +21,9 @@ public class PostCommentController {
 
     @PostMapping("/{post-id}/comments")
     public ResponseEntity<ApiResponse<PostCommentResponse>> createComment(
-            @RequestHeader("user-id") String userId,
-            @PathVariable("post-id") Long postId,
-            @RequestBody PostCommentRequest request) {
+            @RequestHeader(name = "user-id") String userId,
+            @PathVariable(name = "post-id") Long postId,
+            @Valid @RequestBody PostCommentRequest request) {
         PostCommentResponse response = commentService.createComment(userId, postId, request);
 
         return ResponseEntity.status(201).body(
@@ -34,10 +35,10 @@ public class PostCommentController {
 
     @PatchMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<PostCommentResponse>> updateComment(
-            @RequestHeader("user-id") String userId,
-            @RequestHeader("role") String role,
-            @PathVariable("comment-id") Long commentId,
-            @RequestBody PostCommentRequest request
+            @RequestHeader(name = "user-id") String userId,
+            @RequestHeader(name = "role") String role,
+            @PathVariable(name = "comment-id") Long commentId,
+            @Valid @RequestBody PostCommentRequest request
     ) {
         PostCommentResponse response = commentService.updateComment(userId, commentId, request, role);
 
@@ -48,9 +49,9 @@ public class PostCommentController {
 
     @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(
-            @RequestHeader("user-id") String userId,
-            @RequestHeader("role") String role,
-            @PathVariable("comment-id") Long commentId) {
+            @RequestHeader(name = "user-id") String userId,
+            @RequestHeader(name = "role") String role,
+            @PathVariable(name = "comment-id") Long commentId) {
         commentService.deleteComment(userId, commentId, role);
 
         return ResponseEntity.ok(
@@ -60,7 +61,7 @@ public class PostCommentController {
 
     @GetMapping("/{post-id}/comments")
     public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getComments(
-            @PathVariable("post-id") Long postId) {
+            @PathVariable(name = "post-id") Long postId) {
         List<PostCommentResponse> comments = commentService.getCommentsByPostId(postId);
 
         return ResponseEntity.ok(
@@ -70,7 +71,7 @@ public class PostCommentController {
 
     @GetMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<PostCommentResponse>> getCommentById(
-            @PathVariable("comment-id") Long commentId) {
+            @PathVariable(name = "comment-id") Long commentId) {
         PostCommentResponse comment = commentService.getCommentById(commentId);
 
         return ResponseEntity.ok(
@@ -80,7 +81,7 @@ public class PostCommentController {
 
     @GetMapping("/comments/{parent-comment-id}/replies")
     public ResponseEntity<ApiResponse<List<PostCommentResponse>>> getReplies(
-            @PathVariable("parent-comment-id") Long parentCommentId) {
+            @PathVariable(name = "parent-comment-id") Long parentCommentId) {
         List<PostCommentResponse> replies = commentService.getRepliesByParentCommentId(parentCommentId);
 
         return ResponseEntity.ok(

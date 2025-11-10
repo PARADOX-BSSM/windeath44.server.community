@@ -21,6 +21,7 @@ public class PostCommentLikeService {
         }else {
             PostCommentLike postCommentLike = PostCommentLike.builder()
                     .postCommentId(commentId)
+                    .userId(userId)
                     .build();
 
             PostCommentLike saved = postCommentLikeRepository.save(postCommentLike);

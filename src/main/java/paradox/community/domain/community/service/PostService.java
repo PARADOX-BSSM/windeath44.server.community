@@ -46,7 +46,7 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::getInstance);
 
         if (!post.getUserId().equals(userId)) {
-            throw PostNotFoundException.getInstance();
+            throw PostUpdateForbiddenException.getInstance();
         }
 
         post.publish();
@@ -111,9 +111,9 @@ public class PostService {
                 request.title(),
                 pageable
         );
-        return posts.map((post) -> {
+        return posts.map(post -> {
             Long postCommentCount = postCommentRepository.countByPostId(post.getPostId());
-            return  PostResponse.from(post, postCommentCount);
+            return PostResponse.from(post, postCommentCount);
         });
     }
 }

@@ -4,15 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 
 @Entity
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@Setter
 @Builder
 @Table(name = "post_comments")
 public class PostComment {
@@ -46,4 +44,9 @@ public class PostComment {
     @UpdateTimestamp
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 댓글의 수정 시간
+
+    public void updateBody(String body) {
+        if (body == null) throw new IllegalArgumentException("Comment body cannot be null");
+        this.body = body;
+    }
 }
