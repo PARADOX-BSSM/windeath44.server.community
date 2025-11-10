@@ -20,10 +20,10 @@ import java.util.List;
 public class JudgmentCommentController {
     private final JudgmentCommentService commentService;
 
-    @PostMapping("/{judgmentId}/comments")
+    @PostMapping("/{judgment-id}/comments")
     public ResponseEntity<ApiResponse<JudgmentCommentResponse>> createComment(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId,
+            @PathVariable("judgment-id") Long judgmentId,
             @RequestBody JudgmentCommentRequest request) {
         JudgmentCommentResponse response = commentService.createComment(userId, judgmentId, request);
 
@@ -36,40 +36,38 @@ public class JudgmentCommentController {
         );
     }
 
-    @PatchMapping("/{judgmentId}/comments/{commentId}")
+    @PatchMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<JudgmentCommentResponse>> updateComment(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId,
-            @PathVariable Long commentId,
+            @PathVariable("comment-id") Long commentId,
             @RequestBody JudgmentCommentRequest request) {
         JudgmentCommentResponse response = commentService.updateComment(userId, commentId, request);
 
         return ResponseEntity.ok(
                 HttpUtil.success(
-                        "User id: " + userId + " successfully updated comment id: " + commentId,
+                        "successfully updated comment id: " + commentId,
                         response
                 )
         );
     }
 
-    @DeleteMapping("/{judgmentId}/comments/{commentId}")
+    @DeleteMapping("/comments/{comment-id}")
     public ResponseEntity<ApiResponse<Void>> deleteComment(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId,
-            @PathVariable Long commentId) {
+            @PathVariable("comment-id") Long commentId) {
         commentService.deleteComment(userId, commentId);
 
         return ResponseEntity.ok(
                 HttpUtil.success(
-                        "User id: " + userId + " successfully deleted comment id: " + commentId
+                        "successfully deleted comment id: " + commentId
                 )
         );
     }
 
-    @GetMapping("/{judgmentId}/comments")
+    @GetMapping("/{judgment-id}/comments")
     public ResponseEntity<ApiResponse<List<JudgmentCommentResponse>>> getComments(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId) {
+            @PathVariable("judgment-id") Long judgmentId) {
         List<JudgmentCommentResponse> comments = commentService.getCommentsByJudgmentId(userId, judgmentId);
 
         return ResponseEntity.ok(
@@ -80,11 +78,10 @@ public class JudgmentCommentController {
         );
     }
 
-    @GetMapping("/{judgmentId}/comments/{parentCommentId}/replies")
+    @GetMapping("/comments/{parent-comment-id}/replies")
     public ResponseEntity<ApiResponse<List<JudgmentCommentResponse>>> getReplies(
             @RequestHeader("user-id") String userId,
-            @PathVariable Long judgmentId,
-            @PathVariable Long parentCommentId) {
+            @PathVariable("parent-comment-id") Long parentCommentId) {
         List<JudgmentCommentResponse> replies = commentService.getRepliesByParentCommentId(userId, parentCommentId);
 
         return ResponseEntity.ok(
@@ -95,9 +92,9 @@ public class JudgmentCommentController {
         );
     }
 
-    @GetMapping("/{judgmentId}/comments/count")
+    @GetMapping("/{judgment-id}/comments/count")
     public ResponseEntity<ApiResponse<Long>> getCommentsCount(
-            @PathVariable Long judgmentId) {
+            @PathVariable("judgment-id") Long judgmentId) {
         Long count = commentService.getCommentsCount(judgmentId);
 
         return ResponseEntity.ok(

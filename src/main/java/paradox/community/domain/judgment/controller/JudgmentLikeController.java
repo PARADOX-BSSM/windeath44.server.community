@@ -19,7 +19,6 @@ public class JudgmentLikeController {
     // 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<JudgmentLikeResponse>> registerJudgmentLike(@PathVariable("judgment-id") Long judgmentId, @RequestHeader("user-id") String userId) {
-        System.out.println("일단 확인\n");
         JudgmentLikeResponse judgmentLikeResponse = judgmentLikeService.addJudgmentLike(userId, judgmentId);
 
         if (judgmentLikeResponse == null) return ResponseEntity.badRequest().build();
