@@ -15,28 +15,28 @@ public class PostCommentLikeService {
     private final PostCommentLikeRepository postCommentLikeRepository;
 
     @Transactional
-    public PostCommentLikeResponse addPostCommentLike(Long commentId, String userId) {
-        if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
-            return null;
+    public java.util.Optional<PostCommentLikeResponse> addPostCommentLike(Long commentId, String userId) {
+        if (Boolean.TRUE.equals(postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId))) {
+            return java.util.Optional.empty();
         }else {
             PostCommentLike postCommentLike = PostCommentLike.builder()
                     .postCommentId(commentId)
+                    .userId(userId)
                     .build();
 
             PostCommentLike saved = postCommentLikeRepository.save(postCommentLike);
-
-            return PostCommentLikeResponse.from(saved);
+            return java.util.Optional.of(PostCommentLikeResponse.from(saved));
         }
     }
 
     @Transactional
     public void removePostCommentLike(Long commentId, String userId) {
-        if (postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId)) {
+        if (Boolean.TRUE.equals(postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, commentId))) {
             postCommentLikeRepository.deleteByUserIdAndPostCommentId(userId, commentId);
         }
     }
 
-    public Boolean isLiked(Long postCommentId, String userId) {
-        return postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, postCommentId);
+    public boolean isLiked(Long postCommentId, String userId) {
+        return Boolean.TRUE.equals(postCommentLikeRepository.existsByUserIdAndPostCommentId(userId, postCommentId));
     }
 }

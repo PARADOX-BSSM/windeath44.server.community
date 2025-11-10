@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.community.dto.request.PostCommentRequest;
 import paradox.community.domain.community.dto.response.PostCommentResponse;
 import paradox.community.domain.community.exception.*;
-import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.model.PostComment;
 import paradox.community.domain.community.repository.PostCommentLikeRepository;
 import paradox.community.domain.community.repository.PostCommentRepository;
@@ -14,7 +13,6 @@ import paradox.community.domain.community.repository.PostRepository;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +24,7 @@ public class PostCommentService {
 
     @Transactional
     public PostCommentResponse createComment(String userId, Long postId, PostCommentRequest request) {
-        Post post = postRepository.findById(postId)
+        postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
@@ -81,21 +79,20 @@ public class PostCommentService {
             throw PostCommentUpdateForbiddenException.getInstance();
         }
 
-        comment.setBody(request.body());
-        PostComment updatedComment = commentRepository.save(comment);
+        comment.updateBody(request.body());
 
         Long likeCount = commentLikeRepository.countByPostCommentId(commentId);
 
         return new PostCommentResponse(
-                updatedComment.getCommentId(),
-                updatedComment.getPostId(),
-                updatedComment.getUserId(),
-                updatedComment.getUserName(),
-                updatedComment.getProfile(),
-                updatedComment.getParentCommentId(),
-                updatedComment.getBody(),
-                updatedComment.getCreatedAt(),
-                updatedComment.getUpdatedAt(),
+                comment.getCommentId(),
+                comment.getPostId(),
+                comment.getUserId(),
+                comment.getUserName(),
+                comment.getProfile(),
+                comment.getParentCommentId(),
+                comment.getBody(),
+                comment.getCreatedAt(),
+                comment.getUpdatedAt(),
                 likeCount
         );
     }
@@ -114,9 +111,7 @@ public class PostCommentService {
 
         // 대댓글들의 좋아요 bulk 삭제
         if (!replies.isEmpty()) {
-            List<Long> replyIds = replies.stream()
-                    .map(PostComment::getCommentId)
-                    .collect(Collectors.toList());
+            List<Long> replyIds = replies.stream().map(PostComment::getCommentId).toList();
             commentLikeRepository.deleteByPostCommentIdIn(replyIds);
             commentRepository.deleteAll(replies);
         }
@@ -140,7 +135,7 @@ public class PostCommentService {
         // 좋아요 수 bulk 조회
         List<Long> commentIds = comments.stream()
                 .map(PostComment::getCommentId)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(commentIds);
 
@@ -157,7 +152,7 @@ public class PostCommentService {
                         comment.getUpdatedAt(),
                         likesCountMap.getOrDefault(comment.getCommentId(), 0L)
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)
@@ -174,7 +169,7 @@ public class PostCommentService {
         // 좋아요 수 bulk 조회
         List<Long> replyIds = replies.stream()
                 .map(PostComment::getCommentId)
-                .collect(Collectors.toList());
+                .toList();
 
         Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(replyIds);
 
@@ -191,7 +186,7 @@ public class PostCommentService {
                         reply.getUpdatedAt(),
                         likesCountMap.getOrDefault(reply.getCommentId(), 0L)
                 ))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Transactional(readOnly = true)

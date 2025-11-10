@@ -8,4 +8,7 @@ public record PostSearchRequest(
         Long characterId,
         PostStatus status
 ) {
+        public PostSearchRequest {
+                if (title != null && title.isBlank()) title = null;
+        }
 }

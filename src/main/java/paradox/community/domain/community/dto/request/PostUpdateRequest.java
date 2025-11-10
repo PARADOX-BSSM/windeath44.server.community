@@ -7,4 +7,9 @@ public record PostUpdateRequest(
         String body,
         PostStatus status,
         Boolean isBlind
-) {}
+){
+        public PostUpdateRequest {
+                if (title != null && title.isBlank()) throw new IllegalArgumentException("title cannot be blank");
+                if (isBlind == null) isBlind = Boolean.FALSE;
+        }
+}

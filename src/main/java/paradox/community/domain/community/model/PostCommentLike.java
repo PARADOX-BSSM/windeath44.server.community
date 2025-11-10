@@ -5,13 +5,12 @@ import lombok.*;
 
 @Entity
 @Table(
-        name = "post_comment_likes",
-        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "post_comment_id"})
+    name = "post_comment_likes",
+    uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "post_comment_id"})
 )
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
-@Setter
 @Builder
 public class PostCommentLike {
 

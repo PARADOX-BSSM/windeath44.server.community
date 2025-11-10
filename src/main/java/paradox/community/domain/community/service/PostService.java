@@ -27,17 +27,16 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(String userId, PostCreateRequest request) {
-        Post post = Post.builder()
-                .userId(userId)
-                .title(request.title())
-                .body(request.body())
-                .isBlind(request.isBlind())
-                .status(request.status())
-                .likesCount((Long) 0L)
-                .build();
+    Post post = Post.builder()
+        .userId(userId)
+        .title(request.title())
+        .body(request.body())
+        .isBlind(request.isBlind())
+        .status(request.status())
+        .build();
 
-        Post savedPost = postRepository.save(post);
-        return PostResponse.from(savedPost, (Long)0L);
+    Post savedPost = postRepository.save(post);
+    return PostResponse.from(savedPost, 0L);
     }
 
     @Transactional
@@ -46,7 +45,7 @@ public class PostService {
                 .orElseThrow(PostNotFoundException::getInstance);
 
         if (!post.getUserId().equals(userId)) {
-            throw PostNotFoundException.getInstance();
+            throw PostUpdateForbiddenException.getInstance();
         }
 
         post.publish();
@@ -111,9 +110,9 @@ public class PostService {
                 request.title(),
                 pageable
         );
-        return posts.map((post) -> {
+        return posts.map(post -> {
             Long postCommentCount = postCommentRepository.countByPostId(post.getPostId());
-            return  PostResponse.from(post, postCommentCount);
+            return PostResponse.from(post, postCommentCount);
         });
     }
 }

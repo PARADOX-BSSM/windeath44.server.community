@@ -11,8 +11,8 @@ import java.util.List;
 
 @Entity
 @Table(name = "judgment_comments")
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 @Setter
 @Builder
@@ -56,6 +56,7 @@ public class JudgmentComment {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 댓글 수정 시간
 
+    @Builder.Default
     @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
     private Long likesCount = 0L; // 좋아요 개수
 

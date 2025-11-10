@@ -17,29 +17,20 @@ public class PostCommentLikeController {
 
     @PostMapping
     public ResponseEntity<ApiResponse<PostCommentLikeResponse>> registerPostCommentLike(
-            @PathVariable("comment-id") Long commentId,
-            @RequestHeader("user-id") String userId
+            @PathVariable(name = "comment-id") Long commentId,
+            @RequestHeader(name = "user-id") String userId
     ) {
-        PostCommentLikeResponse postCommentLikeResponse =
-                postCommentLikeService.addPostCommentLike(commentId, userId);
-
-        if (postCommentLikeResponse == null) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        ApiResponse<PostCommentLikeResponse> response = new ApiResponse<>(
-                "like registered successfully",
-                postCommentLikeResponse
-        );
-        return ResponseEntity.status(201).body(response);
+    return postCommentLikeService.addPostCommentLike(commentId, userId)
+        .map(body -> ResponseEntity.status(201).body(new ApiResponse<>("like registered successfully", body)))
+        .orElseGet(() -> ResponseEntity.badRequest().body(new ApiResponse<PostCommentLikeResponse>("already liked or invalid request", null)));
     }
 
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> deletePostCommentLike(
-            @PathVariable("comment-id") Long commentId,
-            @RequestHeader("user-id") String userId
+            @PathVariable(name = "comment-id") Long commentId,
+            @RequestHeader(name = "user-id") String userId
     ) {
-        if (postCommentLikeService.isLiked(commentId, userId)) {
+        if (Boolean.TRUE.equals(postCommentLikeService.isLiked(commentId, userId))) {
             postCommentLikeService.removePostCommentLike(commentId, userId);
 
             return ResponseEntity.ok(HttpUtil.success("like deleted successfully"));
@@ -50,7 +41,8 @@ public class PostCommentLikeController {
 
     // 좋아요 여부 확인
     @GetMapping
-    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable Long commentId, @RequestHeader String userId) {
-        return ResponseEntity.ok(HttpUtil.success("success check post comment liked", postCommentLikeService.isLiked(commentId, userId)));
+    public ResponseEntity<ApiResponse<Boolean>> alreadyPostCommentLiked(@PathVariable(name = "comment-id") Long commentId, @RequestHeader(name = "user-id") String userId) {
+        boolean liked = Boolean.TRUE.equals(postCommentLikeService.isLiked(commentId, userId));
+        return ResponseEntity.ok(HttpUtil.success("success check post comment liked", liked));
     }
 }
