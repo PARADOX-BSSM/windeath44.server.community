@@ -21,13 +21,16 @@ public enum ErrorCode {
     JUDGMENT_NOT_FOUND(404, "Judgment not found"),
     JUDGMENT_PARENT_COMMENT_NOT_FOUND(404, "Judgment parent comment not found"),
     JUDGMENT_COMMENT_NOT_FOUND(404, "Judgment comment not found"),
+    JUDGMENT_COMMENT_UPDATE_FORBIDDEN(403, "Judgment comment can only be updated by authors"),
+    JUDGMENT_COMMENT_DELETE_FORBIDDEN(403, "Judgment comment can only be deleted by authors"),
+    JUDGMENT_COMMENT_2DEPTH_OVER_FORBIDDEN(403, "Judgment comment can only be created up to 2depths"),
     JUDGMENT_ALREADY_DELETED(400, "Judgment already deleted"),
-    JUDGMENT_COMMENT_ALREADY_DELETED(400, "Post comment already deleted"),
-    JUDGMENT_COMMENT_DELETE_FORBIDDEN(403, "Judgment comment delete forbidden"),
+    JUDGMENT_COMMENT_ALREADY_DELETED(400, "Judgment comment already deleted"),
 
     VOTE_HISTORY_NOT_FOUND(404, "Vote history not found"),
 
     USER_NOT_FOUND(404, "User not found");
+
     private int status;
     private String message;
 }
