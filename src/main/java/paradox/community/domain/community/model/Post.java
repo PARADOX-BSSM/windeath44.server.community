@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "post_id", nullable = false)
     private Long postId; // 게시글 고유 식별자
 
     @Column(name = "user_id", nullable = false)
