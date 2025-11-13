@@ -32,7 +32,9 @@ public class SecurityConfig {
                         .requestMatchers(Path.PATH + "/communities/posts/**").permitAll()
                         .requestMatchers(Path.PATH + "/communities/judgments/**").permitAll()
                         .anyRequest().authenticated()
-                );
+                )
+                .httpBasic(httpBasic -> httpBasic.disable())  // 추가
+                .formLogin(formLogin -> formLogin.disable());
 
         return http.build();
     }
