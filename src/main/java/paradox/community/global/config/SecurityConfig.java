@@ -29,9 +29,7 @@ public class SecurityConfig {
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(Path.PATH + "/communities/posts/**").permitAll()
-                        .requestMatchers(Path.PATH + "/communities/judgments/**").permitAll()
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .httpBasic(httpBasic -> httpBasic.disable())  // 추가
                 .formLogin(formLogin -> formLogin.disable());
