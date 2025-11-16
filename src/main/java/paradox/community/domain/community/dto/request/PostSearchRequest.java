@@ -6,7 +6,8 @@ public record PostSearchRequest(
         String title,
         Boolean isBlind,
         Long characterId,
-        PostStatus status
+        PostStatus status,
+        String mode
 ) {
         public PostSearchRequest {
                 if (title != null && title.isBlank()) title = null;
