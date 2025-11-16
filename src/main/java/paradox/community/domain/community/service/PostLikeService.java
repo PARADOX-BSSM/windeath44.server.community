@@ -4,8 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.community.dto.response.PostLikeResponse;
+import paradox.community.domain.community.exception.PostNotFoundException;
+import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.model.PostLike;
 import paradox.community.domain.community.repository.PostLikeRepository;
+import paradox.community.domain.community.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
@@ -13,6 +16,7 @@ import paradox.community.domain.community.repository.PostLikeRepository;
 public class PostLikeService {
 
     private final PostLikeRepository postLikeRepository;
+    private final PostRepository postRepository;
 
     // 좋아요
     @Transactional
@@ -26,6 +30,10 @@ public class PostLikeService {
                     .build();
 
             PostLike saved = postLikeRepository.save(postLike);
+
+            Post post = postRepository.findById(postId)
+                    .orElseThrow(PostNotFoundException::getInstance);
+            post.increaseLikes();
             return java.util.Optional.of(PostLikeResponse.from(saved));
         }
     }
@@ -35,6 +43,10 @@ public class PostLikeService {
     public void removePostLike(Long postId, String userId) {
         if (Boolean.TRUE.equals(postLikeRepository.existsByUserIdAndPostId(userId, postId))) {
             postLikeRepository.deleteByUserIdAndPostId(userId, postId);
+
+            Post post = postRepository.findById(postId)
+                    .orElseThrow(PostNotFoundException::getInstance);
+            post.decreaseLikes();
         }
     }
 

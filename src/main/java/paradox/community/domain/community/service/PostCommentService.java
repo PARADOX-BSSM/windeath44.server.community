@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PostCommentService {
     private final PostCommentRepository commentRepository;
     private final PostRepository postRepository;
@@ -47,6 +47,8 @@ public class PostCommentService {
 
         PostComment comment = PostComment.builder()
                 .userId(userId)
+                .userName("unknown")
+                .profile("unknown")
                 .postId(postId)
                 .parentCommentId(parentCommentId)
                 .body(request.body())

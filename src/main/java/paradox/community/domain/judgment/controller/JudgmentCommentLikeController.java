@@ -27,7 +27,7 @@ public class JudgmentCommentLikeController {
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> cancelJudgmentCommentLike(@PathVariable("comment-id") Long judgmentCommentId, @RequestHeader("user-id") String userId) {
         judgmentCommentLikeService.removeJudgmentCommentLike(userId, judgmentCommentId);
-        return ResponseEntity.ok(HttpUtil.success("Success cancel judgment comment",  null));
+        return ResponseEntity.ok(HttpUtil.success("Success cancel judgment comment"));
     }
 
     // 좋아요 여부 확인

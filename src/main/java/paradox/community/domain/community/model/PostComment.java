@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
 
@@ -45,8 +46,23 @@ public class PostComment {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt; // 게시글 댓글의 수정 시간
 
+    @Builder.Default
+    @Column(name = "likes_count", nullable = false, columnDefinition = ColumnDefaults.ZERO_DEFAULT)
+    private Long likesCount = (Long) 0L; // 좋아요
+
     public void updateBody(String body) {
         if (body == null) throw new IllegalArgumentException("Comment body cannot be null");
         this.body = body;
+    }
+
+    public void increaseLikes() {
+        this.likesCount = (this.likesCount == null ? 0L : this.likesCount) + 1L;
+    }
+
+    public void decreaseLikes() {
+        if (this.likesCount == null || this.likesCount <= 0L) {
+            return;
+        }
+        this.likesCount = this.likesCount - 1L;
     }
 }
