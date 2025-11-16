@@ -19,7 +19,7 @@ import paradox.community.domain.community.repository.PostRepository;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class PostService {
 
     private final PostRepository postRepository;
@@ -27,15 +27,17 @@ public class PostService {
 
     @Transactional
     public PostResponse createPost(String userId, PostCreateRequest request) {
-    Post post = Post.builder()
-        .userId(userId)
-        .title(request.title())
-        .body(request.body())
-        .isBlind(request.isBlind())
-        .status(request.status())
-        .build();
+        Post post = Post.builder()
+            .userId(userId)
+            .userName("user.getName()")
+            .profile("user.getProfile()")
+            .title(request.title())
+            .body(request.body())
+            .isBlind(request.isBlind())
+            .status(request.status())
+            .build();
 
-    Post savedPost = postRepository.save(post);
+        Post savedPost = postRepository.save(post);
     return PostResponse.from(savedPost, 0L);
     }
 
@@ -93,7 +95,7 @@ public class PostService {
         post.delete();
     }
 
-    @Transactional
+    @Transactional(readOnly = true)
     public PostResponse getPost(Long postId) {
         Post post = postRepository.findById(postId)
                 .orElseThrow(PostNotFoundException::getInstance);

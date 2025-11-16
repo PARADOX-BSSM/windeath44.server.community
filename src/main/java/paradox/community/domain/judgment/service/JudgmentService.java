@@ -17,7 +17,7 @@ import paradox.community.domain.judgment.repository.VoteRepository;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
+@Transactional
 public class JudgmentService {
 
     private final JudgmentRepository judgmentRepository;
@@ -27,6 +27,9 @@ public class JudgmentService {
         if (!role.equals("ADMIN")) return null;
         Judgment judgment = Judgment.builder()
                 .characterId(request.characterId())
+                .characterName("tempCharacterName")
+                .animeId(1L)
+                .animeName("tempAnimeName")   // ← 반드시 넣어야 한다
                 .title(request.title())
                 .instance(request.instance())
                 .status(JudgmentStatus.InProgress)
@@ -60,6 +63,7 @@ public class JudgmentService {
         return JudgmentResponse.from(judgment);
     }
 
+    @Transactional(readOnly = true)
     public JudgmentResponse getJudgment(Long judgmentId) {
         Judgment judgment = judgmentRepository.findById(judgmentId)
                 .orElseThrow(JudgmentNotFoundException::getInstance);
