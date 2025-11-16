@@ -2,6 +2,7 @@ package paradox.community.domain.community.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -16,6 +17,7 @@ import paradox.community.domain.community.exception.PostUpdateForbiddenException
 import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.repository.PostCommentRepository;
 import paradox.community.domain.community.repository.PostRepository;
+import org.springframework.data.domain.Sort;
 
 @Service
 @RequiredArgsConstructor
@@ -106,11 +108,27 @@ public class PostService {
 
     @Transactional
     public Page<PostResponse> getPosts(PostSearchRequest request, Pageable pageable) {
+        // null-safe mode 처리
+        String mode = request.mode();
+        if (mode == null || mode.isBlank()) {
+            mode = "normal";
+        }
+
+        // mode에 따른 정렬 결정
+        Sort sort = switch (mode) {
+            case "popularity" -> Sort.by(Sort.Direction.DESC, "viewsCount"); // 조회수 내림차순
+            case "latest"     -> Sort.by(Sort.Direction.DESC, "createdAt"); // 최신순
+            case "normal"     -> pageable.getSort();                         // 기존 정렬 유지
+            default           -> pageable.getSort();                         // 예외 케이스도 기본 유지
+        };
+
+        Pageable pageRequest = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), sort);
+
         Page<Post> posts = postRepository.searchPosts(
                 request.status(),
                 request.isBlind(),
                 request.title(),
-                pageable
+                pageRequest
         );
         return posts.map(post -> {
             Long postCommentCount = postCommentRepository.countByPostId(post.getPostId());
