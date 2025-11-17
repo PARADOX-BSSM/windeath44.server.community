@@ -24,7 +24,7 @@ public class PostCommentService {
 
     @Transactional
     public PostCommentResponse createComment(String userId, Long postId, PostCommentRequest request) {
-        postRepository.findById(postId)
+        postRepository.findByPostIdAndIsDeletedFalse(postId)
                 .orElseThrow(PostNotFoundException::getInstance);
 
         Long parentCommentId = request.parentCommentId();
@@ -125,7 +125,7 @@ public class PostCommentService {
 
     @Transactional(readOnly = true)
     public List<PostCommentResponse> getCommentsByPostId(Long postId) {
-        postRepository.findById(postId)
+        postRepository.findByPostIdAndIsDeletedFalse(postId)
                 .orElseThrow(PostNotFoundException::getInstance);
 
         List<PostComment> comments = commentRepository.findByPostIdAndParentCommentIdIsNull(postId);

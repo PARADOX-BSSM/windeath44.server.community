@@ -31,7 +31,7 @@ public class PostLikeService {
 
             PostLike saved = postLikeRepository.save(postLike);
 
-            Post post = postRepository.findById(postId)
+            Post post = postRepository.findByPostIdAndIsDeletedFalse(postId)
                     .orElseThrow(PostNotFoundException::getInstance);
             post.increaseLikes();
             return java.util.Optional.of(PostLikeResponse.from(saved));
@@ -44,7 +44,7 @@ public class PostLikeService {
         if (Boolean.TRUE.equals(postLikeRepository.existsByUserIdAndPostId(userId, postId))) {
             postLikeRepository.deleteByUserIdAndPostId(userId, postId);
 
-            Post post = postRepository.findById(postId)
+            Post post = postRepository.findByPostIdAndIsDeletedFalse(postId)
                     .orElseThrow(PostNotFoundException::getInstance);
             post.decreaseLikes();
         }

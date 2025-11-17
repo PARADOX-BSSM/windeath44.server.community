@@ -1,6 +1,6 @@
 spring:
   application:
-    name:windeath44.community
+    name: windeath44.community
   datasource:
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
