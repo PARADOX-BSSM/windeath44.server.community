@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.annotations.Where;
 import paradox.community.global.constclass.ColumnDefaults;
 
 import java.time.LocalDateTime;
@@ -14,6 +15,7 @@ import java.time.LocalDateTime;
 @Getter
 @Builder
 @Table(name = "posts")
+@Where(clause = "is_deleted = false")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -75,9 +77,15 @@ public class Post {
     }
 
     public void update(String title, String body) {
-        if (title == null || title.isBlank()) throw new IllegalArgumentException("Title cannot be null or blank");
-        this.title = title;
-        this.body = body;
+        if (title != null) {
+            if (title.isBlank()) {
+                throw new IllegalArgumentException("Title cannot be null or blank");
+            }
+            this.title = title;
+        }
+        if (body != null) {
+            this.body = body;
+        }
     }
 
     public void delete() {
@@ -85,6 +93,18 @@ public class Post {
             throw new IllegalStateException("Post is already deleted");
         }
         this.isDeleted = true;
+    }
+
+    public void changeBlind(Boolean isBlind) {
+        if (isBlind != null) {
+            this.isBlind = isBlind;
+        }
+    }
+
+    public void changeStatus(PostStatus status) {
+        if (status != null) {
+            this.status = status;
+        }
     }
 
     // Domain helper methods

@@ -25,6 +25,11 @@ public class PostService {
     private final PostRepository postRepository;
     private final PostCommentRepository postCommentRepository;
 
+    private Post getActivePost(Long postId) {
+        return postRepository.findByPostIdAndIsDeletedFalse(postId)
+                .orElseThrow(PostNotFoundException::getInstance);
+    }
+
     @Transactional
     public PostResponse createPost(String userId, PostCreateRequest request) {
         Post post = Post.builder()
@@ -43,8 +48,7 @@ public class PostService {
 
     @Transactional
     public PostResponse publishPost(Long postId, String userId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
+        Post post = getActivePost(postId);
 
         if (!post.getUserId().equals(userId)) {
             throw PostUpdateForbiddenException.getInstance();
@@ -57,8 +61,7 @@ public class PostService {
 
     @Transactional
     public PostResponse draftPost(Long postId, String userId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
+        Post post = getActivePost(postId);
 
         if (!post.getUserId().equals(userId)) {
             throw PostDraftForbiddenException.getInstance();
@@ -71,22 +74,22 @@ public class PostService {
 
     @Transactional
     public PostResponse updatePost(Long postId, String userId, PostUpdateRequest request, String role) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
+        Post post = getActivePost(postId);
 
         if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
             throw PostUpdateForbiddenException.getInstance();
         }
 
         post.update(request.title(), request.body());
+        post.changeStatus(request.status());
+        post.changeBlind(request.isBlind());
         Long postCommentsCount = postCommentRepository.countByPostId(postId);
         return PostResponse.from(post, postCommentsCount);
     }
 
     @Transactional
     public void deletePost(Long postId, String userId, String role) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
+        Post post = getActivePost(postId);
 
         if (!role.equals("ADMIN") && !post.getUserId().equals(userId)) {
             throw PostDeleteForbiddenException.getInstance();
@@ -97,8 +100,7 @@ public class PostService {
 
     @Transactional(readOnly = true)
     public PostResponse getPost(Long postId) {
-        Post post = postRepository.findById(postId)
-                .orElseThrow(PostNotFoundException::getInstance);
+        Post post = getActivePost(postId);
 
         Long postCommentCount = postCommentRepository.countByPostId(postId);
         return  PostResponse.from(post, postCommentCount);

@@ -10,13 +10,14 @@ import paradox.community.domain.community.model.Post;
 import paradox.community.domain.community.model.PostStatus;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByStatusAndIsBlind(PostStatus status, Boolean isBlind, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE (:status IS NULL OR p.status = :status) AND (:isBlind IS NULL OR p.isBlind = :isBlind) AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND (:status IS NULL OR p.status = :status) AND (:isBlind IS NULL OR p.isBlind = :isBlind) AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
     Page<Post> searchPosts(@Param("status") PostStatus status, @Param("isBlind") Boolean isBlind, @Param("title") String title, Pageable pageable);
 
     List<Post> findByUserId(String userId);
@@ -25,7 +26,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByIsBlind(Boolean isBlind, Pageable pageable);
 
-    @Query("SELECT p FROM Post p LEFT JOIN PostLike pl ON p.postId = pl.postId " + "GROUP BY p.postId ORDER BY COUNT(pl.likeId) DESC")
+    @Query("SELECT p FROM Post p LEFT JOIN PostLike pl ON p.postId = pl.postId WHERE p.isDeleted = false GROUP BY p.postId ORDER BY COUNT(pl.likeId) DESC")
     List<Post> findAllByOrderByLikeCountDesc();
 
     List<Post> findAllByOrderByCreatedAtDesc();
@@ -33,4 +34,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     List<Post> findAllByOrderByCreatedAtAsc();
 
     List<Post> findAllByOrderByViewsCountDesc();
+
+    Optional<Post> findByPostIdAndIsDeletedFalse(Long postId);
 }

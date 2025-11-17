@@ -9,10 +9,10 @@ public class JudgmentParentCommentException extends GlobalException {
     }
 
     private static class Holder {
-        private static final JudgmentNotFoundException INSTANCE = new JudgmentNotFoundException();
+        private static final JudgmentParentCommentException INSTANCE = new JudgmentParentCommentException();
     }
 
-    public static JudgmentNotFoundException getInstance() {
+    public static JudgmentParentCommentException getInstance() {
         return Holder.INSTANCE;
     }
 }
