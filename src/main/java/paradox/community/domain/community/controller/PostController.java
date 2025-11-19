@@ -15,6 +15,7 @@ import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -26,12 +27,12 @@ public class PostController {
 
     // 게시글 목록 조회
     @PostMapping("/list")
-    public ResponseEntity<ApiResponse<Map<String, Page<PostResponse>>>> getPosts(
+    public ResponseEntity<ApiResponse<Map<String, List<PostResponse>>>> getPosts(
             @RequestHeader(name = "user-id", required = false) String userId,
             @RequestBody PostSearchRequest request,
             Pageable pageable) {
         Page<PostResponse> posts = postService.getPosts(request, pageable, userId);
-        return ResponseEntity.ok(HttpUtil.success("success post search", Map.of("posts", posts)));
+        return ResponseEntity.ok(HttpUtil.success("success post search", Map.of("posts", posts.getContent())));
     }
 
     // 게시글 상세 조회
