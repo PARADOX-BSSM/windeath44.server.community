@@ -17,8 +17,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findByStatusAndIsBlind(PostStatus status, Boolean isBlind, Pageable pageable);
 
-    @Query("SELECT p FROM Post p WHERE p.isDeleted = false AND (:status IS NULL OR p.status = :status) AND (:isBlind IS NULL OR p.isBlind = :isBlind) AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%')))")
-    Page<Post> searchPosts(@Param("status") PostStatus status, @Param("isBlind") Boolean isBlind, @Param("title") String title, Pageable pageable);
+    @Query("SELECT p FROM Post p WHERE p.isDeleted = false " +
+            "AND (:status IS NULL OR p.status = :status) " +
+            "AND (:isBlind IS NULL OR p.isBlind = :isBlind) " +
+            "AND (:title IS NULL OR LOWER(p.title) LIKE LOWER(CONCAT('%', :title, '%'))) " +
+            "AND (:userId IS NULL OR p.userId = :userId)")
+    Page<Post> searchPosts(@Param("status") PostStatus status,
+                           @Param("isBlind") Boolean isBlind,
+                           @Param("title") String title,
+                           @Param("userId") String userId,
+                           Pageable pageable);
 
     List<Post> findByUserId(String userId);
 

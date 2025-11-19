@@ -29,7 +29,7 @@ public class JudgmentService {
                 .characterId(request.characterId())
                 .characterName("tempCharacterName")
                 .animeId(1L)
-                .animeName("tempAnimeName")   // ← 반드시 넣어야 한다
+                .animeName("tempAnimeName")
                 .title(request.title())
                 .instance(request.instance())
                 .status(JudgmentStatus.InProgress)
