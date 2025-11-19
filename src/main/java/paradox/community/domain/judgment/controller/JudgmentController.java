@@ -16,6 +16,7 @@ import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
+import java.util.List;
 import java.util.Map;
 
 
@@ -28,9 +29,9 @@ public class JudgmentController {
 
     // 제판 목록 조회
     @PostMapping("/list")
-    public ResponseEntity<ApiResponse<Map<String, Page<JudgmentResponse>>>> getJudgments(@RequestBody JudgmentListRequest request, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Map<String, List<JudgmentResponse>>>> getJudgments(@RequestBody JudgmentListRequest request, Pageable pageable) {
         Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.status(), request.instance(), pageable);
-        return ResponseEntity.ok(HttpUtil.success("success judgment list search", Map.of("judgments", judgments)));
+        return ResponseEntity.ok(HttpUtil.success("success judgment list search", Map.of("judgments", judgments.getContent())));
     }
 
     // 제판 상세 조회
