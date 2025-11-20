@@ -19,6 +19,8 @@ public interface JudgmentCommentRepository extends JpaRepository<JudgmentComment
 
     List<JudgmentComment> findByJudgmentIdAndParentCommentIdIsNull(Long judgmentId);
 
+    List<JudgmentComment> findByParentCommentIdIn(List<Long> parentCommentIds);
+
     @Query("SELECT COUNT(jc) FROM JudgmentComment jc WHERE jc.judgmentId = :judgmentId")
     Long countByJudgmentId(@Param("judgmentId") Long judgmentId);
 }

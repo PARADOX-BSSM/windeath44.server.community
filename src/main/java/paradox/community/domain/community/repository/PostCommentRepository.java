@@ -19,6 +19,8 @@ public interface PostCommentRepository extends JpaRepository<PostComment, Long> 
 
     List<PostComment> findByPostIdAndParentCommentIdIsNull(Long postId);
 
+    List<PostComment> findByParentCommentIdIn(List<Long> parentCommentIds);
+
     @Query("SELECT COUNT(pc) FROM PostComment pc WHERE pc.postId = :postId")
     Long countByPostId(@Param("postId") Long postId);
 }

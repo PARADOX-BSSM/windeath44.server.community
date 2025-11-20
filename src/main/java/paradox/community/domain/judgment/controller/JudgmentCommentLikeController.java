@@ -7,7 +7,6 @@ import paradox.community.domain.judgment.dto.response.JudgmentCommentLikeRespons
 import paradox.community.domain.judgment.service.JudgmentCommentLikeService;
 import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
-import paradox.community.global.util.HttpUtil;
 
 @RestController
 @RequiredArgsConstructor
@@ -19,20 +18,22 @@ public class JudgmentCommentLikeController {
     // 좋아요
     @PostMapping
     public ResponseEntity<ApiResponse<JudgmentCommentLikeResponse>> registerJudgmentCommentLike(@PathVariable("comment-id") Long judgmentCommentId, @RequestHeader("user-id") String userId) {
-        JudgmentCommentLikeResponse judgmentCommentLikeResponse = judgmentCommentLikeService.addJudgmentCommentLike(userId, judgmentCommentId);
-        return ResponseEntity.status(201).body(HttpUtil.success("Success register judgment comment",  judgmentCommentLikeResponse));
+        return judgmentCommentLikeService.addJudgmentCommentLike(userId, judgmentCommentId)
+                .map(body -> ResponseEntity.status(201).body(new ApiResponse<>("like registered successfully", body)))
+                .orElseGet(() -> ResponseEntity.badRequest().body(new ApiResponse<JudgmentCommentLikeResponse>("already liked or invalid request", null)));
     }
 
     // 좋아요 취소
     @DeleteMapping
     public ResponseEntity<ApiResponse<Void>> cancelJudgmentCommentLike(@PathVariable("comment-id") Long judgmentCommentId, @RequestHeader("user-id") String userId) {
         judgmentCommentLikeService.removeJudgmentCommentLike(userId, judgmentCommentId);
-        return ResponseEntity.ok(HttpUtil.success("Success cancel judgment comment"));
+        return ResponseEntity.ok(new ApiResponse<>("Success cancel judgment comment", null));
     }
 
     // 좋아요 여부 확인
     @GetMapping
     public ResponseEntity<ApiResponse<Boolean>> alreadyJudgmentCommentLiked(@PathVariable("comment-id") Long  judgmentCommentId, @RequestHeader("user-id") String userId) {
-        return ResponseEntity.ok(HttpUtil.success("success check judgment comment liked", judgmentCommentLikeService.isLiked(userId, judgmentCommentId)));
+        boolean liked = Boolean.TRUE.equals(judgmentCommentLikeService.isLiked(userId, judgmentCommentId));
+        return ResponseEntity.ok(new ApiResponse<>("success check judgment comment liked", liked));
     }
 }

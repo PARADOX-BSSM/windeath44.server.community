@@ -1,6 +1,7 @@
 package paradox.community.domain.judgment.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record JudgmentCommentResponse(
         Long commentId,
@@ -11,5 +12,6 @@ public record JudgmentCommentResponse(
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
         Long likesCount,
-        Boolean isLiked
+        Boolean isLiked,
+        List<JudgmentCommentResponse> children
 ) {}
