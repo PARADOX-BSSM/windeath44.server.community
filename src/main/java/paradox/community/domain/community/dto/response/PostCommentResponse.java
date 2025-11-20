@@ -1,6 +1,7 @@
 package paradox.community.domain.community.dto.response;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import paradox.community.domain.community.model.PostComment;
 
 public record PostCommentResponse(
@@ -11,7 +12,8 @@ public record PostCommentResponse(
         String body,
         LocalDateTime createdAt,
         LocalDateTime updatedAt,
-        Long likesCount
+        Long likesCount,
+        List<PostCommentResponse> children
 )
 {
         public static PostCommentResponse from(PostComment comment, Long likesCount) {
@@ -23,7 +25,8 @@ public record PostCommentResponse(
                                 comment.getBody(),
                                 comment.getCreatedAt(),
                                 comment.getUpdatedAt(),
-                                likesCount == null ? 0L : likesCount
+                                likesCount == null ? 0L : likesCount,
+                                List.of()
                 );
         }
 

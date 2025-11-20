@@ -13,6 +13,8 @@ import paradox.community.domain.community.repository.PostRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -64,7 +66,8 @@ public class PostCommentService {
                 savedComment.getBody(),
                 savedComment.getCreatedAt(),
                 savedComment.getUpdatedAt(),
-                likeCount
+                likeCount,
+                List.of()
         );
     }
 
@@ -89,7 +92,8 @@ public class PostCommentService {
                 comment.getBody(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                likeCount
+                likeCount,
+                List.of()
         );
     }
 
@@ -122,20 +126,46 @@ public class PostCommentService {
         postRepository.findByPostIdAndIsDeletedFalse(postId)
                 .orElseThrow(PostNotFoundException::getInstance);
 
-        List<PostComment> comments = commentRepository.findByPostIdAndParentCommentIdIsNull(postId);
+        List<PostComment> parents = commentRepository.findByPostIdAndParentCommentIdIsNull(postId);
 
-        if (comments.isEmpty()) {
+        if (parents.isEmpty()) {
             return List.of();
         }
 
-        // 좋아요 수 bulk 조회
-        List<Long> commentIds = comments.stream()
+        List<Long> parentIds = parents.stream()
                 .map(PostComment::getCommentId)
                 .toList();
 
-        Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(commentIds);
+        List<PostComment> replies = parentIds.isEmpty()
+                ? List.of()
+                : commentRepository.findByParentCommentIdIn(parentIds);
 
-        return comments.stream()
+        // 좋아요 수 bulk 조회 (부모 + 대댓글)
+        List<Long> allCommentIds = Stream.concat(
+                        parents.stream().map(PostComment::getCommentId),
+                        replies.stream().map(PostComment::getCommentId)
+                )
+                .toList();
+
+        Map<Long, Long> likesCountMap = commentLikeRepository.countByPostCommentIdIn(allCommentIds);
+
+        // 대댓글을 부모별로 그룹핑 후 DTO 변환
+        Map<Long, List<PostCommentResponse>> repliesByParent = replies.stream()
+                .map(reply -> new PostCommentResponse(
+                        reply.getCommentId(),
+                        reply.getPostId(),
+                        reply.getUserId(),
+                        reply.getParentCommentId(),
+                        reply.getBody(),
+                        reply.getCreatedAt(),
+                        reply.getUpdatedAt(),
+                        likesCountMap.getOrDefault(reply.getCommentId(), 0L),
+                        List.of()
+                ))
+                // 부모 ID를 키로 같은 부모의 대댓글을 모아둔다
+                .collect(Collectors.groupingBy(PostCommentResponse::parentCommentId));
+
+        return parents.stream()
                 .map(comment -> new PostCommentResponse(
                         comment.getCommentId(),
                         comment.getPostId(),
@@ -144,7 +174,8 @@ public class PostCommentService {
                         comment.getBody(),
                         comment.getCreatedAt(),
                         comment.getUpdatedAt(),
-                        likesCountMap.getOrDefault(comment.getCommentId(), 0L)
+                        likesCountMap.getOrDefault(comment.getCommentId(), 0L),
+                        repliesByParent.getOrDefault(comment.getCommentId(), List.of())
                 ))
                 .toList();
     }
@@ -176,7 +207,8 @@ public class PostCommentService {
                         reply.getBody(),
                         reply.getCreatedAt(),
                         reply.getUpdatedAt(),
-                        likesCountMap.getOrDefault(reply.getCommentId(), 0L)
+                        likesCountMap.getOrDefault(reply.getCommentId(), 0L),
+                        List.of()
                 ))
                 .toList();
     }
@@ -196,7 +228,8 @@ public class PostCommentService {
                 comment.getBody(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
-                likeCount
+                likeCount,
+                List.of()
         );
     }
 }
