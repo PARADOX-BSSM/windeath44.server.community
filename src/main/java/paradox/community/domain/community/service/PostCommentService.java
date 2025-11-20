@@ -47,8 +47,6 @@ public class PostCommentService {
 
         PostComment comment = PostComment.builder()
                 .userId(userId)
-                .userName("unknown")
-                .profile("unknown")
                 .postId(postId)
                 .parentCommentId(parentCommentId)
                 .body(request.body())
@@ -62,8 +60,6 @@ public class PostCommentService {
                 savedComment.getCommentId(),
                 savedComment.getPostId(),
                 savedComment.getUserId(),
-                savedComment.getUserName(),
-                savedComment.getProfile(),
                 savedComment.getParentCommentId(),
                 savedComment.getBody(),
                 savedComment.getCreatedAt(),
@@ -89,8 +85,6 @@ public class PostCommentService {
                 comment.getCommentId(),
                 comment.getPostId(),
                 comment.getUserId(),
-                comment.getUserName(),
-                comment.getProfile(),
                 comment.getParentCommentId(),
                 comment.getBody(),
                 comment.getCreatedAt(),
@@ -146,8 +140,6 @@ public class PostCommentService {
                         comment.getCommentId(),
                         comment.getPostId(),
                         comment.getUserId(),
-                        comment.getUserName(),
-                        comment.getProfile(),
                         comment.getParentCommentId(),
                         comment.getBody(),
                         comment.getCreatedAt(),
@@ -180,8 +172,6 @@ public class PostCommentService {
                         reply.getCommentId(),
                         reply.getPostId(),
                         reply.getUserId(),
-                        reply.getUserName(),
-                        reply.getProfile(),
                         reply.getParentCommentId(),
                         reply.getBody(),
                         reply.getCreatedAt(),
@@ -202,8 +192,6 @@ public class PostCommentService {
                 comment.getCommentId(),
                 comment.getPostId(),
                 comment.getUserId(),
-                comment.getUserName(),
-                comment.getProfile(),
                 comment.getParentCommentId(),
                 comment.getBody(),
                 comment.getCreatedAt(),

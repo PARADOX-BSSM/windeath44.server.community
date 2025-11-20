@@ -37,8 +37,6 @@ public class PostService {
     public PostResponse createPost(String userId, PostCreateRequest request) {
         Post post = Post.builder()
                 .userId(userId)
-                .userName("user.getName()")
-                .profile("user.getProfile()")
                 .title(request.title())
                 .body(request.body())
                 .isBlind(request.isBlind())
