@@ -26,7 +26,7 @@ public interface JudgmentCommentLikeRepository extends JpaRepository<JudgmentCom
 
     void deleteByJudgmentCommentId(Long commentId);
 
-    List<JudgmentCommentLike> findByJudgmentCommentId(Long commentId);
+    Optional<JudgmentCommentLike> findByJudgmentCommentId(Long commentId);
 
     List<JudgmentCommentLike> findByUserId(String userId);
 
