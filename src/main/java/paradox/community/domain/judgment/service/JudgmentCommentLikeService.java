@@ -21,7 +21,7 @@ public class JudgmentCommentLikeService {
     @Transactional
     public JudgmentCommentLikeResponse addJudgmentCommentLike(String userId, Long judgmentCommentId) {
         // If already liked, return existing like info (idempotent)
-        return judgmentCommentLikeRepository.findByUserIdAndJudgmentCommentId(userId, judgmentCommentId)
+        return judgmentCommentLikeRepository.findByJudgmentCommentId(judgmentCommentId)
                 .map(JudgmentCommentLikeResponse::from)
                 .orElseGet(() -> {
                     JudgmentCommentLike judgmentCommentLike = JudgmentCommentLike.builder()
