@@ -13,6 +13,8 @@ import paradox.community.domain.judgment.repository.JudgmentRepository;
 
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -47,8 +49,6 @@ public class JudgmentCommentService {
 
         JudgmentComment comment = JudgmentComment.builder()
                 .userId(userId)
-                .userName("unknown")
-                .profile("unknown")
                 .judgmentId(judgmentId)
                 .parentCommentId(parentCommentId)
                 .body(request.body())
@@ -62,15 +62,14 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 savedComment.getCommentId(),
                 savedComment.getUserId(),
-                savedComment.getUserName(),
-                savedComment.getProfile(),
                 savedComment.getJudgmentId(),
                 savedComment.getParentCommentId(),
                 savedComment.getBody(),
                 savedComment.getCreatedAt(),
                 savedComment.getUpdatedAt(),
                 likeCount,
-                isLiked
+                isLiked,
+                List.of()
         );
     }
 
@@ -91,15 +90,14 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 comment.getCommentId(),
                 comment.getUserId(),
-                comment.getUserName(),
-                comment.getProfile(),
                 comment.getJudgmentId(),
                 comment.getParentCommentId(),
                 comment.getBody(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 likeCount,
-                isLiked
+                isLiked,
+                List.of()
         );
     }
 
@@ -132,33 +130,58 @@ public class JudgmentCommentService {
         judgmentRepository.findById(judgmentId)
                 .orElseThrow(JudgmentNotFoundException::getInstance);
 
-        List<JudgmentComment> comments = commentRepository.findByJudgmentIdAndParentCommentIdIsNull(judgmentId);
+        List<JudgmentComment> parents = commentRepository.findByJudgmentIdAndParentCommentIdIsNull(judgmentId);
 
-        if (comments.isEmpty()) {
+        if (parents.isEmpty()) {
             return List.of();
         }
 
-        // 좋아요 수 및 좋아요 여부 bulk 조회
-        List<Long> commentIds = comments.stream()
+        List<Long> parentIds = parents.stream()
                 .map(JudgmentComment::getCommentId)
                 .toList();
 
-        Map<Long, Long> likesCountMap = commentLikeRepository.countByJudgmentCommentIdIn(commentIds);
-        Map<Long, Boolean> isLikedMap = commentLikeRepository.existsByUserIdAndJudgmentCommentIdIn(userId, commentIds);
+        List<JudgmentComment> replies = parentIds.isEmpty()
+                ? List.of()
+                : commentRepository.findByParentCommentIdIn(parentIds);
 
-        return comments.stream()
+        // 좋아요 수 및 좋아요 여부 bulk 조회 (부모 + 대댓글)
+        List<Long> allCommentIds = Stream.concat(
+                        parents.stream().map(JudgmentComment::getCommentId),
+                        replies.stream().map(JudgmentComment::getCommentId)
+                )
+                .toList();
+
+        Map<Long, Long> likesCountMap = commentLikeRepository.countByJudgmentCommentIdIn(allCommentIds);
+        Map<Long, Boolean> isLikedMap = commentLikeRepository.existsByUserIdAndJudgmentCommentIdIn(userId, allCommentIds);
+
+        // 대댓글을 부모별로 그룹핑 후 DTO 변환
+        Map<Long, List<JudgmentCommentResponse>> repliesByParent = replies.stream()
+                .map(reply -> new JudgmentCommentResponse(
+                        reply.getCommentId(),
+                        reply.getUserId(),
+                        reply.getJudgmentId(),
+                        reply.getParentCommentId(),
+                        reply.getBody(),
+                        reply.getCreatedAt(),
+                        reply.getUpdatedAt(),
+                        likesCountMap.getOrDefault(reply.getCommentId(), 0L),
+                        isLikedMap.getOrDefault(reply.getCommentId(), false),
+                        List.of()
+                ))
+                .collect(Collectors.groupingBy(JudgmentCommentResponse::parentCommentId));
+
+        return parents.stream()
                 .map(comment -> new JudgmentCommentResponse(
                         comment.getCommentId(),
                         comment.getUserId(),
-                        comment.getUserName(),
-                        comment.getProfile(),
                         comment.getJudgmentId(),
                         comment.getParentCommentId(),
                         comment.getBody(),
                         comment.getCreatedAt(),
                         comment.getUpdatedAt(),
                         likesCountMap.getOrDefault(comment.getCommentId(), 0L),
-                        isLikedMap.getOrDefault(comment.getCommentId(), false)
+                        isLikedMap.getOrDefault(comment.getCommentId(), false),
+                        repliesByParent.getOrDefault(comment.getCommentId(), List.of())
                 ))
                 .toList();
     }
@@ -186,15 +209,14 @@ public class JudgmentCommentService {
                 .map(reply -> new JudgmentCommentResponse(
                         reply.getCommentId(),
                         reply.getUserId(),
-                        reply.getUserName(),
-                        reply.getProfile(),
                         reply.getJudgmentId(),
                         reply.getParentCommentId(),
                         reply.getBody(),
                         reply.getCreatedAt(),
                         reply.getUpdatedAt(),
                         likesCountMap.getOrDefault(reply.getCommentId(), 0L),
-                        isLikedMap.getOrDefault(reply.getCommentId(), false)
+                        isLikedMap.getOrDefault(reply.getCommentId(), false),
+                        List.of()
                 ))
                 .toList();
     }
@@ -210,15 +232,14 @@ public class JudgmentCommentService {
         return new JudgmentCommentResponse(
                 comment.getCommentId(),
                 comment.getUserId(),
-                comment.getUserName(),
-                comment.getProfile(),
                 comment.getJudgmentId(),
                 comment.getParentCommentId(),
                 comment.getBody(),
                 comment.getCreatedAt(),
                 comment.getUpdatedAt(),
                 likeCount,
-                isLiked
+                isLiked,
+                List.of()
         );
     }
 

@@ -19,23 +19,22 @@ public class JudgmentCommentLikeService {
     private final JudgmentCommentRepository judgmentCommentRepository;
 
     @Transactional
-    public JudgmentCommentLikeResponse addJudgmentCommentLike(String userId, Long judgmentCommentId) {
-        // If already liked, return existing like info (idempotent)
-        return judgmentCommentLikeRepository.findByJudgmentCommentId(judgmentCommentId)
-                .map(JudgmentCommentLikeResponse::from)
-                .orElseGet(() -> {
-                    JudgmentCommentLike judgmentCommentLike = JudgmentCommentLike.builder()
-                            .userId(userId)
-                            .judgmentCommentId(judgmentCommentId)
-                            .build();
+    public java.util.Optional<JudgmentCommentLikeResponse> addJudgmentCommentLike(String userId, Long judgmentCommentId) {
+        if (Boolean.TRUE.equals(judgmentCommentLikeRepository.existsByUserIdAndJudgmentCommentId(userId, judgmentCommentId))) {
+            return java.util.Optional.empty();
+        }
 
-                    JudgmentCommentLike saved = judgmentCommentLikeRepository.save(judgmentCommentLike);
+        JudgmentCommentLike judgmentCommentLike = JudgmentCommentLike.builder()
+                .userId(userId)
+                .judgmentCommentId(judgmentCommentId)
+                .build();
 
-                    JudgmentComment comment = judgmentCommentRepository.findById(judgmentCommentId)
-                            .orElseThrow(JudgmentCommentNotFoundException::getInstance);
-                    comment.incrementLikesCount();
-                    return JudgmentCommentLikeResponse.from(saved);
-                });
+        JudgmentCommentLike saved = judgmentCommentLikeRepository.save(judgmentCommentLike);
+
+        JudgmentComment comment = judgmentCommentRepository.findById(judgmentCommentId)
+                .orElseThrow(JudgmentCommentNotFoundException::getInstance);
+        comment.incrementLikesCount();
+        return java.util.Optional.of(JudgmentCommentLikeResponse.from(saved));
     }
 
     @Transactional
