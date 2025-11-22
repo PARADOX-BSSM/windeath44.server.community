@@ -16,13 +16,13 @@ import java.util.stream.Collectors;
 @Repository
 public interface JudgmentCommentLikeRepository extends JpaRepository<JudgmentCommentLike, Long> {
 
-    boolean existsByUserIdAndJudgmentCommentId(String userId, Long commentId);
+    Boolean existsByUserIdAndJudgmentCommentId(String userId, Long commentId);
 
     Optional<JudgmentCommentLike> findByUserIdAndJudgmentCommentId(String userId, Long commentId);
 
     void deleteByUserIdAndJudgmentCommentId(String userId, Long commentId);
 
-    long countByJudgmentCommentId(Long commentId);
+    Long countByJudgmentCommentId(Long commentId);
 
     void deleteByJudgmentCommentId(Long commentId);
 
