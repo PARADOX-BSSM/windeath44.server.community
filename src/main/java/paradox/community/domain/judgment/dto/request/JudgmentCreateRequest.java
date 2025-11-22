@@ -6,6 +6,7 @@ import java.time.LocalDateTime;
 
 public record JudgmentCreateRequest(
         Long characterId,
+        Long animeId,
         String title,
         JudgmentInstance instance,
         LocalDateTime startAt,

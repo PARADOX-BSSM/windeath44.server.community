@@ -27,7 +27,7 @@ public class JudgmentService {
         if (!role.equals("ADMIN")) return null;
         Judgment judgment = Judgment.builder()
                 .characterId(request.characterId())
-                .animeId(1L)
+                .animeId(request.animeId())
                 .title(request.title())
                 .instance(request.instance())
                 .status(JudgmentStatus.InProgress)
