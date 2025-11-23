@@ -24,11 +24,14 @@ public class Judgment {
     @EqualsAndHashCode.Include
     private Long judgmentId; // 재판 고유 식별자
 
-    @Column(name = "character_id", nullable = false)
-    private Long characterId; // 재판 대상 캐릭터(characters.id) 참조
-
     @Column(name = "anime_id", nullable = false)
     private Long animeId;
+
+    @Column(name = "character_name", nullable = false)
+    private String characterName;
+
+    @Column(name = "image_url", nullable = false)
+    private String imageUrl;
 
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
@@ -96,5 +99,7 @@ public class Judgment {
         if (this.hellCount == null) this.hellCount = 0L;
         if (this.likesCount == null) this.likesCount = 0L;
         if (this.status == null) this.status = JudgmentStatus.InProgress;
+        if (this.characterName == null) this.characterName = "";
+        if (this.imageUrl == null) this.imageUrl = "";
     }
 }
