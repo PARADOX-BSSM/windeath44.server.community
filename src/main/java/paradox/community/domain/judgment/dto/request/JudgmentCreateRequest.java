@@ -5,8 +5,9 @@ import paradox.community.domain.judgment.model.JudgmentInstance;
 import java.time.LocalDateTime;
 
 public record JudgmentCreateRequest(
-        Long characterId,
         Long animeId,
+        String characterName,
+        String imageUrl,
         String title,
         JudgmentInstance instance,
         LocalDateTime startAt,

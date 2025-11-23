@@ -26,8 +26,9 @@ public class JudgmentService {
     public JudgmentResponse createJudgment(JudgmentCreateRequest request, String role) {
         if (!role.equals("ADMIN")) return null;
         Judgment judgment = Judgment.builder()
-                .characterId(request.characterId())
                 .animeId(request.animeId())
+                .characterName(request.characterName())
+                .imageUrl(request.imageUrl())
                 .title(request.title())
                 .instance(request.instance())
                 .status(JudgmentStatus.InProgress)
@@ -69,19 +70,11 @@ public class JudgmentService {
         return JudgmentResponse.from(judgment);
     }
 
-    public Page<JudgmentResponse> getJudgments(Long characterId, JudgmentStatus status, JudgmentInstance instance, Pageable pageable) {
+    public Page<JudgmentResponse> getJudgments(JudgmentStatus status, JudgmentInstance instance, Pageable pageable) {
         Page<Judgment> judgments;
 
-        if (characterId != null && status != null && instance != null) {
-            judgments = judgmentRepository.findByCharacterIdAndStatusAndInstance(characterId, status, instance, pageable);
-        }else if (characterId != null && status != null) {
-            judgments = judgmentRepository.findByCharacterIdAndStatus(characterId, status, pageable);
-        }else  if (characterId != null && instance != null) {
-            judgments = judgmentRepository.findByCharacterIdAndInstance(characterId, instance, pageable);
-        }else if (status != null && instance != null) {
+        if (status != null && instance != null) {
             judgments = judgmentRepository.findByStatusAndInstance(status, instance, pageable);
-        }else if (characterId != null) {
-            judgments = judgmentRepository.findByCharacterId(characterId, pageable);
         }else if (status != null) {
             judgments = judgmentRepository.findByStatus(status, pageable);
         }else if (instance != null) {

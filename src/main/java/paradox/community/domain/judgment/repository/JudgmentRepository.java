@@ -13,11 +13,7 @@ import java.util.List;
 @Repository
 public interface JudgmentRepository extends JpaRepository<Judgment, Long> {
     List<Judgment> findByTitleContaining(String title);
-    Page<Judgment> findByCharacterId(Long characterId, Pageable pageable);
     Page<Judgment> findByStatus(JudgmentStatus status, Pageable pageable);
     Page<Judgment> findByInstance(JudgmentInstance instanceId, Pageable pageable);
-    Page<Judgment> findByCharacterIdAndStatus(Long characterId, JudgmentStatus status, Pageable pageable);
-    Page<Judgment> findByCharacterIdAndInstance(Long characterId, JudgmentInstance instance, Pageable pageable);
     Page<Judgment> findByStatusAndInstance(JudgmentStatus status, JudgmentInstance instance, Pageable pageable);
-    Page<Judgment> findByCharacterIdAndStatusAndInstance(Long characterId, JudgmentStatus status, JudgmentInstance instance, Pageable pageable);
 }
