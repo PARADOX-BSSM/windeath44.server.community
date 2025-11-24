@@ -9,9 +9,7 @@ import java.time.LocalDateTime;
 public record JudgmentResponse(
         Long judgmentId,
         String title,
-        Long animeId,
-        String characterName,
-        String imageUrl,
+        Long characterId,
         JudgmentInstance instance,
         JudgmentStatus status,
         LocalDateTime startAt,
@@ -26,9 +24,7 @@ public record JudgmentResponse(
         return new JudgmentResponse(
                 judgment.getJudgmentId(),
                 judgment.getTitle(),
-                judgment.getAnimeId(),
-                judgment.getCharacterName(),
-                judgment.getImageUrl(),
+                judgment.getCharacterId(),
                 judgment.getInstance(),
                 judgment.getStatus(),
                 judgment.getStartAt(),

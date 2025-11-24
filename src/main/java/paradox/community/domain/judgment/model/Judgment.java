@@ -24,14 +24,8 @@ public class Judgment {
     @EqualsAndHashCode.Include
     private Long judgmentId; // 재판 고유 식별자
 
-    @Column(name = "anime_id", nullable = false)
-    private Long animeId;
-
-    @Column(name = "character_name", nullable = false)
-    private String characterName;
-
-    @Column(name = "image_url", nullable = false)
-    private String imageUrl;
+    @Column(name = "character_id", nullable = false)
+    private Long characterId;
 
     @Column(nullable = false)
     private String title; // 재판 이벤트의 제목
@@ -70,11 +64,13 @@ public class Judgment {
     @Column(name = "likes_count", nullable = false)
     private Long likesCount = 0L; // 좋아요 수
 
-    public void update(String title, LocalDateTime startAt, LocalDateTime endAt) {
+    public void update(String title, JudgmentInstance instance, LocalDateTime startAt, LocalDateTime endAt) {
         if (title == null || title.trim().isEmpty()) throw new IllegalArgumentException("Title cannot be null or empty");
         if (startAt == null || endAt == null) throw new IllegalArgumentException("startAt and endAt cannot be null");
         if (endAt.isBefore(startAt)) throw new IllegalArgumentException("endAt must be after startAt");
+        if (instance == null) throw new IllegalArgumentException("instance cannot be null");
         this.title = title.trim();
+        this.instance = instance;
         this.startAt = startAt;
         this.endAt = endAt;
     }
@@ -99,7 +95,5 @@ public class Judgment {
         if (this.hellCount == null) this.hellCount = 0L;
         if (this.likesCount == null) this.likesCount = 0L;
         if (this.status == null) this.status = JudgmentStatus.InProgress;
-        if (this.characterName == null) this.characterName = "";
-        if (this.imageUrl == null) this.imageUrl = "";
     }
 }
