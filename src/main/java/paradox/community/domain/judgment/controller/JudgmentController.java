@@ -2,6 +2,7 @@ package paradox.community.domain.judgment.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +17,6 @@ import paradox.community.global.Path;
 import paradox.community.global.dto.ApiResponse;
 import paradox.community.global.util.HttpUtil;
 
-import java.util.List;
-import java.util.Map;
-
 
 @RestController
 @RequestMapping(Path.PATH + "/communities/judgments")
@@ -29,9 +27,13 @@ public class JudgmentController {
 
     // 제판 목록 조회
     @PostMapping("/list")
-    public ResponseEntity<ApiResponse<Map<String, List<JudgmentResponse>>>> getJudgments(@RequestBody JudgmentListRequest request, Pageable pageable) {
-        Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.status(), request.instance(), pageable);
-        return ResponseEntity.ok(HttpUtil.success("success judgment list search", Map.of("judgments", judgments.getContent())));
+    public ResponseEntity<ApiResponse<Page<JudgmentResponse>>> getJudgments(@RequestBody JudgmentListRequest request, Pageable pageable) {
+        int page = (request.page() != null && request.page() >= 0) ? request.page() : pageable.getPageNumber();
+        int size = (request.size() != null && request.size() > 0) ? request.size() : pageable.getPageSize();
+        Pageable pageRequest = PageRequest.of(page, size, pageable.getSort());
+
+        Page<JudgmentResponse> judgments = judgmentService.getJudgments(request.characterId(), request.status(), request.instance(), pageRequest);
+        return ResponseEntity.ok(HttpUtil.success("success judgment list search", judgments));
     }
 
     // 제판 상세 조회

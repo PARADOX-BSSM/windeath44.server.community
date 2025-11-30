@@ -6,5 +6,12 @@ import paradox.community.domain.judgment.model.JudgmentStatus;
 public record JudgmentListRequest(
         Long characterId,
         JudgmentStatus status,
-        JudgmentInstance instance
-) {}
+        JudgmentInstance instance,
+        Integer page,
+        Integer size
+) {
+    public JudgmentListRequest {
+        if (page != null && page < 0) page = 0;
+        if (size != null && size <= 0) size = null;
+    }
+}
