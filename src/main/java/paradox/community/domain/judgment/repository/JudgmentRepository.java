@@ -14,7 +14,6 @@ import java.util.List;
 
 @Repository
 public interface JudgmentRepository extends JpaRepository<Judgment, Long> {
-    List<Judgment> findByTitleContaining(String title);
     Page<Judgment> findByStatus(JudgmentStatus status, Pageable pageable);
     Page<Judgment> findByInstance(JudgmentInstance instanceId, Pageable pageable);
     Page<Judgment> findByStatusAndInstance(JudgmentStatus status, JudgmentInstance instance, Pageable pageable);
@@ -23,6 +22,13 @@ public interface JudgmentRepository extends JpaRepository<Judgment, Long> {
     Page<Judgment> findByCharacterIdAndInstance(Long characterId, JudgmentInstance instance, Pageable pageable);
     Page<Judgment> findByCharacterIdAndStatusAndInstance(Long characterId, JudgmentStatus status, JudgmentInstance instance, Pageable pageable);
 
-    @Query("SELECT j.characterId,(COUNT(v) + j.likesCount) FROM Judgment j LEFT JOIN Vote v ON j.judgmentId = v.judgmentId GROUP BY j.judgmentId, j.characterId, j.likesCount ORDER BY (COUNT(v) + j.likesCount) DESC, j.judgmentId DESC")
-    List<JudgmentRankResponse> findTopRankings(Pageable pageable);
+    @Query("""
+            SELECT j.characterId, (COUNT(v) + j.likesCount)
+            FROM Judgment j
+            LEFT JOIN Vote v ON j.judgmentId = v.judgmentId
+            WHERE j.status <> 'Ended'
+            GROUP BY j.judgmentId, j.characterId, j.likesCount
+            ORDER BY (COUNT(v) + j.likesCount) DESC, j.judgmentId DESC
+            """)
+    Page<JudgmentRankResponse> findTopRankings(Pageable pageable);
 }

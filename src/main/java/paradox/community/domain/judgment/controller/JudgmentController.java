@@ -75,8 +75,8 @@ public class JudgmentController {
     }
 
     @GetMapping("/rank")
-    public ResponseEntity<ApiResponse<List<JudgmentRankResponse>>> getJudgmentRank() {
-        List<JudgmentRankResponse> judgment = judgmentService.getTopJudgments();
+    public ResponseEntity<ApiResponse<Page<JudgmentRankResponse>>> getJudgmentRank() {
+        Page<JudgmentRankResponse> judgment = judgmentService.getTopJudgments();
 
         return ResponseEntity.ok(HttpUtil.success("success judgment rank search", judgment));
     }
