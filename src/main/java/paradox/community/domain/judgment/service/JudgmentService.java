@@ -2,18 +2,23 @@ package paradox.community.domain.judgment.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
+import paradox.community.domain.judgment.dto.response.JudgmentRankResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.exception.JudgmentNotFoundException;
 import paradox.community.domain.judgment.model.Judgment;
 import paradox.community.domain.judgment.model.JudgmentInstance;
 import paradox.community.domain.judgment.model.JudgmentStatus;
 import paradox.community.domain.judgment.repository.JudgmentRepository;
-import paradox.community.domain.judgment.repository.VoteRepository;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +71,20 @@ public class JudgmentService {
                 .orElseThrow(JudgmentNotFoundException::getInstance);
 
         return JudgmentResponse.from(judgment);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<JudgmentRankResponse> getTopJudgments() {
+        Page<JudgmentRankResponse> scored = judgmentRepository.findTopRankings(PageRequest.of(0, 3));
+        List<JudgmentRankResponse> content = scored.getContent();
+        List<JudgmentRankResponse> ranked = new ArrayList<>();
+
+        for (int i = 0; i < content.size(); i++) {
+            JudgmentRankResponse dto = content.get(i);
+            ranked.add(new JudgmentRankResponse(dto.characterId(), (long)(i + 1)));
+        }
+
+        return new PageImpl<>(ranked, scored.getPageable(), scored.getTotalElements());
     }
 
     public Page<JudgmentResponse> getJudgments(Long characterId, JudgmentStatus status, JudgmentInstance instance, Pageable pageable) {

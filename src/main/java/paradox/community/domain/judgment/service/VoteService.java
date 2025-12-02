@@ -73,6 +73,8 @@ public class VoteService {
 
         Long heavenCount = voteRepository.countHeavenVotes(judgmentId);
         Long hellCount = voteRepository.countHellVotes(judgmentId);
+        judgment.setHeavenCount(heavenCount);
+        judgment.setHellCount(hellCount);
 
         return new VoteCreateResponse(
                 vote.getVoteId(),
@@ -122,7 +124,13 @@ public class VoteService {
         if (!voteRepository.existsByUserIdAndJudgmentId(userId, judgmentId)) {
             throw VoteHistoryNotFoundException.getInstance();
         }
+        Judgment judgment = judgmentRepository.findById(judgmentId)
+                .orElseThrow(JudgmentNotFoundException::getInstance);
         voteRepository.deleteByUserIdAndJudgmentId(userId, judgmentId);
+        Long heavenCount = voteRepository.countHeavenVotes(judgmentId);
+        Long hellCount = voteRepository.countHellVotes(judgmentId);
+        judgment.setHeavenCount(heavenCount);
+        judgment.setHellCount(hellCount);
         log.info("Vote deleted - userId: {}, judgmentId: {}", userId, judgmentId);
     }
 

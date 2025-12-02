@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import paradox.community.domain.judgment.dto.request.JudgmentCreateRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentListRequest;
 import paradox.community.domain.judgment.dto.request.JudgmentUpdateRequest;
+import paradox.community.domain.judgment.dto.response.JudgmentRankResponse;
 import paradox.community.domain.judgment.dto.response.JudgmentResponse;
 import paradox.community.domain.judgment.service.JudgmentService;
 import jakarta.validation.Valid;
@@ -71,5 +72,12 @@ public class JudgmentController {
         if (judgment == null) return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 
         return ResponseEntity.ok(HttpUtil.success("success judgment end", judgment));
+    }
+
+    @GetMapping("/rank")
+    public ResponseEntity<ApiResponse<Page<JudgmentRankResponse>>> getJudgmentRank() {
+        Page<JudgmentRankResponse> judgment = judgmentService.getTopJudgments();
+
+        return ResponseEntity.ok(HttpUtil.success("success judgment rank search", judgment));
     }
 }
